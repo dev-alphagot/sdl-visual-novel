@@ -5,11 +5,11 @@
 #include <stdio.h>
 
 #include "window.h"
+#include "wrapper/text.h"
 
 int _main(void) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
-    TTF_Font* pFont;
 
     if (TTF_Init() == -1)
     {
@@ -28,32 +28,33 @@ int _main(void) {
         return 1;
     }
 
+    SDL_RenderSetVSync(renderer, 1);
 
     SDL_SetWindowTitle(window, WINDOW_TITLE);
 
-    SDL_Texture* screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-    pFont = TTF_OpenFont("font/nbpb.ttf", 30);
-
-    SDL_Color textColor = { 0, 0, 0 };
-    SDL_Surface* textSurface = TTF_RenderUTF8_Blended(pFont, "키스의 고유 조건은 입술끼리\n만나야 하고 특별한 기술은\n필요치 않다.", textColor);
-
-    if (!textSurface) {
-        printf("SDL Initialization Failed: %s\n", SDL_GetError());
+    err_text_t res = text_init(renderer);
+    if (res) {
+        printf(text_error_str(res));
         return 1;
     }
 
-    SDL_Texture* mTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-    int mWidth = textSurface->w;
-    int mHeight = textSurface->h;
-
-    // render text
-    SDL_Rect renderQuad = { 10, 10, mWidth, mHeight };
+    res = text_add(u8"키스의 고유 조건은 입술끼리 만나야 하고 특별한 기술은 필요치 않다.", NANUMBARUNPENB, 10, 10, 255, 255, 255, 255);
+    if (res > 0) {
+        printf(text_error_str(res));
+        return 1;
+    }
 
     // 메시지 루프
     SDL_Event event;
+
     int quit = 0;
+    long long tcnt = 0;
+
+    int tid = 1;
+
+    char sb[512] = "";
+    memset(sb, 0, 512);
+
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
@@ -66,14 +67,28 @@ int _main(void) {
         }
 
         SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 16, 32, 48, 255);
 
-        SDL_RenderCopy(renderer, mTexture, NULL, &renderQuad);
+        sprintf(sb, u8"%lld 프레임 경과\n 인간이 이곳에 온 것은 수천 년 만이군…. 왠지 이런 대사가 해보고 싶었습니다.", tcnt);
+
+        text_remove(tid);
+        tid = text_add(sb, NANUMBARUNGOTHIC, 10, 200, 255, 255, 255, 255);
+        if (tid > 0) {
+            printf(text_error_str(res));
+            return 1;
+        }
+        else {
+            tid = -tid;
+        }
+
+        text_render();
+
         SDL_RenderPresent(renderer);
+
+        tcnt++;
     }
 
     // 종료
-    TTF_CloseFont(pFont);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
