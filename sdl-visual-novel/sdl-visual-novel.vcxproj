@@ -74,6 +74,9 @@
     <VcpkgInstalledDir>
     </VcpkgInstalledDir>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -136,8 +139,10 @@
   <ItemGroup>
     <ClCompile Include="boot.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="wrapper\text.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="text.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -22,23 +22,14 @@ int _main(void) {
         return 1;
     }
 
-    // 윈도우 창 생성
-    window = SDL_CreateWindow(u8"미소녀 언어 학습 시뮬레이션",
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        WINDOW_WIDTH, WINDOW_HEIGHT,
-        SDL_WINDOW_SHOWN);
-    if (!window) {
-        printf("SDL Initialization Failed: %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
-
     if (SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer) < 0)
     {
         printf("SDL_CreateWindowAndRenderer Error\n");
         return 1;
     }
+
+
+    SDL_SetWindowTitle(window, WINDOW_TITLE);
 
     SDL_Texture* screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
 
