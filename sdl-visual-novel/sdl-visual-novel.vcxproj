@@ -142,8 +142,8 @@
     <ClCompile Include="wrapper\text.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="text.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="wrapper\text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
