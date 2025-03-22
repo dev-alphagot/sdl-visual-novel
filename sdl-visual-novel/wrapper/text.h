@@ -6,16 +6,17 @@
 #include <SDL2/SDL_TTF.h>
 
 #include "../window.h"
+#include "../util.h"
 
 #define TEXT_CAPACITY 128
 
 typedef enum {
-	INVALID_FONT = 1,
-	STRING_NULL,
-	FONT_TEXTURE_NULL,
-	CAPACITY_EXCEEDED,
-	INVALID_INDEX,
-	FONT_LOAD_FAILED,
+	TEXT_INVALID_FONT = 1,
+	TEXT_STRING_NULL,
+	TEXT_FONT_TEXTURE_NULL,
+	TEXT_CAPACITY_EXCEEDED,
+	TEXT_INVALID_INDEX,
+	TEXT_FONT_LOAD_FAILED,
 	TEXT_SURFACE_NULL
 } err_text_t;
 
@@ -23,20 +24,10 @@ typedef enum {
 	NANUMBARUNGOTHIC,
 	NANUMBARUNPENB,
 	NANUMGOTHIC,
+	SPOQAHANSANSNEO,
+	GYEONGGIMILLENNIUMBATANGB,
 	FONT_COUNT
 } font_t;
-
-typedef enum {
-	LEFT,
-	CENTER,
-	RIGHT
-} halign_t;
-
-typedef enum {
-	TOP,
-	CENTER,
-	BOTTOM
-} valign_t;
 
 typedef struct {
 	font_t font;
@@ -56,11 +47,16 @@ const char* text_error_str(err_text_t err);
 err_text_t text_init(SDL_Renderer* renderer);
 void text_end(void);
 
-err_text_t text_add_o(const char* text, SDL_Color color, font_t font, int x, int y, int w);
+err_text_t text_add_o(const char* text, SDL_Color color, font_t font, int x, int y, int w, float sx, float sy, halign_t ha, valign_t va);
 
 err_text_t text_add(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+err_text_t text_add_a(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a, halign_t ha, valign_t va);
+err_text_t text_add_s(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a, float sx, float sy);
+err_text_t text_add_as(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a, float sx, float sy, halign_t ha, valign_t va);
 err_text_t text_add_r(const char* text, font_t font, int x, int y, int w, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 err_text_t text_remove(int index);
+
+err_text_t text_content(int id, const char* content);
 
 void text_render(void);

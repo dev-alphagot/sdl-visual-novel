@@ -1,3 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <math.h>
 #include "text.h"
 #include "../misc.h"
 #include "../window.h"
@@ -15,12 +18,12 @@ static SDL_Renderer* renderer;
 
 const char* text_error_str(err_text_t err) {
 	switch (err) {
-		case INVALID_FONT: return "Invalid font.";
-		case STRING_NULL: return "The string parameter is null. (or empty)";
-		case FONT_TEXTURE_NULL: return "Font texture allocation failed.";
-		case CAPACITY_EXCEEDED: return "Text capacity exceeded.";
-		case INVALID_INDEX: return "Invalid index.";
-		case FONT_LOAD_FAILED: return "Font load failed.";
+		case TEXT_INVALID_FONT: return "Invalid font.";
+		case TEXT_STRING_NULL: return "The string parameter is null. (not empty)";
+		case TEXT_FONT_TEXTURE_NULL: return "Font texture allocation failed.";
+		case TEXT_CAPACITY_EXCEEDED: return "Text capacity exceeded.";
+		case TEXT_INVALID_INDEX: return "Invalid index.";
+		case TEXT_FONT_LOAD_FAILED: return "Font load failed.";
 		case TEXT_SURFACE_NULL: return "Text surface allocation failed.";
 
 		default: return "Unknown error.";
@@ -34,13 +37,14 @@ err_text_t text_init(SDL_Renderer* _renderer) {
 
 	char ss[48] = "";
 	for (int i = 0; i < FONT_COUNT; i++) {
-
 		sprintf(ss, "font/%d.ttf", i);
 
-		if (!(fonts[i] = TTF_OpenFont(ss, 60))) {
-			return FONT_LOAD_FAILED;
+		if (!(fonts[i] = TTF_OpenFont(ss, 48))) {
+			return TEXT_FONT_LOAD_FAILED;
 		}
+		TTF_SetFontHinting(fonts[i], TTF_HINTING_LIGHT);
 	}
+
 
 	return 0;
 }
@@ -72,21 +76,36 @@ static int text_able_index(void) {
 }
 
 // 성공 시 (인덱스 * -1)을 반환
-err_text_t text_add_o(const char* text, SDL_Color color, font_t font, int x, int y, int w) {
+err_text_t text_add_o(
+	const char* text1, SDL_Color color, font_t font, 
+	int x, int y, int w1, 
+	float sx, float sy, 
+	halign_t ha, valign_t va
+) {
 	int index = text_able_index();
 
-	if (index < 0) return CAPACITY_EXCEEDED;
-	if (!text) return STRING_NULL;
-	if (font < 0 || font >= FONT_COUNT) return INVALID_FONT;
+	char* text = strlen(text1) ? text1 : " ";
 
-	if(!strlen(text)) return STRING_NULL;
+	if (index < 0) return TEXT_CAPACITY_EXCEEDED;
+	if (!text) return TEXT_STRING_NULL;
+	if (font < 0 || font >= FONT_COUNT) return TEXT_INVALID_FONT;
 
-	text_t tx = { font, color, text, x, y, w };
+	text_t tx = { font, color, text, x, y, w1, sx, sy, ha, va };
 	SDL_Rect rt = { x, y, 0, 0 };
 
 	texts[index] = tx;
 
-	surfaces[index] = TTF_RenderUTF8_Blended_Wrapped(fonts[tx.font], tx.text, tx.color, w);
+	int w2 = 0;
+
+	TTF_MeasureUTF8(fonts[tx.font], tx.text, 1 << 30, &w2, NULL);
+	w2 = (int)(ceil(w2 * sx));
+
+	int w = (w1 <= -1 ? w2 : (int)(ceil(w1 * sx)));
+
+	//tx.w = w;
+	//texts[index] = tx;
+
+	surfaces[index] = TTF_RenderUTF8_Blended_Wrapped(fonts[tx.font], tx.text, tx.color, (int)(ceil(w / sx)));
 #if VERBOSE
 	if (!surfaces[index])
 		printf("SDL Error @ %s: %s\n", __func__, SDL_GetError());
@@ -98,11 +117,21 @@ err_text_t text_add_o(const char* text, SDL_Color color, font_t font, int x, int
 	if (!text_textures[index])
 		printf("SDL Error @ %s: %s\n", __func__, SDL_GetError());
 #endif
-	if (!text_textures[index]) return FONT_TEXTURE_NULL;
+	if (!text_textures[index]) return TEXT_FONT_TEXTURE_NULL;
 
-	iclamp(&(rt.w), surfaces[index]->w, w);
-	rt.h = surfaces[index]->h;
+	int wx = w;
+	int wy = (int)ceil(surfaces[index]->h * sy);
+
+	if (ha != LEFT) rt.x -= (int)ceil(w * (ha / 2.0f));
+	if (va != TOP) rt.y -= (int)ceil((surfaces[index]->h * sy) * (va / 2.0f));
+
+	rt.w = w;
+	rt.h = wy;
 	rects[index] = rt;
+
+#if VERBOSE
+	printf("SDL Info @ %s: #%d %ld %ld %ld %ld (%d %d %f %f)\n", __func__, index, rt.x, rt.y, rt.w, rt.h, surfaces[index]->w, surfaces[index]->h, sx, sy);
+#endif
 
 	return -index;
 }
@@ -110,17 +139,35 @@ err_text_t text_add_o(const char* text, SDL_Color color, font_t font, int x, int
 err_text_t text_add(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	SDL_Color color = { r, g, b, a };
 
-	return text_add_o(text, color, font, x, y, WINDOW_WIDTH - x);
+	return text_add_o(text, color, font, x, y, -1, 1.0f, 1.0f, LEFT, TOP);
+}
+
+err_text_t text_add_a(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a, halign_t ha, valign_t va) {
+	SDL_Color color = { r, g, b, a };
+
+	return text_add_o(text, color, font, x, y, -1, 1.0f, 1.0f, ha, va);
+}
+
+err_text_t text_add_s(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a, float sx, float sy) {
+	SDL_Color color = { r, g, b, a };
+
+	return text_add_o(text, color, font, x, y, -1, sx, sy, LEFT, TOP);
+}
+
+err_text_t text_add_as(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a, float sx, float sy, halign_t ha, valign_t va) {
+	SDL_Color color = { r, g, b, a };
+
+	return text_add_o(text, color, font, x, y, -1, sx, sy, ha, va);
 }
 
 err_text_t text_add_r(const char* text, font_t font, int x, int y, int w, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	SDL_Color color = { r, g, b, a };
 
-	return text_add_o(text, color, font, x, y, w);
+	return text_add_o(text, color, font, x, y, w, 1.0f, 1.0f, LEFT, TOP);
 }
 
 err_text_t text_remove(int index) {
-	if (index < 0 || index >= TEXT_CAPACITY) return INVALID_INDEX;
+	if (index < 0 || index >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
 
 	if (!texts[index].text) return 0;
 
@@ -134,6 +181,16 @@ err_text_t text_remove(int index) {
 	surfaces[index] = NULL;
 
 	return 0;
+}
+
+// 성공 시 (인덱스 * -1)을 반환. 원래 인덱스랑 같은 인덱스를 반환하지 않는 경우도 있음.
+err_text_t text_content(int id, const char* content) {
+	text_t tx = texts[id];
+
+	if(text_remove(id)) return TEXT_INVALID_INDEX;
+	return text_add_o(
+		content, tx.color, tx.font, tx.x, tx.y, tx.w, tx.scale_x, tx.scale_y, tx.halign, tx.valign
+	);
 }
 
 void text_render(void) {

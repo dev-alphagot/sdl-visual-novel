@@ -140,12 +140,14 @@
     <ClCompile Include="boot.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="util.c" />
+    <ClCompile Include="wrapper\image.c" />
     <ClCompile Include="wrapper\text.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="misc.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="window.h" />
+    <ClInclude Include="wrapper\image.h" />
     <ClInclude Include="wrapper\text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
