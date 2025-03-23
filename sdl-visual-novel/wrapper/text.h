@@ -26,6 +26,8 @@ typedef enum {
 	NANUMGOTHIC,
 	SPOQAHANSANSNEO,
 	GYEONGGIMILLENNIUMBATANGB,
+	HUIJI,
+	COMBINED,
 	FONT_COUNT
 } font_t;
 
@@ -59,4 +61,8 @@ err_text_t text_remove(int index);
 
 err_text_t text_content(int id, const char* content);
 
+err_text_t text_color(int id, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+
 void text_render(void);
+
+void text_clear(void);

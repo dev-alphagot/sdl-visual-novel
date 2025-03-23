@@ -9,7 +9,7 @@
 #define IMAGE_RECT_REUSE -3250000
 
 typedef enum {
-	IMAGE_LOAD_FAILED,
+	IMAGE_LOAD_FAILED = 1,
 	IMAGE_INVALID_RENDERER,
 	IMAGE_INVALID_PATH,
 	IMAGE_CAPACITY_EXCEEDED,
@@ -47,3 +47,5 @@ err_image_t image_content(int id, const char* new_path);
 void image_render(void);
 
 void image_end(void);
+
+void image_clear(void);

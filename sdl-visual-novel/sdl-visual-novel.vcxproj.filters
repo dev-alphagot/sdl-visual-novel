@@ -13,6 +13,24 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\screens">
+      <UniqueIdentifier>{356407cc-c227-42f7-bf39-da3bc63be4f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\screens">
+      <UniqueIdentifier>{22156a9d-7467-4d8d-802b-85114bf88e1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\engine">
+      <UniqueIdentifier>{714db028-5f57-4f07-97eb-c5c14b2c6945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\wrapper">
+      <UniqueIdentifier>{f69d186a-fb27-43ce-8332-afbedee9a430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\wrapper">
+      <UniqueIdentifier>{a60cdc68-b75b-4054-ab7f-2da484645683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\engine">
+      <UniqueIdentifier>{7bbcaccd-3b76-4fe8-9015-1843f415a1e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -21,14 +39,26 @@
     <ClCompile Include="boot.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="wrapper\text.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="util.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="screens\notice.c">
+      <Filter>소스 파일\screens</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\fupdate.c">
+      <Filter>소스 파일\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\screen.c">
+      <Filter>소스 파일\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\text.c">
+      <Filter>소스 파일\wrapper</Filter>
+    </ClCompile>
     <ClCompile Include="wrapper\image.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="screens\title.c">
+      <Filter>소스 파일\screens</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,11 +71,23 @@
     <ClInclude Include="util.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="screens\notice.h">
+      <Filter>헤더 파일\screens</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\fupdate.h">
+      <Filter>헤더 파일\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\screen.h">
+      <Filter>헤더 파일\engine</Filter>
+    </ClInclude>
     <ClInclude Include="wrapper\text.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\wrapper</Filter>
     </ClInclude>
     <ClInclude Include="wrapper\image.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="screens\title.h">
+      <Filter>헤더 파일\screens</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

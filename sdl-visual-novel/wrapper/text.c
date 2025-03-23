@@ -193,10 +193,28 @@ err_text_t text_content(int id, const char* content) {
 	);
 }
 
+// 성공 시 (인덱스 * -1)을 반환. 원래 인덱스랑 같은 인덱스를 반환하지 않는 경우도 있음.
+err_text_t text_color(int id, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+	text_t tx = texts[id];
+
+	SDL_Color clr = { r, g, b, a };
+
+	if (text_remove(id)) return TEXT_INVALID_INDEX;
+	return text_add_o(
+		tx.text, clr, tx.font, tx.x, tx.y, tx.w, tx.scale_x, tx.scale_y, tx.halign, tx.valign
+	);
+}
+
 void text_render(void) {
 	for (int i = 0; i < TEXT_CAPACITY; i++) {
 		if (!(texts[i].text)) continue;
 
 		SDL_RenderCopy(renderer, text_textures[i], NULL, rects + i);
+	}
+}
+
+void text_clear(void) {
+	for (int i = 0; i < TEXT_CAPACITY; i++) {
+		text_remove(i);
 	}
 }

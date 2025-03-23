@@ -134,3 +134,9 @@ void image_end(void) {
 		SDL_DestroyTexture(images[i].tex);
 	}
 }
+
+void image_clear(void) {
+	for (int i = 0; i < IMAGE_CAPACITY; i++) {
+		image_remove(i);
+	}
+}

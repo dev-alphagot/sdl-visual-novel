@@ -4,10 +4,16 @@
 #include <SDL2/SDL_Image.h>
 #include <SDL2/SDL_Mixer.h>
 #include <SDL2/SDL_TTF.h>
+#include <SDL2/SDL2_framerate.h>
+
 #include <stdio.h>
 #include <stdbool.h>
 
 #include "window.h"
+
+#include "engine/fupdate.h"
+#include "engine/screen.h"
+
 #include "wrapper/text.h"
 #include "wrapper/image.h"
 
@@ -83,6 +89,8 @@ int _main(void) {
         return 1;
     }
 
+    screen_init(renderer);
+
     res = text_add_as(
         u8"키스의 고유 조건은 입술끼리 만나야\n하고 특별한 기술은 필요치 않다.", 
         SPOQAHANSANSNEO, 
@@ -119,11 +127,11 @@ int _main(void) {
         1.0f, 1.0f, H_CENTER, V_CENTER
     );
 
-    const char* txt = u8"산타클로스가 단 하룻밤만에 키보토스의 아이들에게 선물을 주기 위해선…\n그의 루돌프는 최소 마하 4 이상의 속도를 내야 할 거야.";
+    const char* txt = u8"サンタクロースさんが たった一晩でキヴォトスの 子供たちにプレゼントを渡す\nためには… 彼のトナカイは最低 マッハ4以上の速度を出さなきゃ いけないはず。\n키스의 고유 조건은 입술끼리 만나야 하고 특별한 기술은 필요치 않다.";
 
     int content = -text_add_as(
         u8"",
-        NANUMBARUNPENB,
+        COMBINED,
         220, WINDOW_HEIGHT - 180,
         255, 255, 255, 255,
         0.5, 0.5, LEFT, TOP
@@ -161,6 +169,10 @@ int _main(void) {
     int offs = -1;
     int delay = 0;
 
+    FPSmanager fpsManager;
+    SDL_initFramerate(&fpsManager);
+    SDL_setFramerate(&fpsManager, 60);
+
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
@@ -180,6 +192,10 @@ int _main(void) {
                     keyDown = true;
                     offs = 0;
                     delay = 0;
+
+                    screen_ss();
+
+                    printf("%d\n", fupdate_add(181, screen_tr));
                 }
             }
             else if (event.type == SDL_KEYUP) {
@@ -201,6 +217,7 @@ int _main(void) {
             text_content(content, s3);
         }
 
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
@@ -211,11 +228,17 @@ int _main(void) {
 
         text_content(0, sb);
 
+        screen_render();
+
         image_render();
 
         text_render();
 
+        fupdate_update();
+
         SDL_RenderPresent(renderer);
+
+        SDL_framerateDelay(&fpsManager);
 
         tcnt++;
     }
