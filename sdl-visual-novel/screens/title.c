@@ -7,17 +7,18 @@ static int ntId = 0;
 
 static void sc_title_initialize(void) {
 	ntId = -text_add_as(
-		u8"타이틀 화면 만들기 귀찮은데", 
-		GYEONGGIMILLENNIUMBATANGB, 
+		u8"タイトル名をここで入力", 
+		COMBINED, 
 		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 
-		255, 255, 255, 0, 
-		H_CENTER, V_CENTER, 0.5f, 0.5f
+		0, 0, 0, 255,
+		1.0f, 1.0f, H_CENTER, V_CENTER
 	);
 }
 
 static void sc_title_render(void) {
-	if (vTicks <= 51) {
-		ntId = -text_color(ntId, 255, 255, 255, vTicks * 5);
+	if (vTicks >= 60 && vTicks <= 111) {
+		int a = (vTicks - 60) * 5;
+		ntId = -text_color(ntId, a, a, a, 255);
 	}
 
 	vTicks++;
@@ -26,5 +27,5 @@ static void sc_title_render(void) {
 static void sc_title_dispose(void) {}
 
 screen_t sc_title = {
-	"notice", sc_title_initialize, sc_title_render, sc_title_dispose
+	"title", sc_title_initialize, sc_title_render, sc_title_dispose
 };

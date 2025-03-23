@@ -84,10 +84,11 @@ err_text_t text_add_o(
 ) {
 	int index = text_able_index();
 
+	if (!text1) return TEXT_STRING_NULL;
+
 	char* text = strlen(text1) ? text1 : " ";
 
 	if (index < 0) return TEXT_CAPACITY_EXCEEDED;
-	if (!text) return TEXT_STRING_NULL;
 	if (font < 0 || font >= FONT_COUNT) return TEXT_INVALID_FONT;
 
 	text_t tx = { font, color, text, x, y, w1, sx, sy, ha, va };
@@ -97,15 +98,48 @@ err_text_t text_add_o(
 
 	int w2 = 0;
 
-	TTF_MeasureUTF8(fonts[tx.font], tx.text, 1 << 30, &w2, NULL);
+	char* ss = strdup(tx.text);
+
+	int lfc = 0;
+	int mx = 0;
+
+	for (int i = 0; i < strlen(ss); i++) {
+		if (ss[i] == '\n') lfc++;
+	}
+	
+	if (lfc == 0) {
+		TTF_MeasureUTF8(fonts[tx.font], tx.text, WINDOW_WIDTH / sx, &w2, NULL);
+	}
+	else {
+		for (int i = 0; i <= lfc; i++) {
+			ss = strtok(i == 0 ? ss : NULL, "\n");
+
+			int r = 0;
+
+			TTF_MeasureUTF8(fonts[tx.font], ss, WINDOW_WIDTH / sx, &r, NULL);
+
+			r += r % 2;
+			r += 48;
+
+			if (mx < r) mx = r;
+		}
+
+		w2 = mx;
+	}
+	
 	w2 = (int)(ceil(w2 * sx));
+
+#if VERBOSE
+	if (!surfaces[index])
+		printf("SDL Info @ %s: %d %d\n", __func__, w2, (int)ceil(w2 / sx));
+#endif
 
 	int w = (w1 <= -1 ? w2 : (int)(ceil(w1 * sx)));
 
 	//tx.w = w;
 	//texts[index] = tx;
 
-	surfaces[index] = TTF_RenderUTF8_Blended_Wrapped(fonts[tx.font], tx.text, tx.color, (int)(ceil(w / sx)));
+	surfaces[index] = TTF_RenderUTF8_Blended_Wrapped(fonts[tx.font], tx.text, tx.color, (int)ceil(w / sx));
 #if VERBOSE
 	if (!surfaces[index])
 		printf("SDL Error @ %s: %s\n", __func__, SDL_GetError());
@@ -130,7 +164,7 @@ err_text_t text_add_o(
 	rects[index] = rt;
 
 #if VERBOSE
-	printf("SDL Info @ %s: #%d %ld %ld %ld %ld (%d %d %f %f)\n", __func__, index, rt.x, rt.y, rt.w, rt.h, surfaces[index]->w, surfaces[index]->h, sx, sy);
+	printf("SDL Info @ %s: #%d %ld %ld %ld %ld (%d %d %d %f %f)\n", __func__, index, rt.x, rt.y, rt.w, rt.h, w2, surfaces[index]->w, surfaces[index]->h, sx, sy);
 #endif
 
 	return -index;

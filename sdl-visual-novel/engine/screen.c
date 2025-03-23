@@ -9,7 +9,7 @@
 #include "../wrapper/text.h"
 #include "../wrapper/image.h"
 
-screen_t screens[];
+screen_t screens[6];
 static int screen_count = -1;
 
 static SDL_Renderer* renderer;
@@ -39,16 +39,13 @@ static void screen_transition(void) {
 			SDL_SetRenderDrawColor(renderer, orc.r, orc.g, orc.b, orc.a);
 		}
 
-		stf++;
-		return; // for debug
-
 		if (stf == 62) {
 			screen_current.dispose();
 
 			text_clear();
 			image_clear();
 		}
-		else if (stf == 118) {
+		else if (stf == 119) {
 			screen_desired.initialize();
 			screen_current = screen_desired;
 		}
@@ -90,6 +87,10 @@ void screen_ss(void) {
 void screen_init(SDL_Renderer* _renderer, int scc) {
 	renderer = _renderer;
 	screen_count = scc;
+
+	screen_current = screens[0];
+
+	screen_current.initialize();
 }
 
 static void screen_change_o(screen_t screen) {

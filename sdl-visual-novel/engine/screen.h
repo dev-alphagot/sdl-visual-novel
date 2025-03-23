@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define SCREEN_TRANSITION_DEBUG
+// #define SCREEN_TRANSITION_DEBUG
 
 typedef struct {
 	const char* id;
@@ -14,7 +14,7 @@ typedef struct {
 	void (*dispose)(void);
 } screen_t;
 
-extern screen_t screens;
+extern screen_t screens[6];
 
 void screen_init(SDL_Renderer* _renderer, int scc);
 
