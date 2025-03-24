@@ -27,14 +27,14 @@ static void sc_notice_render(void) {
 	if (vTicks <= 51) {
 		int a = vTicks * 5;
 
-		ntId = -text_color(ntId, a, a, a, 255);
-		ntI2 = -text_color(ntI2, a, a, a, 255);
+		ntId = -text_color(ntId, a, a, a, 254);
+		ntI2 = -text_color(ntI2, a, a, a, 254);
 	}
 	else if (vTicks >= 230 && vTicks <= 280) {
 		int a = (281 - vTicks) * 5;
 
-		ntId = -text_color(ntId, a, a, a, 255);
-		ntI2 = -text_color(ntI2, a, a, a, 255);
+		ntId = -text_color(ntId, a, a, a, 254);
+		ntI2 = -text_color(ntI2, a, a, a, 254);
 	}
 	else if (vTicks == 311) {
 		puts("ss\n");

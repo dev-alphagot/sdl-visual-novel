@@ -20,8 +20,6 @@ static screen_t screen_desired;
 static int stf = -1;
 
 static void screen_transition(void) {
-	printf("%d\n", stf);
-
 	if (stf < 120) {
 		for (int i = 0; i < 4; i++) {
 			SDL_Rect rc = { 0, (WINDOW_HEIGHT / 4) * i, WINDOW_WIDTH, WINDOW_HEIGHT / 4};

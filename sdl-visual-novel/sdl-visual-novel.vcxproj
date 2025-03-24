@@ -141,21 +141,25 @@
     <ClCompile Include="engine\fupdate.c" />
     <ClCompile Include="engine\screen.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="screens\ingame.c" />
     <ClCompile Include="screens\notice.c" />
     <ClCompile Include="screens\title.c" />
     <ClCompile Include="util.c" />
     <ClCompile Include="wrapper\image.c" />
+    <ClCompile Include="wrapper\input.c" />
     <ClCompile Include="wrapper\text.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\fupdate.h" />
     <ClInclude Include="engine\screen.h" />
     <ClInclude Include="misc.h" />
+    <ClInclude Include="screens\ingame.h" />
     <ClInclude Include="screens\notice.h" />
     <ClInclude Include="screens\title.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="wrapper\image.h" />
+    <ClInclude Include="wrapper\input.h" />
     <ClInclude Include="wrapper\text.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

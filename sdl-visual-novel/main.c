@@ -16,9 +16,11 @@
 
 #include "wrapper/text.h"
 #include "wrapper/image.h"
+#include "wrapper/input.h"
 
 #include "screens/notice.h"
 #include "screens/title.h"
+#include "screens/ingame.h"
 
 int _main(void) {
     SDL_Window* window = NULL;
@@ -70,16 +72,9 @@ int _main(void) {
 
     screens[0] = sc_notice;
     screens[1] = sc_title;
+    screens[2] = sc_ingame;
 
-    screen_init(renderer, 2);
-
-    Mix_Music* music = Mix_LoadMUS("sound/bgm/rwaltz.ogg");
-    if (music == NULL) {
-        fprintf(stderr, "Failed to load music file: %s\n", Mix_GetError());
-        return 1;
-    }
-
-    Mix_PlayMusic(music, 1 << 30);
+    screen_init(renderer, 3);
 
     // 메시지 루프
     SDL_Event event;
@@ -93,8 +88,10 @@ int _main(void) {
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
-                if (event.key.keysym.sym == SDLK_ESCAPE)
-                    quit = 1;
+                input_keydown(event.key.keysym.sym);
+            }
+            else if (event.type == SDL_KEYUP) {
+                input_keyup(event.key.keysym.sym);
             }
             else if (event.type == SDL_QUIT) {
                 quit = 1;
@@ -113,6 +110,10 @@ int _main(void) {
 
         fupdate_update();
 
+        if (input_is_keydown(SDLK_ESCAPE)) quit = 1;
+
+        input_update();
+
         SDL_RenderPresent(renderer);
 
         SDL_framerateDelay(&fpsManager);
@@ -121,7 +122,6 @@ int _main(void) {
     IMG_Quit();
 
     // 종료
-    Mix_FreeMusic(music);
     Mix_CloseAudio();
 
     SDL_DestroyRenderer(renderer);
