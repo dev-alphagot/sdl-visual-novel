@@ -60,8 +60,11 @@ static void sc_title_render(void) {
 	}
 
 	if (input_is_keydown(SDLK_RETURN)) {
-		puts("fc\n");
 		screen_change("ingame");
+	}
+
+	if (input_is_keydown(SDLK_RSHIFT)) {
+		screen_change("fliptest");
 	}
 
 	vTicks++;

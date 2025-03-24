@@ -37,7 +37,6 @@ static void sc_notice_render(void) {
 		ntI2 = -text_color(ntI2, a, a, a, 254);
 	}
 	else if (vTicks == 311) {
-		puts("ss\n");
 		screen_change("title");
 	}
 

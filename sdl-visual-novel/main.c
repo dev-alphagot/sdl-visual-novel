@@ -21,6 +21,7 @@
 #include "screens/notice.h"
 #include "screens/title.h"
 #include "screens/ingame.h"
+#include "screens/fliptest.h"
 
 int _main(void) {
     SDL_Window* window = NULL;
@@ -73,8 +74,9 @@ int _main(void) {
     screens[0] = sc_notice;
     screens[1] = sc_title;
     screens[2] = sc_ingame;
+    screens[3] = sc_fliptest;
 
-    screen_init(renderer, 3);
+    screen_init(renderer, 4);
 
     // 메시지 루프
     SDL_Event event;
