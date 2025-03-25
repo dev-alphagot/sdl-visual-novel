@@ -1,7 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "character.h"
 
 #include <stdio.h>
-#define _CRT_SECURE_NO_WARNINGS
 
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +29,7 @@ void char_init(void) {
 	for (int i = 0; i < indices; i++) {
 		if (i >= CHAR_CAPACITY) return;
 
-		char* tok = strtok(i == 0 ? index_buf : NULL, '\n');
+		char* tok = strtok(i == 0 ? index_buf : NULL, "\n");
 		sprintf(f_buf, "def/char/%s.txt", tok);
 
 		FILE* hl = fopen(f_buf, "rt");
@@ -39,7 +40,7 @@ void char_init(void) {
 
 		d = atoi(p_buf);
 
-		character_t chr;
+		character_t chr = { -1, "" }; // 임시 초기화
 
 		for (int j = 0; j < d; j++) {
 			fgets(p_buf, 64, hl);
@@ -66,8 +67,9 @@ void char_init(void) {
 		printf("ID %d\tPATH %s\n", chr.id, chr.path);
 		for (int a = 0; a < CHAR_EMOTION_MAX_PATH; a++) {
 			if (!chr.emotions[a].path) continue;
+			if (!strlen(chr.emotions[a].path)) continue;
 
-			printf(" - MMP %d\tPATH %s\n", chr.emotions[a].movement_multiplier, chr.emotions[a].path);
+			printf(" - MMP %d\tPATH %s/%s\n", chr.emotions[a].movement_multiplier, chr.path, chr.emotions[a].path);
 		}
 		puts("");
 		characters[i] = chr;

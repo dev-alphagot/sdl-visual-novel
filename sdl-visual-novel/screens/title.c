@@ -4,6 +4,8 @@
 #include "../wrapper/input.h"
 
 #include "../engine/screen.h"
+#include "../engine/character.h"
+#include "../engine/texthold.h"
 
 #include <SDL2/SDL_Mixer.h>
 
@@ -49,6 +51,12 @@ static void sc_title_initialize(void) {
 	}
 
 	// Mix_PlayMusic(titlemusic, 1 << 30);
+
+	char_init();
+
+	th_load();
+
+	th_display();
 
 	Mix_FadeInMusic(titlemusic, 1 << 30, 5000);
 }

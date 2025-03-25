@@ -141,6 +141,7 @@
     <ClCompile Include="engine\character.c" />
     <ClCompile Include="engine\fupdate.c" />
     <ClCompile Include="engine\screen.c" />
+    <ClCompile Include="engine\texthold.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="screens\fliptest.c" />
     <ClCompile Include="screens\ingame.c" />
@@ -155,6 +156,7 @@
     <ClInclude Include="engine\character.h" />
     <ClInclude Include="engine\fupdate.h" />
     <ClInclude Include="engine\screen.h" />
+    <ClInclude Include="engine\texthold.h" />
     <ClInclude Include="misc.h" />
     <ClInclude Include="screens\fliptest.h" />
     <ClInclude Include="screens\ingame.h" />

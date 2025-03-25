@@ -1,0 +1,19 @@
+18
+1
+image/heroine
+0
+neutral
+1
+angry c
+2
+mad
+1
+smile c
+-1
+sad
+2
+surprised
+0
+shsusus
+1
+happy

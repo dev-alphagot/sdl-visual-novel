@@ -119,6 +119,17 @@ err_image_t image_content(int id, const char* new_path) {
 	);
 }
 
+err_image_t image_move(int id, int x, int y) {
+	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
+
+	images[id].rect.x += x;
+	images[id].rect.y += y;
+
+	return 0;
+}
+
 void image_render(void) {
 	for (int i = 0; i < IMAGE_CAPACITY; i++) {
 		if (!(images[i].tex)) continue;

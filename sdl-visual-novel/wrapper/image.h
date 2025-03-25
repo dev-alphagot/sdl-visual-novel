@@ -44,6 +44,8 @@ err_image_t image_remove(int index);
 
 err_image_t image_content(int id, const char* new_path);
 
+err_image_t image_move(int id, int x, int y);
+
 void image_render(void);
 
 void image_end(void);

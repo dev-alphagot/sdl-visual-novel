@@ -19,4 +19,6 @@ typedef struct {
 	emotion_t emotions[CHAR_MAX_EMOTION];
 } character_t;
 
+extern character_t characters[];
+
 void char_init(void);

@@ -17,3 +17,5 @@ typedef enum {
 int char_uni_bytes(char ss);
 
 void str_trim_lf(int l, char* arr);
+
+float ease_io_expo(float x);

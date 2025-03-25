@@ -1,6 +1,7 @@
 #include "util.h"
 
 #include <stdint.h>
+#include <math.h>
 
 void iclamp(int* v, int mi, int mx) {
 	if (*v < mi) *v = mi;
@@ -26,4 +27,13 @@ void str_trim_lf(int l, char* arr) {
             // break;
         }
     }
+}
+
+float ease_io_expo(float x) {
+    const float c1 = 1.70158f;
+    const float c2 = c1 * 1.525f;
+
+    return x < 0.5f
+        ? (float)(pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2
+        : (float)(pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
 }

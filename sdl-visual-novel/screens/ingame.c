@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "ingame.h"
 
 #include "../util.h"
@@ -6,7 +8,9 @@
 #include "../wrapper/image.h"
 #include "../wrapper/input.h"
 
+#include "../engine/texthold.h"
 #include "../engine/fupdate.h"
+#include "../engine/character.h"
 
 #include <SDL2/SDL_Mixer.h>
 
@@ -20,28 +24,63 @@ static int speak_name = 0;
 static int speak_content = 0;
 
 static int task_ticks = -1;
+static int task_emo = 0;
 
 static int spk_ticks = -1;
 static int spk_offset = -1;
 
-char* name = u8"猫塚ヒビキ";
-char* text = u8"サンタクロースさんが たった一晩でキヴォトスの 子供たちにプレゼントを渡す\nためには… 彼のトナカイは最低 マッハ4以上の速度を出さなきゃ いけないはず。\n키스의 고유 조건은 입술끼리 만나야 하고 특별한 기술은 필요치 않다.";
-static char  spk_buffer[1024] = "";
+static int tid = 100001;
+
+char name[ 128] = u8" ";
+char text[2048] = u8" ";
+static char  spk_buffer[2048] = "";
 
 static Mix_Music* bgm;
 
-static void sc_ingame_angry_task(void) {
-	if(task_ticks == 0) image_content(heroine, "image/heroine/angry c.png");
+static character_t chr;
 
-	if (task_ticks == 180) {
+static text_h_t th = { -1, "" };
+
+static char emo_buf[CHAR_BASE_MAX_PATH + CHAR_EMOTION_MAX_PATH] = "";
+
+static void sc_ingame_emotion(void) {
+	emotion_t emo = chr.emotions[task_emo + 1];
+
+	if (task_ticks == 0) {
+		sprintf(emo_buf, "%s/%s.png", chr.path, emo.path);
+		printf("%s\n", emo.path);
+		image_content(heroine, emo_buf);
+	}
+
+	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
+
+	if (task_ticks >= 1 && task_ticks <= 22) {
+		image_move(heroine, 0, (int)ceil(-4 * emo.movement_multiplier * ease_io_expo(task_ticks / 22.0f)));
+	}
+	else if (task_ticks >= 23 && task_ticks <= 44) {
+		image_move(heroine, 0, (int)floor(4 * emo.movement_multiplier * ease_io_expo(1.0f - ((task_ticks - 23) / 22.0f))));
+	}
+
+	if (task_ticks == 44) {
 		image_content(heroine, "image/heroine/neutral.png");
 		task_ticks = -2;
+
+		task_emo++;
+		task_emo %= 7;
 	}
 
 	task_ticks++;
 }
 
 static void sc_ingame_initialize(void) {
+	chr = characters[0];
+
+	th_search(100000, &th);
+	memcpy(name, th.value, 128);
+
+	//printf("%s %s\n", name, text);
+	//printf("START\n");
+
 	bgm = Mix_LoadMUS("sound/bgm/dotabata.ogg");
 	if (bgm == NULL) {
 		fprintf(stderr, "Failed to load music file: %s\n", Mix_GetError());
@@ -89,21 +128,24 @@ static void sc_ingame_initialize(void) {
 static void sc_ingame_render(void) {
 	if (task_ticks < 0 && input_is_keydown(SDLK_a)) {
 		task_ticks = 0;
-		fupdate_add(181, sc_ingame_angry_task);
+		fupdate_add(45, sc_ingame_emotion);
 	}
 
 	if (spk_ticks < 0 && spk_offset < 0 && input_is_keydown(SDLK_z)) {
+		memset(spk_buffer, 0, 2048);
+		th_search(tid++, &th);
+		memcpy(text, th.value, 2048);
 		spk_offset = 0;
 		spk_ticks = 0;
-
-		name = u8"猫冢 响";
 	}
 
 	if (spk_ticks-- == 0 && spk_offset < strlen(text)) {
 		int cb = char_uni_bytes(text[spk_offset]);
 
 		spk_offset += cb;
+		if (text[spk_offset - 1] == '@') text[spk_offset - 1] = '\n';
 		memcpy(spk_buffer, text, spk_offset);
+		//printf("%d %c %s\n", spk_offset - 1, spk_buffer[spk_offset - 1], spk_buffer);
 
 		text_content(speak_name, name);
 
@@ -111,10 +153,20 @@ static void sc_ingame_render(void) {
 
 		spk_ticks = cb;
 	}
+	else if (spk_ticks == 0 && spk_offset >= strlen(text)) {
+		spk_offset = -1;
+		spk_ticks = 0;
+	}
+}
+
+static void sc_ingame_music_free(void) {
+	Mix_FreeMusic(bgm);
 }
 
 static void sc_ingame_dispose(void) {
-	Mix_FreeMusic(bgm);
+	Mix_FadeOutMusic(2000);
+
+	Mix_HookMusicFinished(sc_ingame_music_free);
 }
 
 screen_t sc_ingame = {

@@ -13,6 +13,7 @@
 
 #include "engine/fupdate.h"
 #include "engine/screen.h"
+#include "engine/texthold.h"
 
 #include "wrapper/text.h"
 #include "wrapper/image.h"
@@ -77,6 +78,8 @@ int _main(void) {
     screens[3] = sc_fliptest;
 
     screen_init(renderer, 4);
+
+    th_init();
 
     // 메시지 루프
     SDL_Event event;
