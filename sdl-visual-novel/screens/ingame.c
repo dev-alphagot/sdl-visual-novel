@@ -70,7 +70,7 @@ static void sc_ingame_initialize(void) {
 		GYEONGGIMILLENNIUMBATANGB,
 		104, WINDOW_HEIGHT - 104,
 		255, 255, 255, 255,
-		1.0f, 1.0f, H_CENTER, V_CENTER
+		0.8f, 0.8f, H_CENTER, V_CENTER
 	);
 
 	speak_content = -text_add_as(
