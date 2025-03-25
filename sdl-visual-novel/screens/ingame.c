@@ -17,14 +17,18 @@
 static int ntId = 0;
 
 static int bg = 0;
+static int bg_cf = 0;
 static int heroine = 0;
 
 static int speak_bg = 0;
 static int speak_name = 0;
 static int speak_content = 0;
 
-static int task_ticks = -1;
-static int task_emo = 0;
+static int emo_ticks = -1;
+static int emo_index = 0;
+
+static int bg_cf_ticks = -1;
+static int bg_cf_index = 0;
 
 static int spk_ticks = -1;
 static int spk_offset = -1;
@@ -44,9 +48,9 @@ static text_h_t th = { -1, "" };
 static char emo_buf[CHAR_BASE_MAX_PATH + CHAR_EMOTION_MAX_PATH] = "";
 
 static void sc_ingame_emotion(void) {
-	emotion_t emo = chr.emotions[task_emo + 1];
+	emotion_t emo = chr.emotions[emo_index + 1];
 
-	if (task_ticks == 0) {
+	if (emo_ticks == 0) {
 		sprintf(emo_buf, "%s/%s.png", chr.path, emo.path);
 		printf("%s\n", emo.path);
 		image_content(heroine, emo_buf);
@@ -54,22 +58,49 @@ static void sc_ingame_emotion(void) {
 
 	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
 
-	if (task_ticks >= 1 && task_ticks <= 22) {
-		image_move(heroine, 0, (int)ceil(-4 * emo.movement_multiplier * ease_io_expo(task_ticks / 22.0f)));
+	if (emo_ticks >= 1 && emo_ticks <= 22) {
+		image_move(heroine, 0, (int)ceil(-4 * emo.movement_multiplier * ease_io_expo(emo_ticks / 22.0f)));
 	}
-	else if (task_ticks >= 23 && task_ticks <= 44) {
-		image_move(heroine, 0, (int)floor(4 * emo.movement_multiplier * ease_io_expo(1.0f - ((task_ticks - 23) / 22.0f))));
+	else if (emo_ticks >= 23 && emo_ticks <= 44) {
+		image_move(heroine, 0, (int)floor(4 * emo.movement_multiplier * ease_io_expo(1.0f - ((emo_ticks - 23) / 22.0f))));
 	}
 
-	if (task_ticks == 44) {
+	if (emo_ticks == 44) {
 		image_content(heroine, "image/heroine/neutral.png");
-		task_ticks = -2;
+		emo_ticks = -2;
 
-		task_emo++;
-		task_emo %= 7;
+		emo_index++;
+		emo_index %= 7;
 	}
 
-	task_ticks++;
+	emo_ticks++;
+}
+
+static void sc_ingame_bg_cf(void) { // 배경 크로스페이드
+	const char* bgf = bg_cf_index ? "image/bg/Stairs Day.png" : "image/bg/Classroom Day.png";
+
+	if (bg_cf_ticks == 0) {
+		image_content(bg_cf, bgf);
+	}
+
+	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
+
+	if (bg_cf_ticks >= 1 && bg_cf_ticks <= 60) {
+		float va = ease_io_cubic(bg_cf_ticks / 60.0f);
+
+		image_alpha(bg_cf, (uint8_t)ceil(va * 255));
+		image_alpha(bg, (uint8_t)floor((1.0f - va) * 255));
+	}
+
+	if (bg_cf_ticks == 60) {
+		image_content(bg, bgf);
+		image_alpha(bg, 255);
+		image_alpha(bg_cf, 0);
+		bg_cf_ticks = -2;
+		bg_cf_index = ++bg_cf_index % 2;
+	}
+
+	bg_cf_ticks++;
 }
 
 static void sc_ingame_initialize(void) {
@@ -91,6 +122,13 @@ static void sc_ingame_initialize(void) {
 		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
 		0.666667f, 0.666667f, H_CENTER, H_CENTER
 	);
+	bg_cf = -image_add(
+		"image/bg/Stairs Afternoon.png",
+		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
+		0.666667f, 0.666667f, H_CENTER, H_CENTER
+	);
+
+	image_alpha(bg_cf, 0);
 
 	heroine = -image_add(
 		"image/heroine/neutral.png",
@@ -126,9 +164,14 @@ static void sc_ingame_initialize(void) {
 }
 
 static void sc_ingame_render(void) {
-	if (task_ticks < 0 && input_is_keydown(SDLK_a)) {
-		task_ticks = 0;
+	if (emo_ticks < 0 && input_is_keydown(SDLK_a)) {
+		emo_ticks = 0;
 		fupdate_add(45, sc_ingame_emotion);
+	}
+
+	if (bg_cf_ticks < 0 && input_is_keydown(SDLK_s)) {
+		bg_cf_ticks = 0;
+		fupdate_add(61, sc_ingame_bg_cf);
 	}
 
 	if (spk_ticks < 0 && spk_offset < 0 && input_is_keydown(SDLK_z)) {
@@ -161,6 +204,7 @@ static void sc_ingame_render(void) {
 
 static void sc_ingame_music_free(void) {
 	Mix_FreeMusic(bgm);
+	Mix_HookMusicFinished(NULL); // 개같이 버그 해결
 }
 
 static void sc_ingame_dispose(void) {

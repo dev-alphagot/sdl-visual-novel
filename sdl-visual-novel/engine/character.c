@@ -56,7 +56,7 @@ void char_init(void) {
 				int emo_index = (j - 2) >> 1;
 
 				if (j % 2 == 0) {
-					chr.emotions[emo_index].movement_multiplier = atoi(p_buf);
+					chr.emotions[emo_index].movement_multiplier = atof(p_buf);
 				}
 				else {
 					strcpy(chr.emotions[emo_index].path, p_buf);
@@ -69,7 +69,7 @@ void char_init(void) {
 			if (!chr.emotions[a].path) continue;
 			if (!strlen(chr.emotions[a].path)) continue;
 
-			printf(" - MMP %d\tPATH %s/%s\n", chr.emotions[a].movement_multiplier, chr.path, chr.emotions[a].path);
+			printf(" - MMP %f\tPATH %s/%s\n", chr.emotions[a].movement_multiplier, chr.path, chr.emotions[a].path);
 		}
 		puts("");
 		characters[i] = chr;

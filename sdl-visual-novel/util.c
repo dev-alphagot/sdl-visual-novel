@@ -37,3 +37,7 @@ float ease_io_expo(float x) {
         ? (float)(pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2
         : (float)(pow(2 * x - 2, 2) * ((c2 + 1) * (x * 2 - 2) + c2) + 2) / 2;
 }
+
+float ease_io_cubic(float x){
+    return x < 0.5f ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
+}

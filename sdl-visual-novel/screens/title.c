@@ -7,6 +7,8 @@
 #include "../engine/character.h"
 #include "../engine/texthold.h"
 
+#include "../misc.h"
+
 #include <SDL2/SDL_Mixer.h>
 
 static int vTicks = 0;
@@ -56,7 +58,9 @@ static void sc_title_initialize(void) {
 
 	th_load();
 
+#if VERBOSE
 	th_display();
+#endif
 
 	Mix_FadeInMusic(titlemusic, 1 << 30, 5000);
 }
@@ -80,6 +84,7 @@ static void sc_title_render(void) {
 
 static void sc_title_music_free(void) {
 	Mix_FreeMusic(titlemusic);
+	Mix_HookMusicFinished(NULL);
 }
 
 static void sc_title_dispose(void) {

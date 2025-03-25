@@ -2,6 +2,7 @@
 #include "../misc.h"
 
 static image_t images[IMAGE_CAPACITY];
+//static SDL_Texture* image_tex_orig[IMAGE_CAPACITY];
 
 static SDL_Renderer* renderer;
 
@@ -71,6 +72,8 @@ err_image_t image_add(
 
 	SDL_FreeSurface(imageSurface);
 
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
 	SDL_Rect rc = {
 		x - ((int)(ceil(w1 * (halign / 2.0f)))),
 		y - ((int)(ceil(h1 * (valign / 2.0f)))),
@@ -91,7 +94,7 @@ err_image_t image_add(
 	}
 
 	image_t im = {
-		texture, rc, scale_x, scale_y, halign, valign
+		texture, rc, scale_x, scale_y, halign, valign, x == IMAGE_RECT_REUSE ? images[index].a : 255
 	};
 	images[index] = im;
 
@@ -130,10 +133,26 @@ err_image_t image_move(int id, int x, int y) {
 	return 0;
 }
 
+err_image_t image_alpha(int id, uint8_t a) {
+	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
+	images[id].a = a;
+
+	return;
+
+	int res = SDL_SetTextureAlphaMod(images[id].tex, a);
+
+	if (res) {
+		printf("SDL Error @ %s: %d / %s", __func__, res, SDL_GetError());
+	}
+}
+
 void image_render(void) {
 	for (int i = 0; i < IMAGE_CAPACITY; i++) {
 		if (!(images[i].tex)) continue;
 
+		SDL_SetTextureAlphaMod(images[i].tex, images[i].a);
 		SDL_RenderCopy(renderer, images[i].tex, NULL, &images[i].rect);
 	}
 }

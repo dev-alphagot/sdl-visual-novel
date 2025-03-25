@@ -9,7 +9,7 @@
 #define CHAR_INDEX_BUFFER_LENGTH 65536
 
 typedef struct {
-	int movement_multiplier;
+	float movement_multiplier;
 	char path[CHAR_EMOTION_MAX_PATH];
 } emotion_t;
 
