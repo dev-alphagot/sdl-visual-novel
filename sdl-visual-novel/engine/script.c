@@ -25,8 +25,18 @@ int sc_exec(void) {
 		switch (opc) {
 
         case CHAR_SET:
+            short cid = 0;
+            fread(&cid, 2, 1, script);
+
+            chr = characters[cid];
+
             break;
         case BG_CROSSFADE:
+            short cid = 0;
+            fread(&cid, 2, 1, script);
+
+
+
             break;
         case BGM_PLAY:
             break;
