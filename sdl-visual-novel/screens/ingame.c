@@ -28,7 +28,7 @@ static int emo_ticks = -1;
 static int emo_index = 0;
 
 static int bg_cf_ticks = -1;
-static int bg_cf_index = 0;
+       int bg_cf_index = 0;
 
 static int spk_ticks = -1;
 static int spk_offset = -1;
@@ -39,7 +39,7 @@ char name[ 128] = u8" ";
 char text[2048] = u8" ";
 static char  spk_buffer[2048] = "";
 
-static Mix_Music* bgm;
+       Mix_Music* ingame_bgm;
 
 static character_t chr;
 
@@ -77,7 +77,9 @@ static void sc_ingame_emotion(void) {
 }
 
 static void sc_ingame_bg_cf(void) { // 배경 크로스페이드
-	const char* bgf = bg_cf_index ? "image/bg/Stairs Day.png" : "image/bg/Classroom Day.png";
+	char bgf[64] = "";
+
+	sprintf(bgf, "image/bg/%d.png", bg_cf_index);
 
 	if (bg_cf_ticks == 0) {
 		image_content(bg_cf, bgf);
@@ -111,11 +113,6 @@ static void sc_ingame_initialize(void) {
 
 	//printf("%s %s\n", name, text);
 	//printf("START\n");
-
-	bgm = Mix_LoadMUS("sound/bgm/dotabata.ogg");
-	if (bgm == NULL) {
-		fprintf(stderr, "Failed to load music file: %s\n", Mix_GetError());
-	}
 
 	bg = -image_add(
 		"image/bg/Stairs Day.png",
@@ -160,7 +157,7 @@ static void sc_ingame_initialize(void) {
 
 	// Mix_PlayMusic(titlemusic, 1 << 30);
 
-	Mix_FadeInMusic(bgm, 1 << 30, 5000);
+	Mix_FadeInMusic(ingame_bgm, 1 << 30, 5000);
 }
 
 static void sc_ingame_render(void) {
@@ -203,7 +200,7 @@ static void sc_ingame_render(void) {
 }
 
 static void sc_ingame_music_free(void) {
-	Mix_FreeMusic(bgm);
+	Mix_FreeMusic(ingame_bgm);
 	Mix_HookMusicFinished(NULL); // 개같이 버그 해결
 }
 

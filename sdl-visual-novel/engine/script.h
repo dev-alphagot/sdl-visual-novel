@@ -16,5 +16,7 @@ typedef enum {
 	SEL_LOAD,
 	CHAR_SHOW,
 	CHAR_HIDE,
-	WCOLL_ADD // 단어장
+	WCOLL_ADD, // 단어장
+	EMOTE,
+	SE_PLAY
 } opcode_t;
