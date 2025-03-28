@@ -14,6 +14,8 @@
 
 #include <SDL2/SDL_Mixer.h>
 
+#include <stdbool.h>
+
 static int ntId = 0;
 
 static int bg = 0;
@@ -24,6 +26,9 @@ static int speak_bg = 0;
 static int speak_name = 0;
 static int speak_content = 0;
 
+static int cg_id = 0;
+static int cg_show_ticks = -1;
+
 static int emo_ticks = -1;
 static int emo_index = 0;
 
@@ -33,11 +38,11 @@ static int bg_cf_ticks = -1;
 static int spk_ticks = -1;
 static int spk_offset = -1;
 
-static int tid = 100001;
+       int ingame_tid = 100001;
 
-char name[ 128] = u8" ";
-char text[2048] = u8" ";
-static char  spk_buffer[2048] = "";
+	   char ingame_name[ 128] = u8" ";
+	   char ingame_text[2048] = u8" ";
+static char spk_buffer [2048] = "";
 
        Mix_Music* ingame_bgm;
 
@@ -47,8 +52,24 @@ static text_h_t th = { -1, "" };
 
 static char emo_buf[CHAR_BASE_MAX_PATH + CHAR_EMOTION_MAX_PATH] = "";
 
+static char cg_buf[64];
+
+const char* ingame_sel_text[10];
+bool ingame_sel_disp = false;
+int ingame_sel_last = 0; // 0..9
+
+void sc_ingame_text(void) {
+	if (!(spk_ticks < 0 && spk_offset < 0)) return;
+
+	memset(spk_buffer, 0, 2048);
+	th_search(ingame_tid++, &th);
+	memcpy(ingame_text, th.value, 2048);
+	spk_offset = 0;
+	spk_ticks = 0;
+}
+
 static void sc_ingame_emotion(void) {
-	emotion_t emo = chr.emotions[emo_index + 1];
+	emotion_t emo = chr.emotions[emo_index];
 
 	if (emo_ticks == 0) {
 		sprintf(emo_buf, "%s/%s.png", chr.path, emo.path);
@@ -66,11 +87,8 @@ static void sc_ingame_emotion(void) {
 	}
 
 	if (emo_ticks == 44) {
-		image_content(heroine, "image/heroine/neutral.png");
+		// image_content(heroine, "image/heroine/neutral.png");
 		emo_ticks = -2;
-
-		emo_index++;
-		emo_index %= 7;
 	}
 
 	emo_ticks++;
@@ -105,11 +123,65 @@ static void sc_ingame_bg_cf(void) { // 배경 크로스페이드
 	bg_cf_ticks++;
 }
 
+static void sc_ingame_cg_show_task(void) { // 배경 크로스페이드
+
+	if (cg_show_ticks == 0) {
+		image_content(cg_id, cg_buf);
+	}
+
+	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
+
+	if (cg_show_ticks >= 1 && cg_show_ticks <= 60) {
+		float va = ease_io_cubic(cg_show_ticks / 60.0f);
+
+		image_alpha(cg_id, (uint8_t)ceil(va * 255));
+	}
+
+	if (cg_show_ticks == 60) {
+		cg_show_ticks = -2;
+	}
+
+	cg_show_ticks++;
+}
+
+static void sc_ingame_cg_hide_task(void) { // 배경 크로스페이드
+	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
+
+	if (cg_show_ticks >= 1 && cg_show_ticks <= 60) {
+		float va = 1.0f - ease_io_cubic(cg_show_ticks / 60.0f);
+
+		image_alpha(cg_id, (uint8_t)floor(va * 255));
+	}
+
+	if (cg_show_ticks == 60) {
+		cg_show_ticks = -2;
+	}
+
+	cg_show_ticks++;
+}
+
+void sc_ingame_cg_show(short id) {
+	sprintf(cg_buf, "image/cg/%d.png", id);
+	cg_show_ticks = 0;
+	fupdate_add(61, sc_ingame_cg_show_task);
+}
+
+void sc_ingame_cg_hide(void) {
+	cg_show_ticks = 0;
+	fupdate_add(61, sc_ingame_cg_hide_task);
+}
+
+void sc_ingame_emote(int ei) {
+	emo_ticks = 0;
+	emo_index = ei;
+	fupdate_add(45, sc_ingame_emotion);
+}
+
 static void sc_ingame_initialize(void) {
 	chr = characters[0];
 
 	th_search(100000, &th);
-	memcpy(name, th.value, 128);
+	memcpy(ingame_name, th.value, 128);
 
 	//printf("%s %s\n", name, text);
 	//printf("START\n");
@@ -139,8 +211,14 @@ static void sc_ingame_initialize(void) {
 		1.0f, 1.0f, H_CENTER, BOTTOM
 	);
 
+	cg_id = -image_add(
+		"image/cg/1.png",
+		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
+		1.0f, 1.0f, H_CENTER, V_CENTER
+	);
+
 	speak_name = -text_add_as(
-		name,
+		ingame_name,
 		GYEONGGIMILLENNIUMBATANGB,
 		104, WINDOW_HEIGHT - 104,
 		255, 255, 255, 255,
@@ -173,27 +251,27 @@ static void sc_ingame_render(void) {
 
 	if (spk_ticks < 0 && spk_offset < 0 && input_is_keydown(SDLK_z)) {
 		memset(spk_buffer, 0, 2048);
-		th_search(tid++, &th);
-		memcpy(text, th.value, 2048);
+		th_search(ingame_tid++, &th);
+		memcpy(ingame_text, th.value, 2048);
 		spk_offset = 0;
 		spk_ticks = 0;
 	}
 
-	if (spk_ticks-- == 0 && spk_offset < strlen(text)) {
-		int cb = char_uni_bytes(text[spk_offset]);
+	if (spk_ticks-- == 0 && spk_offset < strlen(ingame_text)) {
+		int cb = char_uni_bytes(ingame_text[spk_offset]);
 
 		spk_offset += cb;
-		if (text[spk_offset - 1] == '@') text[spk_offset - 1] = '\n';
-		memcpy(spk_buffer, text, spk_offset);
+		if (ingame_text[spk_offset - 1] == '@') ingame_text[spk_offset - 1] = '\n';
+		memcpy(spk_buffer, ingame_text, spk_offset);
 		//printf("%d %c %s\n", spk_offset - 1, spk_buffer[spk_offset - 1], spk_buffer);
 
-		text_content(speak_name, name);
+		text_content(speak_name, ingame_name);
 
 		text_content(speak_content, spk_buffer);
 
 		spk_ticks = cb;
 	}
-	else if (spk_ticks == 0 && spk_offset >= strlen(text)) {
+	else if (spk_ticks == 0 && spk_offset >= strlen(ingame_text)) {
 		spk_offset = -1;
 		spk_ticks = 0;
 	}

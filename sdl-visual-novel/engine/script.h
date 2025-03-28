@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdbool.h>
+
 typedef enum {
 	CHAR_SET = 1,
 	BG_CROSSFADE,
@@ -20,3 +22,9 @@ typedef enum {
 	EMOTE,
 	SE_PLAY
 } opcode_t;
+
+extern uint8_t sc_sel_storage[];
+
+extern bool* sc_word_collected;
+
+int sc_exec(void);
