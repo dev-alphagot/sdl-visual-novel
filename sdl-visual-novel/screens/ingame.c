@@ -67,6 +67,8 @@ static int ingame_sel_txt_ids[10];
 
 static int imx = 10;
 
+static int spk_bg_hide_tick = 0;
+
 void sc_ingame_text(void) {
 	if (!(spk_ticks < 0 && spk_offset < 0)) return;
 
@@ -346,6 +348,20 @@ static void sc_ingame_initialize(void) {
 static void sc_ingame_render(void) {
 	while (!sc_exec()) {}
 
+	if (!(!ingame_name || !spk_buffer)) {
+		if (strlen(ingame_name) == 0 && strlen(spk_buffer) == 0) {
+			spk_bg_hide_tick++;
+
+			if (spk_bg_hide_tick > 3) {
+				image_alpha(speak_bg, 0);
+			}
+		}
+		else {
+			image_alpha(speak_bg, 255);
+			spk_bg_hide_tick = 0;
+		}
+	}
+
 	if (emo_ticks < 0 && input_is_keydown(SDLK_a)) {
 		emo_ticks = 0;
 		fupdate_add(45, sc_ingame_emotion);
@@ -414,15 +430,6 @@ static void sc_ingame_render(void) {
 		spk_ticks = 0;
 
 		sc_delay = 65534;
-	}
-
-	if (!(!ingame_name || !spk_buffer)) {
-		if (strlen(ingame_name) == 0 && strlen(spk_buffer) == 0) {
-			image_alpha(speak_bg, 0);
-		}
-		else {
-			image_alpha(speak_bg, 255);
-		}
 	}
 }
 
