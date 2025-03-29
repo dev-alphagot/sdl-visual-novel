@@ -357,6 +357,8 @@ static void sc_ingame_render(void) {
 	}
 
 	if (sc_delay == 65534 && input_is_keydown(SDLK_z)) {
+		memset(ingame_name, 0, 128);
+		memset(spk_buffer, 0, 2048);
 		text_content(speak_name, "");
 		text_content(speak_content, "");
 		sc_delay = 0;
@@ -412,6 +414,15 @@ static void sc_ingame_render(void) {
 		spk_ticks = 0;
 
 		sc_delay = 65534;
+	}
+
+	if (!(!ingame_name || !spk_buffer)) {
+		if (strlen(ingame_name) == 0 && strlen(spk_buffer) == 0) {
+			image_alpha(speak_bg, 0);
+		}
+		else {
+			image_alpha(speak_bg, 255);
+		}
 	}
 }
 
