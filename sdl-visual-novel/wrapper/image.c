@@ -114,12 +114,20 @@ err_image_t image_remove(int index) {
 
 // 성공 시 (인덱스 * -1)을 반환. 원래 인덱스랑 같은 인덱스를 반환하지 않는 경우도 있음.
 err_image_t image_content(int id, const char* new_path) {
-	image_t tx = images[id];
+	SDL_Surface* imageSurface;
+	if (!(imageSurface = IMG_Load(new_path))) return IMAGE_INVALID_PATH;
 
-	if (image_remove(id)) return IMAGE_INVALID_INDEX;
-	return image_add(
-		new_path, IMAGE_RECT_REUSE, tx.rect.y, tx.scale_x, tx.scale_y, tx.halign, tx.valign
-	);
+	SDL_Texture* texture;
+	if (!(texture = SDL_CreateTextureFromSurface(renderer, imageSurface))) return IMAGE_SURFACE_NULL;
+
+	SDL_FreeSurface(imageSurface);
+
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+	SDL_DestroyTexture(images[id].tex);
+	images[id].tex = texture;
+
+	return 0;
 }
 
 err_image_t image_move(int id, int x, int y) {

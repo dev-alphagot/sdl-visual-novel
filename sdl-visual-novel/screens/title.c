@@ -58,7 +58,7 @@ static void sc_title_initialize(void) {
 
 	th_load();
 
-#if VERBOSE
+#if !VERBOSE
 	th_display();
 #endif
 
@@ -68,7 +68,7 @@ static void sc_title_initialize(void) {
 static void sc_title_render(void) {
 	if (vTicks >= 60 && vTicks <= 111) {
 		int a = (vTicks - 60) * 5;
-		ntId = -text_color(ntId, a, a, a, 254);
+		text_color(ntId, a, a, a, 254);
 	}
 
 	if (input_is_keydown(SDLK_RETURN)) {

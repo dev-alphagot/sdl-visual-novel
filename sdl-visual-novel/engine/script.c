@@ -10,22 +10,22 @@
 #include "character.h"
 #include "texthold.h"
 
+#include "../wrapper/image.h"
+
 #include "../screens/ingame.h"
 
 static FILE* script;
 
-static character_t chr;
+       int reg   = 0;
+       int sc_delay = 65;
 
-static int reg   = 0;
-static int delay = 0;
-
-static char fnb[64] = "";
+static char fnb[80] = "";
 
 static Mix_Music* ingame_bgm_w;
 
 uint8_t sc_sel_storage[128] = { 0 };
 
-bool* sc_word_collected;
+bool* sc_word_collected = NULL;
 
 static void sc_bgm_fadein(void) {
 	Mix_FreeMusic(ingame_bgm);
@@ -33,70 +33,122 @@ static void sc_bgm_fadein(void) {
 	ingame_bgm = ingame_bgm_w;
 }
 
+void sc_forcejump(int offset) {
+	fseek(script, offset, SEEK_SET);
+}
+
 int sc_exec(void) {
+    if (!sc_word_collected) {
+        sc_word_collected = malloc(sizeof(bool) * 128);
+    }
+
+    if (!script) {
+        script = fopen("def/scripts/prologue.bin", "rb");
+    }
+
 	do {
-		opcode_t opc;
+        if (sc_delay > 0) {
+            if(sc_delay < 65534) sc_delay--;
+            return 1;
+        }
+
+		opcode_t opc = 0;
 
 		if (feof(script)) return -1;
 		fread(&opc, 1, 1, script);
 
+		printf("Script Offset %d OpCode: %d\n", ftell(script), opc);
+
 		switch (opc) {
 
         case CHAR_SET:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
-            chr = characters[cid];
+			for (int i = 0; i < CHAR_CAPACITY; i++) {
+				if (characters[i].id == cid) {
+					chr = characters[i];
+					break;
+				}
+			}
+
+            if (cid != 990) {
+                sprintf(fnb, "%s/%s.png", chr.path, chr.emotions[0].path); 
+                image_content(ingame_char, fnb);
+            }
 
             break;
+        }
         case BG_CROSSFADE:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
-			bg_cf_index = cid;
+            bg_cf_index = cid;
+            sc_ingame_bg_cf_start();
+            sc_delay = 60;
 
             break;
+        }
         case BGM_PLAY:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
-			sprintf(fnb, "sound/bgm/%d.ogg", cid);
-			ingame_bgm_w = Mix_LoadMUS(fnb);
+            sprintf(fnb, "sound/bgm/%d.ogg", cid);
+            ingame_bgm_w = Mix_LoadMUS(fnb);
 
-			Mix_FadeOutMusic(2000);
-			Mix_HookMusicFinished(sc_bgm_fadein);
+            if (ingame_bgm) {
+                Mix_FadeOutMusic(2000);
+                Mix_HookMusicFinished(sc_bgm_fadein);
+            }
+            else {
+                ingame_bgm = ingame_bgm_w;
+				Mix_FadeInMusic(ingame_bgm, 1 << 30, 2000);
+            }
 
             break;
+        }
         case CG_SHOW:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
             sc_ingame_cg_show(cid);
-            delay = 60;
+            sc_delay = 60;
 
             break;
+        }
         case CG_HIDE:
+        {
             sc_ingame_cg_hide();
-            delay = 60;
+            sc_delay = 60;
 
             break;
+        }
         case TEXT:
+        {
+            sc_delay = 65536;
+
             text_h_t th = { -1, "" };
 
             th_search(chr.id * 100000, &th);
 
             strcpy_s(ingame_name, 128, th.value);
 
-            short cid = 0;
-            fread(&cid, 2, 1, script);
+            int cid = 0;
+            fread(&cid, 4, 1, script);
 
-            th_search(chr.id * 100000 + cid, &th);
+            th_search(cid, &th);
 
             strcpy_s(ingame_text, 2048, th.value);
 
             sc_ingame_text();
             break;
+        }
         case SEL_ADD:
+        {
             uint8_t cix = 0;
             short cid = 0;
             int ciw = 0;
@@ -106,67 +158,100 @@ int sc_exec(void) {
             fread(&cid, 2, 1, script);
             fread(&ciw, 4, 1, script);
 
-            cix--;
+			printf("SEL_ADD %d %d %d\n", cix, cid, ciw);
 
-            th_search(chr.id * 100000 + ciw, &th);
+            th_search(ciw, &th);
 
             if (!(cix > 0 && cix < 10)) break;
 
-            ingame_sel_text[cix] = th.value;
+            ingame_sel_text[cix - 1] = th.value;
+			ingame_sel_offs[cix - 1] = cid;
+            printf("%p %p\n", th.value, ingame_sel_text[cix - 1]);
 
             break;
+        }
         case SEL_DISP:
-            ingame_sel_last = -1;
-            ingame_sel_disp = true;
+        {
+            sc_delay = 65535;
+            sc_ingame_sel_disp();
             break;
+        }
         case JUMP:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
-			fseek(script, cid, SEEK_SET);
+            fseek(script, cid, SEEK_SET);
 
             break;
+        }
         case COMPARE_JUMP:
+        {
             uint8_t ccd = 0;
             short cid = 0;
             fread(&ccd, 1, 1, script);
             fread(&cid, 2, 1, script);
 
-			if (reg == ccd) fseek(script, cid, SEEK_SET);
+            printf("%d %d %d %d\n", reg, ccd, reg == ccd, cid);
+            if (reg == ccd) fseek(script, cid, SEEK_SET);
 
             break;
+        }
         case WAIT:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
-			delay = cid;
+            sc_delay = cid;
             break;
+        }
         case SEL_SAVE:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
             sc_sel_storage[cid] = reg;
 
             break;
+        }
         case SEL_LOAD:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
             reg = sc_sel_storage[cid];
 
             break;
+        }
         case CHAR_SHOW:
+        {
+            sc_ingame_char_show();
+            sc_delay = 60;
             break;
+        }
         case CHAR_HIDE:
+        {
+            sc_ingame_char_hide();
+            sc_delay = 60;
             break;
+        }
         case WCOLL_ADD:
+        {
+            int cid = 0;
+            fread(&cid, 4, 1, script);
+
+            sc_word_collected[cid - 99800000] = true;
             break;
+        }
         case EMOTE:
+        {
             uint8_t cid = 0;
             fread(&cid, 1, 1, script);
             sc_ingame_emote(cid);
-			break;
+            break;
+        }
 		case SE_PLAY:
+        {
             short cid = 0;
             fread(&cid, 2, 1, script);
 
@@ -175,9 +260,10 @@ int sc_exec(void) {
 
             Mix_PlayChannel(-1, r, 0);
 
-			break;
+            break;
+        }
 		}
-    } while (delay == 0);
+    } while (sc_delay == 0);
 
 	return 0;
 }

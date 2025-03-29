@@ -1,6 +1,6 @@
 #pragma once
 
-#define CHAR_CAPACITY 16
+#define CHAR_CAPACITY 32
 
 #define CHAR_BASE_MAX_PATH 64
 #define CHAR_EMOTION_MAX_PATH 16

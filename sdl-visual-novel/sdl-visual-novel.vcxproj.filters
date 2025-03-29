@@ -60,23 +60,23 @@
     <ClCompile Include="screens\title.c">
       <Filter>소스 파일\screens</Filter>
     </ClCompile>
-    <ClCompile Include="engine\character.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\texthold.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="screens\fliptest.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="screens\ingame.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="wrapper\input.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="engine\script.c">
       <Filter>소스 파일\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\texthold.c">
+      <Filter>소스 파일\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\character.c">
+      <Filter>소스 파일\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="screens\ingame.c">
+      <Filter>소스 파일\screens</Filter>
+    </ClCompile>
+    <ClCompile Include="screens\fliptest.c">
+      <Filter>소스 파일\screens</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper\input.c">
+      <Filter>소스 파일\wrapper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,22 +107,22 @@
     <ClInclude Include="screens\title.h">
       <Filter>헤더 파일\screens</Filter>
     </ClInclude>
-    <ClInclude Include="engine\character.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\texthold.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="engine\script.h">
+      <Filter>헤더 파일\engine</Filter>
     </ClInclude>
     <ClInclude Include="screens\fliptest.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\screens</Filter>
     </ClInclude>
     <ClInclude Include="screens\ingame.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\screens</Filter>
     </ClInclude>
     <ClInclude Include="wrapper\input.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="engine\script.h">
+    <ClInclude Include="engine\character.h">
+      <Filter>헤더 파일\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\texthold.h">
       <Filter>헤더 파일\engine</Filter>
     </ClInclude>
   </ItemGroup>

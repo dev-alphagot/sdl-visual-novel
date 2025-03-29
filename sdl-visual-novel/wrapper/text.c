@@ -11,6 +11,7 @@ static text_t       texts[TEXT_CAPACITY];
 static SDL_Texture* text_textures[TEXT_CAPACITY];
 static SDL_Surface* surfaces[TEXT_CAPACITY];
 static SDL_Rect     rects[TEXT_CAPACITY];
+static int          wrapCache[TEXT_CAPACITY];
 
 static TTF_Font*    fonts[FONT_COUNT];
 
@@ -42,7 +43,7 @@ err_text_t text_init(SDL_Renderer* _renderer) {
 		if (!(fonts[i] = TTF_OpenFont(ss, 48))) {
 			return TEXT_FONT_LOAD_FAILED;
 		}
-		TTF_SetFontHinting(fonts[i], TTF_HINTING_LIGHT);
+		TTF_SetFontHinting(fonts[i], TTF_HINTING_NORMAL);
 	}
 
 
@@ -138,7 +139,7 @@ err_text_t text_add_o(
 
 	//tx.w = w;
 	//texts[index] = tx;
-
+	wrapCache[index] = (int)ceil(w / sx);
 	surfaces[index] = TTF_RenderUTF8_Blended_Wrapped(fonts[tx.font], tx.text, tx.color, (int)ceil(w / sx));
 #if VERBOSE
 	if (!surfaces[index])
@@ -152,6 +153,9 @@ err_text_t text_add_o(
 		printf("SDL Error @ %s: %s\n", __func__, SDL_GetError());
 #endif
 	if (!text_textures[index]) return TEXT_FONT_TEXTURE_NULL;
+
+	SDL_SetSurfaceBlendMode(surfaces[index], SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode(text_textures[index], SDL_BLENDMODE_BLEND);
 
 	int wx = w;
 	int wy = (int)ceil(surfaces[index]->h * sy);
@@ -229,14 +233,21 @@ err_text_t text_content(int id, const char* content) {
 
 // 성공 시 (인덱스 * -1)을 반환. 원래 인덱스랑 같은 인덱스를 반환하지 않는 경우도 있음.
 err_text_t text_color(int id, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-	text_t tx = texts[id];
+	if (id < 0 || id >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
 
-	SDL_Color clr = { r, g, b, a };
+	if (!texts[id].text) return TEXT_INVALID_INDEX;
 
-	if (text_remove(id)) return TEXT_INVALID_INDEX;
-	return text_add_o(
-		tx.text, clr, tx.font, tx.x, tx.y, tx.w, tx.scale_x, tx.scale_y, tx.halign, tx.valign
-	);
+	SDL_Color cc = { r, g, b, a };
+
+	texts[id].color = cc;
+
+	SDL_FreeSurface(surfaces[id]);
+	SDL_DestroyTexture(text_textures[id]);
+
+	surfaces[id] = TTF_RenderUTF8_Blended_Wrapped(fonts[texts[id].font], texts[id].text, cc, wrapCache[id]);
+	text_textures[id] = SDL_CreateTextureFromSurface(renderer, surfaces[id]);
+
+	return 0;
 }
 
 void text_render(void) {

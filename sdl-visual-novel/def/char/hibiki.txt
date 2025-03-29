@@ -1,19 +1,9 @@
-18
+8
 1
-image/heroine
-0
-neutral
-1
-angry c
-2
-mad
-1
+image/char/hibiki
+0.0
+smile
+0.0
 smile c
--1
-sad
-2
-surprised
-0
-shsusus
-1
-happy
+1.0
+mad c

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef enum {
 	CHAR_SET = 1,
@@ -23,8 +24,13 @@ typedef enum {
 	SE_PLAY
 } opcode_t;
 
+extern int reg;
+extern int sc_delay;
+
 extern uint8_t sc_sel_storage[];
 
 extern bool* sc_word_collected;
+
+void sc_forcejump(int offset);
 
 int sc_exec(void);

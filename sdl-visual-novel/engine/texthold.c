@@ -100,11 +100,11 @@ void th_search(int key, text_h_t* out) {
     if (flag == 1) { // 키를 찾았다면
         memcpy(out, node, sizeof(text_h_t));
         // out = node;
-        printf("\n 키는 [ %d ], 값은 [ %s ] 입니다. \n", node->key, node->value);
+        printf(" 키는 [ %d ], 값은 [ %s ] 입니다. \n", node->key, node->value);
     }
     else {
         memcpy(out, calloc(1, sizeof(text_h_t)), sizeof(text_h_t));
-        printf("\n 존재하지 않는 키는 찾을 수 없습니다. \n");
+        printf(" 존재하지 않는 키는 찾을 수 없습니다. \n");
     }
 }
 
@@ -141,7 +141,11 @@ void th_load(void) {
         FILE* file = fopen(nbuf, "rt");
         char* fbuf = (char*)malloc(65536);
 
-        if (!fbuf || !file) return;
+        if (!fbuf || !file) {
+            free(fbuf);
+			continue;
+        }
+        printf("%s START\n", nbuf);
 
         while (!feof(file)) {
             fgets(fbuf, 65536, file);
@@ -157,5 +161,7 @@ void th_load(void) {
                 else th_add(characters[i].id * 100000 + dd, _strdup(st));
             }
         }
+        printf("%s COMPLETED\n", nbuf);
+        free(fbuf);
     }
 }
