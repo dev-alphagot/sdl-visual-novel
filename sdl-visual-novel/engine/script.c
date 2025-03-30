@@ -199,7 +199,7 @@ int sc_exec(void) {
         }
         case WAIT:
         {
-            short cid = 0;
+            unsigned short cid = 0;
             fread(&cid, 2, 1, script);
 
             sc_delay = cid;
@@ -259,6 +259,15 @@ int sc_exec(void) {
             Mix_Chunk* r = Mix_LoadWAV(fnb);
 
             Mix_PlayChannel(-1, r, 0);
+
+            break;
+        }
+        case CG_CONTENT:
+        {
+            short cid = 0;
+            fread(&cid, 2, 1, script);
+
+            sc_ingame_cg_content(cid);
 
             break;
         }

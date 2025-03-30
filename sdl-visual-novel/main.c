@@ -10,6 +10,7 @@
 #include <stdbool.h>
 
 #include "window.h"
+#include "util.h"
 
 #include "engine/fupdate.h"
 #include "engine/screen.h"
@@ -83,8 +84,6 @@ int _main(void) {
 
     // 메시지 루프
     SDL_Event event;
-
-    int quit = 0;
 
     FPSmanager fpsManager;
     SDL_initFramerate(&fpsManager);

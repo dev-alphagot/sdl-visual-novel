@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <math.h>
 
+int quit = 0;
+
 void iclamp(int* v, int mi, int mx) {
 	if (*v < mi) *v = mi;
 	else if (*v > mx) *v = mx;

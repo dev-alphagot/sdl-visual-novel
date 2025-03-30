@@ -29,6 +29,7 @@ extern int ingame_sel_last; // 0..9
 void sc_ingame_text(void);
 
 void sc_ingame_cg_show(short id);
+void sc_ingame_cg_content(short id);
 void sc_ingame_cg_hide(void);
 
 void sc_ingame_char_show(void);

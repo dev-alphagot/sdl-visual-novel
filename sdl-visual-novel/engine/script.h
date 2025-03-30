@@ -21,7 +21,8 @@ typedef enum {
 	CHAR_HIDE,
 	WCOLL_ADD, // 단어장
 	EMOTE,
-	SE_PLAY
+	SE_PLAY,
+	CG_CONTENT
 } opcode_t;
 
 extern int reg;

@@ -135,7 +135,11 @@ static void sc_ingame_bg_cf(void) { // 배경 크로스페이드
 static void sc_ingame_cg_show_task(void) { // 배경 크로스페이드
 
 	if (cg_show_ticks == 0) {
-		image_content(cg_id, cg_buf);
+		image_remove(cg_id);
+		cg_id = -image_add(
+			cg_buf, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 1.0f, 1.0f, H_CENTER, V_CENTER
+		);
+		image_alpha(cg_id, 0);
 	}
 
 	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
@@ -153,9 +157,7 @@ static void sc_ingame_cg_show_task(void) { // 배경 크로스페이드
 	cg_show_ticks++;
 }
 
-static void sc_ingame_cg_hide_task(void) { // 배경 크로스페이드
-	// printf("%f\n", task_ticks > 15 ? ease_io_expo(1.0f - ((task_ticks - 15) / 15.0f)) : ease_io_expo(task_ticks / 15.0f));
-
+static void sc_ingame_cg_hide_task(void) {
 	if (cg_show_ticks >= 1 && cg_show_ticks <= 60) {
 		float va = 1.0f - ease_io_cubic(cg_show_ticks / 60.0f);
 
@@ -206,6 +208,11 @@ void sc_ingame_cg_show(short id) {
 void sc_ingame_cg_hide(void) {
 	cg_show_ticks = 0;
 	fupdate_add(61, sc_ingame_cg_hide_task);
+}
+
+void sc_ingame_cg_content(short id) {
+	sprintf(cg_buf, "image/cg/%d.png", id);
+	image_content(cg_id, cg_buf);
 }
 
 void sc_ingame_char_show(void) {
