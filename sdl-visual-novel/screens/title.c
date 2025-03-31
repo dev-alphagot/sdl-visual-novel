@@ -152,7 +152,7 @@ static void sc_title_render(void) {
 			screen_change("ingame");
 			break;
 		case 2:
-			screen_change("wordcoll");
+			screen_change("wcoll");
 			break;
 		case 3:
 			screen_change("config");

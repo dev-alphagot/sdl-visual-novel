@@ -78,6 +78,9 @@
     <ClCompile Include="wrapper\input.c">
       <Filter>소스 파일\wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="screens\wcoll.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="engine\texthold.h">
       <Filter>헤더 파일\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="screens\wcoll.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

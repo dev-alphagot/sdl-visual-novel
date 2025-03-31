@@ -148,6 +148,7 @@
     <ClCompile Include="screens\ingame.c" />
     <ClCompile Include="screens\notice.c" />
     <ClCompile Include="screens\title.c" />
+    <ClCompile Include="screens\wcoll.c" />
     <ClCompile Include="util.c" />
     <ClCompile Include="wrapper\image.c" />
     <ClCompile Include="wrapper\input.c" />
@@ -164,6 +165,7 @@
     <ClInclude Include="screens\ingame.h" />
     <ClInclude Include="screens\notice.h" />
     <ClInclude Include="screens\title.h" />
+    <ClInclude Include="screens\wcoll.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="wrapper\image.h" />

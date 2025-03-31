@@ -24,6 +24,7 @@
 #include "screens/title.h"
 #include "screens/ingame.h"
 #include "screens/fliptest.h"
+#include "screens/wcoll.h"
 
 int _main(void) {
     SDL_Window* window = NULL;
@@ -77,8 +78,9 @@ int _main(void) {
     screens[1] = sc_title;
     screens[2] = sc_ingame;
     screens[3] = sc_fliptest;
+    screens[4] = sc_wcoll;
 
-    screen_init(renderer, 4);
+    screen_init(renderer, 5);
 
     th_init();
 
