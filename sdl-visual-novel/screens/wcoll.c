@@ -53,7 +53,14 @@ static void sc_wcoll_initialize(void) {
 	image_alpha(wcoll_ltb, 250);
 
 	wcoll_segment_txt = -text_add_as(
-		u8"", GYEONGGIMILLENNIUMBATANGB, 185, 135, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"단어장을 뒤적거리는 학습자를 위한 안내서", GYEONGGIMILLENNIUMBATANGB, 185, 135, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+	);
+
+	text_add_as(
+		u8"      단어장의 페이지는 ←→ 키를 이용해 넘길 수 있습니다.", COMBINED, 185, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+	);
+	text_add_as(
+		u8"      ↑↓ 키를 이용해 위아래로 스크롤할 수 있습니다.", COMBINED, 185, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 }
 
