@@ -188,6 +188,10 @@ static void sc_wcoll_render(void) {
 	else if (input_is_keydown(SDLK_DOWN)) {
 		sc_wcoll_scroll(-1);
 	}
+
+	if (input_is_keydown(SDLK_x)) {
+		screen_change("title");
+	}
 }
 
 static void sc_wcoll_dispose(void) {}
