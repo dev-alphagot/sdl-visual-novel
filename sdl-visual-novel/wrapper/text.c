@@ -250,6 +250,17 @@ err_text_t text_color(int id, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	return 0;
 }
 
+err_text_t text_move(int id, int x, int y) {
+	if (id < 0 || id >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
+
+	if (!(text_textures[id])) return TEXT_INVALID_INDEX;
+
+	rects[id].x += x;
+	rects[id].y += y;
+
+	return 0;
+}
+
 void text_render(void) {
 	for (int i = 0; i < TEXT_CAPACITY; i++) {
 		if (!(texts[i].text)) continue;

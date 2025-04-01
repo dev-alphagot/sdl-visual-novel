@@ -89,12 +89,13 @@ void th_search(int key, text_h_t* out) {
     int hashIndex = hashFunction(key);
     text_h_t* node = hashTable[hashIndex].head;
     int flag = 0;
-    while (node != NULL)
+    while (node != NULL && node != 0xFFFFFFFFFFFFFFFF)
     {
         if (node->key == key) {
             flag = 1;
             break;
         }
+
         node = node->next;
     }
     if (flag == 1) { // 키를 찾았다면

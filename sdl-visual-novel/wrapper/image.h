@@ -4,7 +4,7 @@
 #include <SDL2/SDL_Image.h>
 #include "../util.h"
 
-#define IMAGE_CAPACITY 16
+#define IMAGE_CAPACITY 32
 
 #define IMAGE_RECT_REUSE -3250000
 
@@ -47,7 +47,11 @@ err_image_t image_content(int id, const char* new_path);
 
 err_image_t image_move(int id, int x, int y);
 
+err_image_t image_pos(int id, int x, int y);
+
 err_image_t image_alpha(int id, uint8_t a);
+
+err_image_t image_get_rect(int id, SDL_Rect* const rc);
 
 void image_render(void);
 

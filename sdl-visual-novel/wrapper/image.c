@@ -141,6 +141,32 @@ err_image_t image_move(int id, int x, int y) {
 	return 0;
 }
 
+err_image_t image_pos(int id, int x, int y) {
+	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
+
+	image_t im = images[id];
+
+	images[id].rect.x = x;
+	images[id].rect.y = y;
+
+	images[id].rect.x -= ((int)(ceil(images[id].rect.w * (im.halign / 2.0f))));
+	images[id].rect.y -= ((int)(ceil(images[id].rect.h * (im.valign / 2.0f))));
+
+	return 0;
+}
+
+err_image_t image_get_rect(int id, SDL_Rect* const rc) {
+	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
+
+	memcpy(rc, &images[id].rect, sizeof(SDL_Rect));
+
+	return 0;
+}
+
 err_image_t image_alpha(int id, uint8_t a) {
 	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
 
