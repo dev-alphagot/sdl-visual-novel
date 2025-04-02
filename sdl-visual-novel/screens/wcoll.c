@@ -174,10 +174,10 @@ static void sc_wcoll_initialize(void) {
 	}
 
 	wcoll_txts[0] = -text_add_as(
-		u8"단어장의 페이지는 ←→ 키를 이용해 넘길 수 있습니다.", COMBINED, 220, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"단어장의 페이지는 ← → 키를 이용해 넘길 수 있습니다.", COMBINED, 220, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 	wcoll_txts[1] = -text_add_as(
-		u8"↑↓ 키를 이용해 위아래로 스크롤할 수 있습니다.", COMBINED, 220, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"↑ ↓ 키를 이용해 위아래로 스크롤할 수 있습니다.", COMBINED, 220, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 	wcoll_txts[2] = -text_add_as(
 		u8"X 키를 이용해 타이틀 화면으로 돌아갈 수 있습니다.", COMBINED, 220, 135 + 60 * 3, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP

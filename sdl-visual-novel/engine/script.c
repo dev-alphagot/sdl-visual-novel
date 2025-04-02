@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include <SDL2/SDL_Mixer.h>
 
@@ -297,10 +298,23 @@ void sc_init(void) {
     sc_words = wcnt;
 
     sc_word_collected = calloc(sizeof(bool), wcnt);
+    if (!sc_word_collected) return;
+
+    FILE* save = fopen("save.bin", "rb");
+    if (!save) return;
+    fseek(save, sizeof(time_t), SEEK_CUR);
+    fread(sc_sel_storage, 1, 128, save);
+    
+    int swd = 0;
+    fread(&swd, 4, 1, save);
+    fread(sc_word_collected, wcnt > swd ? swd : wcnt, 1, save);
+    fclose(save);
 }
 
 void sc_save(void) {
+    time_t tm = time(NULL);
     FILE* save = fopen("save.bin", "wb");
+    fwrite(&tm, sizeof(time_t), 1, save);
     fwrite(sc_sel_storage, 1, 128, save);
     fwrite(&sc_words, 4, 1, save);
     fwrite(sc_word_collected, sc_words, 1, save);
