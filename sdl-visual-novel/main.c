@@ -84,6 +84,8 @@ int _main(void) {
 
     th_init();
 
+    Mix_VolumeMusic(vol_bgm);
+
     // 메시지 루프
     SDL_Event event;
 

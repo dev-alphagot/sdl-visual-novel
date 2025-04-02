@@ -261,6 +261,32 @@ err_text_t text_move(int id, int x, int y) {
 	return 0;
 }
 
+err_text_t text_pos(int id, int x, int y) {
+	if (id < 0 || id >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
+
+	if (!(text_textures[id])) return TEXT_INVALID_INDEX;
+
+	text_t im = texts[id];
+
+	rects[id].x = x;
+	rects[id].y = y;
+
+	rects[id].x -= ((int)(ceil(rects[id].w * (im.halign / 2.0f))));
+	rects[id].y -= ((int)(ceil(rects[id].h * (im.valign / 2.0f))));
+
+	return 0;
+}
+
+err_text_t text_get_rect(int id, SDL_Rect* const rc) {
+	if (id < 0 || id >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
+
+	if (!(text_textures[id])) return TEXT_INVALID_INDEX;
+
+	memcpy(rc, rects + id, sizeof(SDL_Rect));
+
+	return 0;
+}
+
 void text_render(void) {
 	for (int i = 0; i < TEXT_CAPACITY; i++) {
 		if (!(texts[i].text)) continue;

@@ -7,13 +7,14 @@
 #include "../engine/screen.h"
 #include "../engine/character.h"
 #include "../engine/texthold.h"
+#include "../engine/script.h"
 
 #include "../misc.h"
 #include "../util.h"
 
 #include <SDL2/SDL_Mixer.h>
 
-#define OP_COUNT 5
+#define OP_COUNT 4
 
 static int vTicks = 0;
 static int ntId = 0;
@@ -28,14 +29,13 @@ static const char* op_ctt[OP_COUNT] = {
 	u8"처음부터",
 	u8"이어서",
 	u8"단어장",
-	u8"환경설정",
 	u8"종료"
 };
 
 static Mix_Music* titlemusic;
 
 static void sc_title_op_highlight(void) {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < OP_COUNT; i++) {
 		image_alpha(op_img[i], 128);
 		text_color(op_txt[i], 0, 0, 0, 128);
 	}
@@ -53,11 +53,11 @@ static void sc_title_initialize(void) {
 		"image/bg/note.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 1.0f, 1.0f, H_CENTER, V_CENTER
 	);
 
-	text_add_as(
+	int nid = -text_add_as(
 		u8"タイトル名を\nここで入力", 
 		COMBINED, 
-		WINDOW_WIDTH / 2 - 12, WINDOW_HEIGHT / 2 - 128, 
-		255, 255, 255, 255,
+		WINDOW_WIDTH / 2 - 12, WINDOW_HEIGHT / 2 + 12, 
+		0, 0, 0, 255,
 		0.8f, 0.8f, H_CENTER, V_CENTER
 	);
 	text_add_as(
@@ -74,13 +74,11 @@ static void sc_title_initialize(void) {
 		254, 254, 254, 254,
 		0.35f, 0.35f, RIGHT, BOTTOM
 	);
-	ntId = -text_add_as(
-		"",
-		SPOQAHANSANSNEO,
-		WINDOW_WIDTH / 2 - 20, WINDOW_HEIGHT / 1.3f,
-		255, 255, 255, 0,
-		0.5f, 0.5f, H_CENTER, V_CENTER
-	); 
+
+	SDL_Rect rc = { 0 };
+	text_get_rect(nid, &rc);
+
+	image_add("image/bg/white.png", WINDOW_WIDTH / 2 - 12, WINDOW_HEIGHT / 2 + 12, rc.w / 100.0f + 0.16f, rc.h / 100.0f + 0.16f, H_CENTER, V_CENTER);
 
 	for (int i = 0; i < OP_COUNT; i++) {
 		op_img[i] = -image_add(
@@ -107,6 +105,8 @@ static void sc_title_initialize(void) {
 
 	th_load();
 
+	sc_init();
+
 #if VERBOSE
 	th_display();
 #endif
@@ -117,12 +117,6 @@ static void sc_title_initialize(void) {
 }
 
 static void sc_title_render(void) {
-	if (vTicks >= 60 && vTicks <= 111) {
-		int a = (vTicks - 60) * 5;
-		if (vTicks == 61) text_content(ntId, u8"Enter 키를 눌러 시작");
-		text_color(ntId, 255, 255, 255, a);
-	}
-
 	if (input_is_keydown(SDLK_RETURN)) {
 		screen_change("ingame");
 	}
@@ -155,9 +149,6 @@ static void sc_title_render(void) {
 			screen_change("wcoll");
 			break;
 		case 3:
-			screen_change("config");
-			break;
-		case 4:
 			quit = 1;
 			break;
 		}

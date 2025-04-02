@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdint.h>
+
 void iclamp(int* v, int mi, int mx);
 
 typedef enum {
@@ -15,6 +17,9 @@ typedef enum {
 } valign_t;
 
 extern int quit;
+
+extern uint8_t vol_bgm;
+extern uint8_t vol_sfx;
 
 int char_uni_bytes(char ss);
 

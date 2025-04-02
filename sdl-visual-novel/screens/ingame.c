@@ -12,6 +12,7 @@
 #include "../engine/fupdate.h"
 #include "../engine/character.h"
 #include "../engine/script.h"
+#include "../engine/screen.h"
 
 #include <SDL2/SDL_Mixer.h>
 
@@ -353,7 +354,16 @@ static void sc_ingame_initialize(void) {
 }
 
 static void sc_ingame_render(void) {
-	while (!sc_exec()) {}
+	int res = 0;
+	
+	do {
+		res = sc_exec();
+	} while (res == 0);
+
+	if (res == -1) {
+		sc_save();
+		screen_change("title");
+	}
 
 	if (!(!ingame_name || !spk_buffer)) {
 		if (strlen(ingame_name) == 0 && strlen(spk_buffer) == 0) {

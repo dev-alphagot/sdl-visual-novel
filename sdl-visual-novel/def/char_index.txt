@@ -1,5 +1,6 @@
 hibiki
 sensei
 narrator
+word-coll-t
 word-coll-w
 word-coll-m

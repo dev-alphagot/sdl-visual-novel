@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -30,8 +31,14 @@ extern int sc_delay;
 
 extern uint8_t sc_sel_storage[];
 
+extern FILE* sc_script;
+
 extern bool* sc_word_collected;
 
 void sc_forcejump(int offset);
 
 int sc_exec(void);
+
+void sc_init(void);
+
+void sc_save(void);

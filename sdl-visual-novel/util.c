@@ -5,6 +5,9 @@
 
 int quit = 0;
 
+uint8_t vol_bgm = 0;
+uint8_t vol_sfx = 0;
+
 void iclamp(int* v, int mi, int mx) {
 	if (*v < mi) *v = mi;
 	else if (*v > mx) *v = mx;
