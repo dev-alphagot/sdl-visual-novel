@@ -26,8 +26,15 @@ static Mix_Music* ingame_bgm_w;
 
 uint8_t sc_sel_storage[128] = { 0 };
 
+char** sc_script_index_table = NULL;
+
 static int sc_words = 0;
 bool* sc_word_collected = NULL;
+
+time_t sc_save_last = 0;
+
+int sc_index_current = 2;
+static int sc_index_next = 2;
 
 static void sc_bgm_fadein(void) {
 	Mix_FreeMusic(ingame_bgm);
@@ -45,8 +52,10 @@ int sc_exec(void) {
     }
 
     if (!sc_script) {
-        sc_script = fopen("def/scripts/1.bin", "rb");
-        printf("%p\n", sc_script);
+        static char fff[80] = "";
+		sprintf(fff, "def/scripts/%s.bin", sc_script_index_table[sc_index_next]);
+        sc_script = fopen(fff, "rb");
+		sc_index_current = sc_index_next;
     }
 
 	do {
@@ -57,12 +66,10 @@ int sc_exec(void) {
 
 		opcode_t opc = 0;
 
-        printf("%p\n", sc_script);
-
 		if (feof(sc_script)) return -1;
 		fread(&opc, 1, 1, sc_script);
 
-		printf("sc_script Offset %d OpCode: %d\n", ftell(sc_script), opc);
+		printf("Script Offset %d OpCode: %d\n", ftell(sc_script) - 1, opc);
 
 		switch (opc) {
 
@@ -278,6 +285,14 @@ int sc_exec(void) {
 
             break;
         }
+		case NEXT:
+		{
+            short cid = 0;
+            fread(&cid, 2, 1, sc_script);
+
+            sc_index_next = cid;
+			break;
+		}
 		}
     } while (sc_delay == 0);
 
@@ -295,28 +310,67 @@ void sc_init(void) {
         if (fgetc(ff) == '\n') wcnt++;
     }
 
+    fclose(ff);
+
     sc_words = wcnt;
 
     sc_word_collected = calloc(sizeof(bool), wcnt);
     if (!sc_word_collected) return;
 
+    ff = fopen("def/script_index.txt", "rt");
+
+    wcnt = 1;
+
+    while (!feof(ff)) {
+        if (fgetc(ff) == '\n') wcnt++;
+    }
+
+	sc_script_index_table = calloc(sizeof(char*), wcnt);
+
+    if (!sc_script_index_table) return;
+
+    fseek(ff, 0, SEEK_SET);
+
+    for (int i = 0; i < wcnt; i++) {
+		sc_script_index_table[i] = calloc(sizeof(char), 64);
+        if (!sc_script_index_table[i]) continue;
+        fgets(sc_script_index_table[i], 64, ff);
+        printf("%d %s\n", i, sc_script_index_table[i]);
+		str_trim_lf(64, sc_script_index_table[i]);
+    }
+
+	fclose(ff);
+
     FILE* save = fopen("save.bin", "rb");
     if (!save) return;
-    fseek(save, sizeof(time_t), SEEK_CUR);
+    fread(&sc_save_last, sizeof(time_t), 1, save);
+    fread(&sc_index_current, sizeof(time_t), 1, save);
+    fread(&sc_index_next, sizeof(time_t), 1, save);
     fread(sc_sel_storage, 1, 128, save);
     
     int swd = 0;
-    fread(&swd, 4, 1, save);
+    fread(&swd, sizeof(int), 1, save);
     fread(sc_word_collected, wcnt > swd ? swd : wcnt, 1, save);
     fclose(save);
+
+	printf("Save %lld %d %d\n", sc_save_last, sc_index_current, sc_index_next);
+}
+
+void sc_reset(void) {
+    sc_save_last = 0;
+	sc_index_current = 2;
+	sc_index_next = 2;
+	memset(sc_sel_storage, 0, 128);
 }
 
 void sc_save(void) {
     time_t tm = time(NULL);
     FILE* save = fopen("save.bin", "wb");
     fwrite(&tm, sizeof(time_t), 1, save);
+    fwrite(&sc_index_current, sizeof(int), 1, save);
+    fwrite(&sc_index_next, sizeof(int), 1, save);
     fwrite(sc_sel_storage, 1, 128, save);
-    fwrite(&sc_words, 4, 1, save);
+    fwrite(&sc_words, sizeof(int), 1, save);
     fwrite(sc_word_collected, sc_words, 1, save);
     fclose(save);
 }

@@ -23,7 +23,8 @@ typedef enum {
 	WCOLL_ADD, // 단어장
 	EMOTE,
 	SE_PLAY,
-	CG_CONTENT
+	CG_CONTENT,
+	NEXT,
 } opcode_t;
 
 extern int reg;
@@ -35,10 +36,17 @@ extern FILE* sc_script;
 
 extern bool* sc_word_collected;
 
+extern time_t sc_save_last;
+
+extern int sc_index_current;
+extern char** sc_script_index_table;
+
 void sc_forcejump(int offset);
 
 int sc_exec(void);
 
 void sc_init(void);
+
+void sc_reset(void);
 
 void sc_save(void);

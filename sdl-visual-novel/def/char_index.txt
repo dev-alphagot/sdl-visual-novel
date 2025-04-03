@@ -1,6 +1,6 @@
 hibiki
 sensei
 narrator
-word-coll-t
+script-names
 word-coll-w
 word-coll-m

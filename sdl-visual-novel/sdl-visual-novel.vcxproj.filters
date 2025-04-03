@@ -79,13 +79,10 @@
       <Filter>소스 파일\wrapper</Filter>
     </ClCompile>
     <ClCompile Include="screens\wcoll.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\screens</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="window.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="misc.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -128,8 +125,11 @@
     <ClInclude Include="engine\texthold.h">
       <Filter>헤더 파일\engine</Filter>
     </ClInclude>
-    <ClInclude Include="screens\wcoll.h">
+    <ClInclude Include="window.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="screens\wcoll.h">
+      <Filter>헤더 파일\screens</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
