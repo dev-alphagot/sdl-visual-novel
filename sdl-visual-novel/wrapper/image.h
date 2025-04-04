@@ -53,6 +53,8 @@ err_image_t image_add_tex(
 
 err_image_t image_remove(int index);
 
+err_image_t image_remove_nofree(int index);
+
 err_image_t image_content(int id, const char* new_path);
 
 err_image_t image_move(int id, int x, int y);

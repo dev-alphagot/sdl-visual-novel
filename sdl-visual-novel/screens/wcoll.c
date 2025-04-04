@@ -80,10 +80,12 @@ static void sc_wcoll_scroll(int mod) {
 }
 
 static void sc_wcoll_segment_update(void) {
+	printf("%p %d %d\n", wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h);
+
 	if (!wcoll_imgs || !wcoll_txts || !wcoll_mnns) return;
 
 	for (int i = 0; i < wcoll_ct_seg; i++) {
-		image_remove(wcoll_imgs[i]);
+		image_remove_nofree(wcoll_imgs[i]);
 		text_remove(wcoll_txts[i]);
 		text_remove(wcoll_mnns[i]);
 	}
@@ -173,6 +175,8 @@ static void sc_wcoll_initialize(void) {
 
 	wcoll_bg_w = imageSurface->w;
 	wcoll_bg_h = imageSurface->h;
+
+	printf("%p %d %d\n", wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h);
 
 	SDL_FreeSurface(imageSurface);
 

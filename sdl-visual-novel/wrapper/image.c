@@ -155,6 +155,17 @@ err_image_t image_remove(int index) {
 	return 0;
 }
 
+err_image_t image_remove_nofree(int index) {
+	if (index < 0 || index >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[index].tex)) return IMAGE_INVALID_INDEX;
+
+	// SDL_DestroyTexture(images[index].tex);
+	images[index].tex = NULL;
+
+	return 0;
+}
+
 // 성공 시 (인덱스 * -1)을 반환. 원래 인덱스랑 같은 인덱스를 반환하지 않는 경우도 있음.
 err_image_t image_content(int id, const char* new_path) {
 	SDL_Surface* imageSurface;
