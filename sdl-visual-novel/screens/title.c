@@ -166,6 +166,7 @@ static void sc_title_initialize(void) {
 static void sc_title_render(void) {
 	if (modal) {
 		if (input_is_keydown(SDLK_z)) {
+			sc_title_modal_off();
 			sc_reset();
 			screen_change("ingame");
 		}
@@ -211,7 +212,7 @@ static void sc_title_render(void) {
 }
 
 static void sc_title_music_free(void) {
-	Mix_FreeMusic(titlemusic);
+	if(titlemusic) Mix_FreeMusic(titlemusic);
 	Mix_HookMusicFinished(NULL);
 }
 

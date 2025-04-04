@@ -178,7 +178,7 @@ err_image_t image_content(int id, const char* new_path) {
 
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-	SDL_DestroyTexture(images[id].tex);
+	if(images[id].tex) SDL_DestroyTexture(images[id].tex);
 	images[id].tex = texture;
 
 	return 0;

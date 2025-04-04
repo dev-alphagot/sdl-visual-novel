@@ -134,7 +134,6 @@ static void sc_ingame_bg_cf(void) { // 배경 크로스페이드
 }
 
 static void sc_ingame_cg_show_task(void) { // 배경 크로스페이드
-
 	if (cg_show_ticks == 0) {
 		image_remove(cg_id);
 		cg_id = -image_add(
@@ -268,10 +267,7 @@ void sc_ingame_sel_disp(void) {
 		printf("%2d: %d <= x < %d\n", imax, (5 - (imax / 2)), (5 - (imax / 2)) + imax);
 	}*/
 
-	printf("%d <= x < %d\n", (5 - (imx / 2)), (5 - (imx / 2)) + imx);
-
 	for (int i = (5 - (imx / 2)); i < (5 - (imx / 2)) + imx; i++) {
-		printf(" %d\n", i - (5 - (imx / 2)));
 		image_alpha(ingame_sel_img_ids[i], 255);
 		text_content(ingame_sel_txt_ids[i], ingame_sel_text[i - (5 - (imx / 2))]);
 	}
@@ -284,13 +280,15 @@ static void sc_ingame_initialize(void) {
 	//printf("%s %s\n", name, text);
 	//printf("START\n");
 
+	sc_script = NULL;
+
 	bg = -image_add(
 		"image/bg/0.png",
 		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
 		0.666667f, 0.666667f, H_CENTER, H_CENTER
 	);
 	bg_cf = -image_add(
-		"image/bg/Stairs Afternoon.png",
+		"image/bg/0.png",
 		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2,
 		0.666667f, 0.666667f, H_CENTER, H_CENTER
 	);
@@ -351,6 +349,9 @@ static void sc_ingame_initialize(void) {
 	}
 
 	// Mix_PlayMusic(titlemusic, 1 << 30);
+
+	sc_delay = 62;
+	sc_exec_desire = true;
 }
 
 static void sc_ingame_render(void) {
@@ -362,7 +363,8 @@ static void sc_ingame_render(void) {
 
 	if (res == -1) {
 		sc_save();
-		screen_change("title");
+		// printf("TITLE DESIRE %d\n", sc_is_go_to_title());
+		screen_change(sc_is_go_to_title() ? "title" : "ingame");
 	}
 
 	if (!(!ingame_name || !spk_buffer)) {

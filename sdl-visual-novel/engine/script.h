@@ -27,6 +27,8 @@ typedef enum {
 	NEXT,
 } opcode_t;
 
+extern bool sc_exec_desire;
+
 extern int reg;
 extern int sc_delay;
 
@@ -41,6 +43,8 @@ extern time_t sc_save_last;
 extern int sc_index_current;
 extern char** sc_script_index_table;
 extern int sc_scripts;
+
+bool sc_is_go_to_title(void);
 
 void sc_forcejump(int offset);
 

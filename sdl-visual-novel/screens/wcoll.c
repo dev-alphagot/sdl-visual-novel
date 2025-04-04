@@ -246,7 +246,18 @@ static void sc_wcoll_render(void) {
 	}
 }
 
-static void sc_wcoll_dispose(void) {}
+static void sc_wcoll_dispose(void) {
+	SDL_DestroyTexture(wcoll_bg_tex);
+
+	for (int i = 0; i < wcoll_count; i++) {
+		free(wcoll_indices[i]);
+	}
+	free(wcoll_indices);
+
+	free(wcoll_imgs);
+	free(wcoll_txts);
+	free(wcoll_mnns);
+}
 
 screen_t sc_wcoll = {
 	"wcoll", sc_wcoll_initialize, sc_wcoll_render, sc_wcoll_dispose

@@ -92,7 +92,7 @@ void screen_init(SDL_Renderer* _renderer, int scc) {
 }
 
 static void screen_change_o(screen_t screen) {
-	if (!strcmp(screen_current.id, screen.id)) return;
+	// if (!strcmp(screen_current.id, screen.id)) return;
 	if (stf >= 0) return;
 
 	screen_desired = screen;

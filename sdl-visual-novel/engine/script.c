@@ -15,7 +15,11 @@
 
 #include "../screens/ingame.h"
 
+#include "../misc.h"
+
 FILE* sc_script = NULL;
+
+bool sc_exec_desire = true;
 
        int reg   = 0;
        int sc_delay = 65;
@@ -37,6 +41,13 @@ time_t sc_save_last = 0;
 int sc_index_current = 2;
 static int sc_index_next = 2;
 
+bool sc_is_go_to_title(void) {
+#if VERBOSE
+    printf("SIGTT %d %d %d\n", sc_index_current, sc_index_next, sc_exec_desire);
+#endif
+    return (sc_index_current == sc_index_next) && !sc_exec_desire;
+}
+
 static void sc_bgm_fadein(void) {
 	Mix_FreeMusic(ingame_bgm);
     Mix_FadeInMusic(ingame_bgm_w, 1 << 30, 2000);
@@ -52,7 +63,7 @@ int sc_exec(void) {
         sc_word_collected = malloc(sizeof(bool) * 128);
     }
 
-    if (!sc_script) {
+    if (!sc_script && sc_exec_desire) {
         static char fff[80] = "";
 		sprintf(fff, "def/scripts/%s.bin", sc_script_index_table[sc_index_next]);
         sc_script = fopen(fff, "rb");
@@ -67,7 +78,10 @@ int sc_exec(void) {
 
 		opcode_t opc = 0;
 
-		if (feof(sc_script)) return -1;
+        if (feof(sc_script)) {
+			sc_exec_desire = false;
+            return -1;
+        }
 		fread(&opc, 1, 1, sc_script);
 
 		printf("Script Offset %d OpCode: %d\n", ftell(sc_script) - 1, opc);

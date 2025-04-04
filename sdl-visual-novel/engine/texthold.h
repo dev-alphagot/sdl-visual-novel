@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#define TEXTHOLD_BKT_SIZE 256
+#define TEXTHOLD_BKT_SIZE 4096
 #define TEXTHOLD_MAX_CHARS 1024
 
 // 노드 구조체 선언
