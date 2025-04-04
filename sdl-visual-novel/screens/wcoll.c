@@ -11,6 +11,10 @@
 
 #include "../util.h"
 
+SDL_Texture* wcoll_bg_tex = NULL;
+static int wcoll_bg_w = 0;
+static int wcoll_bg_h = 0;
+
 static int wcoll_top = 0;
 static int wcoll_btm = 0;
 static int wcoll_segment_txt = 0;
@@ -124,7 +128,7 @@ static void sc_wcoll_segment_update(void) {
 			th_search(id + 100000, &txt);
 			char* tm = _strdup(txt.value);
 
-			wcoll_imgs[i] = -image_add("image/ui/wcoll_w_bg.png", WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
+			wcoll_imgs[i] = -image_add_tex(wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h, WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
 			wcoll_txts[i] = -text_add_as(
 				tb, COMBINED, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
@@ -133,7 +137,7 @@ static void sc_wcoll_segment_update(void) {
 			);
 		}
 		else {
-			wcoll_imgs[i] = -image_add("image/ui/wcoll_w_bg.png", WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
+			wcoll_imgs[i] = -image_add_tex(wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h, WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
 			wcoll_txts[i] = -text_add_as(
 				u8"???", COMBINED, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
@@ -145,14 +149,32 @@ static void sc_wcoll_segment_update(void) {
 
 	image_pos(wcoll_btm, WINDOW_WIDTH / 2, 173 + wcoll_ct_seg * 60);
 
+	int wcr = 0;
+
+	for (int i = 0; i < sc_scripts; i++) {
+		if (!strcmp(wcoll_indices[wcoll_sel], sc_script_index_table[i])) {
+			wcr = i; break;
+		}
+	}
+
 	text_h_t th = { -1, "" };
-	th_search(99700000 + wcoll_sel, &th);
+	th_search(99700000 + wcr, &th);
 
 	text_content(wcoll_segment_txt, th.value);
 }
 
 static void sc_wcoll_initialize(void) {
 	sc_wcoll_keys_initialize();
+
+	SDL_Surface* imageSurface;
+	if (!(imageSurface = IMG_Load("image/ui/wcoll_w_bg.png"))) return;
+
+	if (!(wcoll_bg_tex = SDL_CreateTextureFromSurface(renderer, imageSurface))) return;
+
+	wcoll_bg_w = imageSurface->w;
+	wcoll_bg_h = imageSurface->h;
+
+	SDL_FreeSurface(imageSurface);
 
 	wcoll_imgs = calloc(4, 3);
 	wcoll_txts = calloc(4, 3);
@@ -170,7 +192,7 @@ static void sc_wcoll_initialize(void) {
 	if (!wcoll_imgs || !wcoll_txts || !wcoll_mnns) return;
 
 	for (int i = 0; i < 3; i++) {
-		wcoll_imgs[i] = -image_add("image/ui/wcoll_w_bg.png", WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
+		wcoll_imgs[i] = -image_add_tex(wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h, WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
 	}
 
 	wcoll_txts[0] = -text_add_as(

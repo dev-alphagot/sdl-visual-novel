@@ -27,6 +27,7 @@ static Mix_Music* ingame_bgm_w;
 uint8_t sc_sel_storage[128] = { 0 };
 
 char** sc_script_index_table = NULL;
+int sc_scripts = 0;
 
 static int sc_words = 0;
 bool* sc_word_collected = NULL;
@@ -324,6 +325,8 @@ void sc_init(void) {
     while (!feof(ff)) {
         if (fgetc(ff) == '\n') wcnt++;
     }
+
+    sc_scripts = wcnt;
 
 	sc_script_index_table = calloc(sizeof(char*), wcnt);
 

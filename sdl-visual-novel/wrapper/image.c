@@ -101,6 +101,49 @@ err_image_t image_add(
 	return -index;
 }
 
+err_image_t image_add_tex(
+	SDL_Texture* tex, int width, int height,
+	int x,
+	int y,
+	float scale_x,
+	float scale_y,
+	halign_t halign,
+	valign_t valign
+) {
+	int index;
+
+	if ((index = image_able_index()) < 0) return IMAGE_CAPACITY_EXCEEDED;
+
+	int w1 = (int)(ceil(width * scale_x));
+	int h1 = (int)(ceil(height * scale_y));
+
+	SDL_Rect rc = {
+		x - ((int)(ceil(w1 * (halign / 2.0f)))),
+		y - ((int)(ceil(h1 * (valign / 2.0f)))),
+		w1, h1
+	};
+
+	if (x == IMAGE_RECT_REUSE) {
+		rc = images[index].rect;
+
+		rc.x += ((int)(ceil(rc.w * (halign / 2.0f))));
+		rc.y += ((int)(ceil(rc.h * (valign / 2.0f))));
+
+		rc.x -= ((int)(ceil(w1 * (halign / 2.0f))));
+		rc.y -= ((int)(ceil(h1 * (valign / 2.0f))));
+
+		rc.w = w1;
+		rc.h = h1;
+	}
+
+	image_t im = {
+		tex, rc, scale_x, scale_y, halign, valign, x == IMAGE_RECT_REUSE ? images[index].a : 255
+	};
+	images[index] = im;
+
+	return -index;
+}
+
 err_image_t image_remove(int index) {
 	if (index < 0 || index >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
 

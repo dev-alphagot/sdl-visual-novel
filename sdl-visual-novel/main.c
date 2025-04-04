@@ -28,7 +28,6 @@
 
 int _main(void) {
     SDL_Window* window = NULL;
-    SDL_Renderer* renderer = NULL;
 
     if (TTF_Init() == -1)
     {

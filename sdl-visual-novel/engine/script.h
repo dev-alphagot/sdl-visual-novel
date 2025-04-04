@@ -40,6 +40,7 @@ extern time_t sc_save_last;
 
 extern int sc_index_current;
 extern char** sc_script_index_table;
+extern int sc_scripts;
 
 void sc_forcejump(int offset);
 

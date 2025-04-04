@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL2/SDL.h>
 #include <stdint.h>
 
 void iclamp(int* v, int mi, int mx);
@@ -17,6 +18,8 @@ typedef enum {
 } valign_t;
 
 extern int quit;
+
+extern SDL_Renderer* renderer;
 
 extern uint8_t vol_bgm;
 extern uint8_t vol_sfx;

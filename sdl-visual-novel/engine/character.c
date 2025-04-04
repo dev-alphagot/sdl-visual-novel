@@ -30,6 +30,7 @@ void char_init(void) {
 		if (i >= CHAR_CAPACITY) return;
 
 		char* tok = strtok(i == 0 ? index_buf : NULL, "\n");
+		memset(f_buf, 0, 64);
 		sprintf(f_buf, "def/char/%s.txt", tok);
 
 		FILE* hl = fopen(f_buf, "rt");

@@ -41,6 +41,16 @@ err_image_t image_add(
 	valign_t valign
 );
 
+err_image_t image_add_tex(
+	SDL_Texture* tex, int width, int height,
+	int x,
+	int y,
+	float scale_x,
+	float scale_y,
+	halign_t halign,
+	valign_t valign
+);
+
 err_image_t image_remove(int index);
 
 err_image_t image_content(int id, const char* new_path);

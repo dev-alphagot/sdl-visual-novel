@@ -5,6 +5,8 @@
 
 int quit = 0;
 
+SDL_Renderer* renderer;
+
 uint8_t vol_bgm = 0;
 uint8_t vol_sfx = 0;
 
