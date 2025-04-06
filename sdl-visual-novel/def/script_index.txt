@@ -1,4 +1,3 @@
 0305
 1
 prologue
-wcoll_test

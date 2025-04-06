@@ -107,6 +107,8 @@ static void sc_wcoll_segment_update(void) {
 
 	wcoll_ct_seg = wc_size >> 2;
 
+	printf("%d\n", wcoll_ct_seg);
+
 	free(wcoll_imgs);
 	free(wcoll_txts);
 	free(wcoll_mnns);
@@ -120,6 +122,8 @@ static void sc_wcoll_segment_update(void) {
 	for (int i = 0; i < wcoll_ct_seg; i++) {
 		int id = 0;
 		fread(&id, 4, 1, wc);
+
+		printf("%d ", sc_word_collected[id - 99800000]);
 
 		if (sc_word_collected[id - 99800000]) {
 			text_h_t txt = { -1, "" };
@@ -148,6 +152,7 @@ static void sc_wcoll_segment_update(void) {
 			);
 		}
 	}
+	puts("");
 
 	image_pos(wcoll_btm, WINDOW_WIDTH / 2, 173 + wcoll_ct_seg * 60);
 

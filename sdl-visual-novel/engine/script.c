@@ -361,13 +361,14 @@ void sc_init(void) {
     FILE* save = fopen("save.bin", "rb");
     if (!save) return;
     fread(&sc_save_last, sizeof(time_t), 1, save);
-    fread(&sc_index_current, sizeof(time_t), 1, save);
-    fread(&sc_index_next, sizeof(time_t), 1, save);
+    fread(&sc_index_current, sizeof(int), 1, save);
+    fread(&sc_index_next, sizeof(int), 1, save);
     fread(sc_sel_storage, 1, 128, save);
     
     int swd = 0;
     fread(&swd, sizeof(int), 1, save);
-    fread(sc_word_collected, wcnt > swd ? swd : wcnt, 1, save);
+	printf("WCOLL %d %d\n", swd, sc_words);
+    fread(sc_word_collected, sc_words > swd ? swd : sc_words, 1, save);
     fclose(save);
 
 	printf("Save %lld %d %d\n", sc_save_last, sc_index_current, sc_index_next);

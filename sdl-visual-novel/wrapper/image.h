@@ -4,7 +4,7 @@
 #include <SDL2/SDL_Image.h>
 #include "../util.h"
 
-#define IMAGE_CAPACITY 32
+#define IMAGE_CAPACITY 128
 
 #define IMAGE_RECT_REUSE -3250000
 
