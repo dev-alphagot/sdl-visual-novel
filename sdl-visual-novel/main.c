@@ -85,6 +85,11 @@ int _main(void) {
 
     Mix_VolumeMusic(vol_bgm);
 
+    SDL_Surface* imageSurface;
+    if (!(imageSurface = IMG_Load("image/ui/saving.png"))) return;
+
+    if (!(sc_save_marker = SDL_CreateTextureFromSurface(renderer, imageSurface))) return;
+
     // 메시지 루프
     SDL_Event event;
 
@@ -120,6 +125,11 @@ int _main(void) {
         if (input_is_keydown(SDLK_ESCAPE)) quit = 1;
 
         input_update();
+
+        if (sc_save_marker) {
+            SDL_SetTextureAlphaMod(sc_save_marker, sc_save_marker_a);
+            SDL_RenderCopy(renderer, sc_save_marker, NULL, &((SDL_Rect) { 1070, 10, 200, 50 }));
+        }
 
         SDL_RenderPresent(renderer);
 

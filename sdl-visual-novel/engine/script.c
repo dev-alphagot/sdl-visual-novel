@@ -15,6 +15,8 @@
 
 #include "../screens/ingame.h"
 
+#include "fupdate.h"
+
 #include "../misc.h"
 
 FILE* sc_script = NULL;
@@ -41,6 +43,8 @@ time_t sc_save_last = 0;
 int sc_index_current = 2;
 static int sc_index_next = 2;
 
+static int sc_saving_mk_tick = -1;
+
 bool sc_is_go_to_title(void) {
 #if VERBOSE
     printf("SIGTT %d %d %d\n", sc_index_current, sc_index_next, sc_exec_desire);
@@ -52,6 +56,16 @@ static void sc_bgm_fadein(void) {
 	Mix_FreeMusic(ingame_bgm);
     Mix_FadeInMusic(ingame_bgm_w, 1 << 30, 2000);
 	ingame_bgm = ingame_bgm_w;
+}
+
+static void sc_save_marker_anim(void) {
+    if (sc_saving_mk_tick >= 180) {
+        sc_saving_mk_tick = -2;
+        sc_save_marker_a = 0;
+        return;
+    }
+
+    sc_save_marker_a = (uint8_t)ceil(fabs(sinf(++sc_saving_mk_tick / 120.0f * M_PI * 2)) * 255);
 }
 
 void sc_forcejump(int offset) {
@@ -80,8 +94,13 @@ int sc_exec(void) {
 
         if (feof(sc_script)) {
 			sc_exec_desire = false;
+            if(sc_saving_mk_tick == -1) fupdate_add(182, sc_save_marker_anim);
             return -1;
         }
+        else {
+            if (sc_saving_mk_tick == -2) sc_saving_mk_tick = -1;
+        }
+
 		fread(&opc, 1, 1, sc_script);
 
 		printf("Script Offset %d OpCode: %d\n", ftell(sc_script) - 1, opc);

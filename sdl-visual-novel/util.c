@@ -10,6 +10,9 @@ SDL_Renderer* renderer;
 uint8_t vol_bgm = 0;
 uint8_t vol_sfx = 0;
 
+SDL_Texture* sc_save_marker = NULL;
+uint8_t sc_save_marker_a = 0;
+
 void iclamp(int* v, int mi, int mx) {
 	if (*v < mi) *v = mi;
 	else if (*v > mx) *v = mx;
