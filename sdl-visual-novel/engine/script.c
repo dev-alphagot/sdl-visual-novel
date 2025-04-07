@@ -42,6 +42,7 @@ time_t sc_save_last = 0;
 
 int sc_index_current = 2;
 static int sc_index_next = 2;
+char sc_save_version[16] = "";
 
 static int sc_saving_mk_tick = -1;
 
@@ -336,6 +337,8 @@ int sc_exec(void) {
 void sc_init(void) {
     if (sc_word_collected) return;
 
+    memcpy(sc_save_version, VERSION, 16);
+
     FILE* ff = fopen("def/text/998.csv", "rt");
 
     int wcnt = 1;
@@ -382,6 +385,7 @@ void sc_init(void) {
     fread(&sc_save_last, sizeof(time_t), 1, save);
     fread(&sc_index_current, sizeof(int), 1, save);
     fread(&sc_index_next, sizeof(int), 1, save);
+    fread(sc_save_version, 16, 1, save);
     fread(sc_sel_storage, 1, 128, save);
     
     int swd = 0;
@@ -406,6 +410,7 @@ void sc_save(void) {
     fwrite(&tm, sizeof(time_t), 1, save);
     fwrite(&sc_index_current, sizeof(int), 1, save);
     fwrite(&sc_index_next, sizeof(int), 1, save);
+    fwrite(VERSION, 16, 1, save);
     fwrite(sc_sel_storage, 1, 128, save);
     fwrite(&sc_words, sizeof(int), 1, save);
     fwrite(sc_word_collected, sc_words, 1, save);

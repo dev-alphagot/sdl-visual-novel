@@ -38,6 +38,8 @@ static const char* op_ctt[OP_COUNT] = {
 
 static int modal_bg = 0;
 static int modal_text = 0;
+static char* modal_text_ptr = NULL;
+static void (*modal_proceed_callback)(void) = NULL;
 static bool modal = false;
 
 static Mix_Music* titlemusic;
@@ -53,21 +55,9 @@ static void sc_title_op_highlight(void) {
 }
 
 static void sc_title_modal_on(void) {
-	static char sss[1536] = "";
-
-	struct tm* tw;
-	tw = localtime(&sc_save_last);
-
-	text_h_t th = { -1, "" };
-	th_search(sc_index_current + 99700000, &th);
-
-	sprintf(sss, 
-		u8"이전에 플레이하던 데이터가 있습니다.\n%d년 %d월 %d일 %d시 %d분에 마지막으로 플레이하였으며,\n%s까지 진행했습니다.\n\n플레이 데이터를 초기화하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
-		, tw->tm_year + 1900, tw->tm_mon + 1, tw->tm_mday, tw->tm_hour, tw->tm_min, th.value);
-
 	modal = true;
 	image_alpha(modal_bg, 240);
-	text_content(modal_text, sss);
+	text_content(modal_text, modal_text_ptr);
 	text_move(ntId, 0, RYUGU);
 	text_move(modal_text, 0, -RYUGU);
 }
@@ -94,20 +84,22 @@ static void sc_title_initialize(void) {
 		0, 0, 0, 255,
 		0.8f, 0.8f, H_CENTER, V_CENTER
 	);
-	/*text_add_as(
+	text_add_as(
 		u8"♪ 77o44birthdayzero @ mamomo",
 		SPOQAHANSANSNEO,
 		8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, LEFT, BOTTOM
 	);
+	char s8[24] = ""; // 24가 적절함
+	sprintf(s8, "V/ %s/sid", VERSION);
 	text_add_as(
-		u8"responsive/milestone",
+		s8,
 		SPOQAHANSANSNEO,
 		WINDOW_WIDTH - 8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, RIGHT, BOTTOM
-	);*/
+	);
 
 	SDL_Rect rc = { 0 };
 	text_get_rect(ntId, &rc);
@@ -163,12 +155,21 @@ static void sc_title_initialize(void) {
 	sc_title_op_highlight();
 }
 
+static void sc_title_modal_0(void) {
+	sc_title_modal_off();
+	sc_reset();
+	screen_change("ingame");
+}
+
+static void sc_title_modal_1(void) {
+	sc_title_modal_off();
+	screen_change("ingame");
+}
+
 static void sc_title_render(void) {
 	if (modal) {
 		if (input_is_keydown(SDLK_z)) {
-			sc_title_modal_off();
-			sc_reset();
-			screen_change("ingame");
+			modal_proceed_callback();
 		}
 		else if (input_is_keydown(SDLK_x)) {
 			sc_title_modal_off();
@@ -191,6 +192,19 @@ static void sc_title_render(void) {
 			switch (op_sel) {
 			case 0:
 				if (sc_save_last) {
+					static char sss[1536] = "";
+
+					struct tm* tw;
+					tw = localtime(&sc_save_last);
+
+					text_h_t th = { -1, "" };
+					th_search(sc_index_current + 99700000, &th);
+
+					sprintf(sss,
+						u8"이전에 플레이하던 데이터가 있습니다.\n%d년 %d월 %d일 %d시 %d분에 마지막으로 플레이하였으며,\n%s까지 진행했습니다.\n\n플레이 데이터를 초기화하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
+						, tw->tm_year + 1900, tw->tm_mon + 1, tw->tm_mday, tw->tm_hour, tw->tm_min, th.value);
+					modal_text_ptr = sss;
+					modal_proceed_callback = sc_title_modal_0;
 					sc_title_modal_on();
 				}
 				else {
@@ -198,7 +212,19 @@ static void sc_title_render(void) {
 				}
 				break;
 			case 1:
-				screen_change("ingame");
+				if (strcmp(VERSION, sc_save_version)) {
+					static char sss[1536] = "";
+
+					sprintf(sss,
+						u8"다른 버전의 플레이 데이터가 있습니다.\n현재 버전은 %s이며,\n데이터가 기록된 버전은 %s입니다.\n\n다른 버전의 저장 데이터를 불러오면\n예기치 못한 오류가 발생할 수 있습니다.\n\n무시하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
+						, VERSION, sc_save_version);
+					modal_text_ptr = sss;
+					modal_proceed_callback = sc_title_modal_1;
+					sc_title_modal_on();
+				}
+				else {
+					screen_change("ingame");
+				}
 				break;
 			case 2:
 				screen_change("wcoll");

@@ -41,6 +41,7 @@ extern bool* sc_word_collected;
 extern time_t sc_save_last;
 
 extern int sc_index_current;
+extern char sc_save_version[16];
 extern char** sc_script_index_table;
 extern int sc_scripts;
 
