@@ -22,14 +22,16 @@ static int wcoll_segment_txt = 0;
 static int wcoll_count = 1;
 static const char** wcoll_indices;
 
-static int* wcoll_imgs;
-static int* wcoll_txts;
-static int* wcoll_mnns;
+static int* wcoll_imgs = NULL;
+static int* wcoll_txts = NULL;
+static int* wcoll_mnns = NULL;
 static int wcoll_ct_seg = 3;
 
 static int wcoll_scroll_pos = 0;
 
 static int wcoll_sel = 0;
+
+static bool wcoll_exiting = false;
 
 static void sc_wcoll_keys_initialize(void) {
 	FILE* indices = fopen("def/wcoll_index.txt", "rt");
@@ -168,6 +170,10 @@ static void sc_wcoll_segment_update(void) {
 }
 
 static void sc_wcoll_initialize(void) {
+	bg_fill_color = (SDL_Color) { 250, 250, 250, 255 };
+
+	wcoll_exiting = false;
+
 	sc_wcoll_keys_initialize();
 
 	SDL_Surface* imageSurface;
@@ -186,10 +192,12 @@ static void sc_wcoll_initialize(void) {
 	wcoll_txts = calloc(4, 3);
 	wcoll_mnns = calloc(4, 3);
 
-	int wcoll_ltb = -image_add("image/bg/white.png", 0, 0, 12.8f, 7.2f, LEFT, TOP);
+	// int wcoll_ltb = -image_add("image/bg/white.png", 0, 0, 12.8f, 7.2f, LEFT, TOP);
 	wcoll_top = -image_add("image/ui/wcoll_top.png", WINDOW_WIDTH / 2, 0, 1.0f, 1.0f, H_CENTER, TOP);
 
-	image_alpha(wcoll_ltb, 250);
+	// image_alpha(wcoll_ltb, 250);
+
+	wcoll_ct_seg = 3;
 
 	wcoll_segment_txt = -text_add_as(
 		u8"단어장을 뒤적거리는 학습자를 위한 안내서", GYEONGGIMILLENNIUMBATANGB, 185, 135, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
@@ -225,25 +233,26 @@ static void sc_wcoll_initialize(void) {
 }
 
 static void sc_wcoll_render(void) {
-	if (input_is_keydown(SDLK_LEFT)) {
+	if (input_is_keydown(SDLK_LEFT) && !wcoll_exiting) {
 		wcoll_sel--;
 		iclamp(&wcoll_sel, 0, wcoll_count - 1);
 		sc_wcoll_segment_update();
 	}
-	else if (input_is_keydown(SDLK_RIGHT)) {
+	else if (input_is_keydown(SDLK_RIGHT) && !wcoll_exiting) {
 		wcoll_sel++;
 		iclamp(&wcoll_sel, 0, wcoll_count - 1);
 		sc_wcoll_segment_update();
 	}
 
-	if (input_is_keydown(SDLK_UP)) {
+	if (input_is_keydown(SDLK_UP) && !wcoll_exiting) {
 		sc_wcoll_scroll(1);
 	}
-	else if (input_is_keydown(SDLK_DOWN)) {
+	else if (input_is_keydown(SDLK_DOWN) && !wcoll_exiting) {
 		sc_wcoll_scroll(-1);
 	}
 
 	if (input_is_keydown(SDLK_x)) {
+		wcoll_exiting = true;
 		screen_change("title");
 	}
 }
@@ -259,6 +268,10 @@ static void sc_wcoll_dispose(void) {
 	free(wcoll_imgs);
 	free(wcoll_txts);
 	free(wcoll_mnns);
+
+	wcoll_imgs = NULL;
+	wcoll_txts = NULL;
+	wcoll_mnns = NULL;
 }
 
 screen_t sc_wcoll = {

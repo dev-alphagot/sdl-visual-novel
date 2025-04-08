@@ -280,6 +280,8 @@ static void sc_ingame_initialize(void) {
 	//printf("%s %s\n", name, text);
 	//printf("START\n");
 
+	bg_fill_color = (SDL_Color){ 0, 0, 0, 255 };
+
 	sc_script = NULL;
 
 	bg = -image_add(

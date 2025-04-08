@@ -13,6 +13,8 @@ uint8_t vol_sfx = 0;
 SDL_Texture* sc_save_marker = NULL;
 uint8_t sc_save_marker_a = 0;
 
+SDL_Color bg_fill_color = { 0, 0, 0, 0 };
+
 char VERSION[16] = "responsive\0\0\0\0\0\0";
 
 void iclamp(int* v, int mi, int mx) {

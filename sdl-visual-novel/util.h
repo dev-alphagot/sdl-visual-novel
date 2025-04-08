@@ -27,6 +27,8 @@ extern uint8_t vol_sfx;
 extern SDL_Texture* sc_save_marker;
 extern uint8_t sc_save_marker_a;
 
+extern SDL_Color bg_fill_color;
+
 extern char VERSION[16];
 
 int char_uni_bytes(char ss);
