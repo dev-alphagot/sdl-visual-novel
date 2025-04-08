@@ -8,6 +8,7 @@
 
 #include "../wrapper/text.h"
 #include "../wrapper/image.h"
+#include "../wrapper/input.h"
 
 screen_t screens[6];
 static int screen_count = -1;
@@ -66,6 +67,7 @@ static void screen_transition(void) {
 		}
 	}
 	else {
+		input_available = true;
 		stf = -2;
 	}
 
@@ -97,6 +99,8 @@ static void screen_change_o(screen_t screen) {
 
 	screen_desired = screen;
 	stf = 0;
+
+	input_available = false;
 
 	fupdate_add(181, screen_transition);
 }

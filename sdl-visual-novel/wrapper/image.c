@@ -211,6 +211,36 @@ err_image_t image_pos(int id, int x, int y) {
 	return 0;
 }
 
+err_image_t image_scale(int id, float sx, float sy) {
+	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
+
+	image_t im = images[id];
+
+	printf("sc %d %d %f %f\n", im.rect.w, im.rect.h, im.scale_x, im.scale_y);
+
+	int wl, hl;
+
+	SDL_QueryTexture(images[id].tex, NULL, NULL, &wl, &hl);
+
+	printf("wh %d %d\n", wl, hl);
+
+	images[id].rect.x += ((int)(ceil(images[id].rect.w * (im.halign / 2.0f))));
+	images[id].rect.y += ((int)(ceil(images[id].rect.h * (im.valign / 2.0f))));
+
+	images[id].rect.w = wl * sx;
+	images[id].rect.h = hl * sy;
+
+	images[id].rect.x -= ((int)(ceil(images[id].rect.w * (im.halign / 2.0f))));
+	images[id].rect.y -= ((int)(ceil(images[id].rect.h * (im.valign / 2.0f))));
+
+	images[id].scale_x = sx;
+	images[id].scale_y = sy;
+
+	return 0;
+}
+
 err_image_t image_get_rect(int id, SDL_Rect* const rc) {
 	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
 

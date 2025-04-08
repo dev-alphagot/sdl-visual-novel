@@ -5,6 +5,8 @@
 
 #define INPUT_MAX_KEYS 16
 
+extern bool input_available;
+
 void input_keydown(SDL_KeyCode key);
 
 void input_keyup(SDL_KeyCode key);

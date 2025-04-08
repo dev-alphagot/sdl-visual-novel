@@ -17,7 +17,7 @@
 #include <SDL2/SDL_Mixer.h>
 #include <time.h>
 
-#define OP_COUNT 4
+#define OP_COUNT 5
 #define RYUGU 1770 // 용궁으로 보내는 위치 상수
 
 static int vTicks = 0;
@@ -33,6 +33,7 @@ static const char* op_ctt[OP_COUNT] = {
 	u8"처음부터",
 	u8"이어서",
 	u8"단어장",
+	u8"설정",
 	u8"종료"
 };
 
@@ -85,14 +86,14 @@ static void sc_title_initialize(void) {
 		0.8f, 0.8f, H_CENTER, V_CENTER
 	);
 	text_add_as(
-		u8"♪ 77o44birthdayzero @ mamomo",
+		u8"♪ Nite Nite @ a_hisa",
 		SPOQAHANSANSNEO,
 		8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, LEFT, BOTTOM
 	);
 	char s8[24] = ""; // 24가 적절함
-	sprintf(s8, "V/ %s/sid", VERSION);
+	sprintf(s8, "%s/sid", VERSION);
 	text_add_as(
 		s8,
 		SPOQAHANSANSNEO,
@@ -119,7 +120,7 @@ static void sc_title_initialize(void) {
 		);
 	}
 
-	titlemusic = Mix_LoadMUS("sound/bgm/77o44birthdayzero.ogg");
+	titlemusic = Mix_LoadMUS("sound/bgm/nitenite.ogg");
 	if (titlemusic == NULL) {
 		fprintf(stderr, "Failed to load music file: %s\n", Mix_GetError());
 		return 1;
@@ -230,6 +231,9 @@ static void sc_title_render(void) {
 				screen_change("wcoll");
 				break;
 			case 3:
+				screen_change("settings");
+				break;
+			case 4:
 				quit = 1;
 				break;
 			}

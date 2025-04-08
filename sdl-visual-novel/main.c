@@ -25,6 +25,7 @@
 #include "screens/ingame.h"
 #include "screens/fliptest.h"
 #include "screens/wcoll.h"
+#include "screens/settings.h"
 
 int _main(void) {
     SDL_Window* window = NULL;
@@ -40,11 +41,13 @@ int _main(void) {
         return 1;
     }
 
-    if (SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer) < 0)
+    if (SDL_CreateWindowAndRenderer(WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI, &window, &renderer) < 0)
     {
         fprintf(stderr, "SDL_CreateWindowAndRenderer Error\n");
         return 1;
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
     SDL_RenderSetVSync(renderer, 1);
 
@@ -78,8 +81,9 @@ int _main(void) {
     screens[2] = sc_ingame;
     screens[3] = sc_fliptest;
     screens[4] = sc_wcoll;
+    screens[5] = sc_settings;
 
-    screen_init(renderer, 5);
+    screen_init(renderer, 6);
 
     th_init();
 

@@ -11,6 +11,8 @@
 
 #include "../util.h"
 
+#include <SDL2/SDL_Mixer.h>
+
 SDL_Texture* wcoll_bg_tex = NULL;
 static int wcoll_bg_w = 0;
 static int wcoll_bg_h = 0;
@@ -32,6 +34,8 @@ static int wcoll_scroll_pos = 0;
 static int wcoll_sel = 0;
 
 static bool wcoll_exiting = false;
+
+static Mix_Music* music;
 
 static void sc_wcoll_keys_initialize(void) {
 	FILE* indices = fopen("def/wcoll_index.txt", "rt");
@@ -230,6 +234,14 @@ static void sc_wcoll_initialize(void) {
 	);
 
 	wcoll_btm = -image_add("image/ui/wcoll_bottom.png", WINDOW_WIDTH / 2, 173 + 180, 1.0f, 1.0f, H_CENTER, TOP);
+
+	music = Mix_LoadMUS("sound/bgm/cosmos.ogg");
+	if (music == NULL) {
+		fprintf(stderr, "Failed to load music file: %s\n", Mix_GetError());
+		return 1;
+	}
+
+	Mix_FadeInMusic(music, 1 << 30, 5000);
 }
 
 static void sc_wcoll_render(void) {
@@ -257,6 +269,11 @@ static void sc_wcoll_render(void) {
 	}
 }
 
+static void sc_wcoll_music_free(void) {
+	if (music) Mix_FreeMusic(music);
+	Mix_HookMusicFinished(NULL);
+}
+
 static void sc_wcoll_dispose(void) {
 	SDL_DestroyTexture(wcoll_bg_tex);
 
@@ -272,6 +289,10 @@ static void sc_wcoll_dispose(void) {
 	wcoll_imgs = NULL;
 	wcoll_txts = NULL;
 	wcoll_mnns = NULL;
+
+	Mix_FadeOutMusic(2000);
+
+	Mix_HookMusicFinished(sc_wcoll_music_free);
 }
 
 screen_t sc_wcoll = {

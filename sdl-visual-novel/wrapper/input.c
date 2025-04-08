@@ -3,6 +3,8 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
+bool input_available = true;
+
 static SDL_KeyCode keys[INPUT_MAX_KEYS];
 static SDL_KeyCode keys_prev[INPUT_MAX_KEYS];
 

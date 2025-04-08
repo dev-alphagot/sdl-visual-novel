@@ -61,6 +61,8 @@ err_image_t image_move(int id, int x, int y);
 
 err_image_t image_pos(int id, int x, int y);
 
+err_image_t image_scale(int id, float sx, float sy);
+
 err_image_t image_alpha(int id, uint8_t a);
 
 err_image_t image_get_rect(int id, SDL_Rect* const rc);

@@ -147,6 +147,7 @@
     <ClCompile Include="screens\fliptest.c" />
     <ClCompile Include="screens\ingame.c" />
     <ClCompile Include="screens\notice.c" />
+    <ClCompile Include="screens\settings.c" />
     <ClCompile Include="screens\title.c" />
     <ClCompile Include="screens\wcoll.c" />
     <ClCompile Include="util.c" />
@@ -164,6 +165,7 @@
     <ClInclude Include="screens\fliptest.h" />
     <ClInclude Include="screens\ingame.h" />
     <ClInclude Include="screens\notice.h" />
+    <ClInclude Include="screens\settings.h" />
     <ClInclude Include="screens\title.h" />
     <ClInclude Include="screens\wcoll.h" />
     <ClInclude Include="util.h" />
