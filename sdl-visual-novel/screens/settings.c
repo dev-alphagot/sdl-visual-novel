@@ -46,6 +46,20 @@ static void sc_settings_highlight(void) {
 	image_alpha(sliders[slider_sel].gauge, 255);
 	text_color(sliders[slider_sel].section, 255, 255, 255, 255);
 	text_color(sliders[slider_sel].value, 255, 255, 255, 255);
+
+	Mix_PlayChannel(-1, arrow_sfx, 0);
+}
+
+static void sc_settings_highlight_silent(void) {
+	for (int i = 0; i < SLIDER_COUNT; i++) {
+		image_alpha(sliders[i].gauge, 128);
+		text_color(sliders[i].section, 255, 255, 255, 128);
+		text_color(sliders[i].value, 255, 255, 255, 128);
+	}
+
+	image_alpha(sliders[slider_sel].gauge, 255);
+	text_color(sliders[slider_sel].section, 255, 255, 255, 255);
+	text_color(sliders[slider_sel].value, 255, 255, 255, 255);
 }
 
 static void sc_settings_value_adjust(int facing) {
@@ -62,12 +76,16 @@ static void sc_settings_value_adjust(int facing) {
 	sprintf(pbuf, "%d%%", rv);
 	text_content(sliders[slider_sel].value, _strdup(pbuf));
 
+	Mix_PlayChannel(-1, arrow_sfx, 0);
+
 	switch (slider_sel) {
 	case 0:
 		vol_bgm = (uint8_t)round(rv * 1.28f);
 		Mix_VolumeMusic(vol_bgm);
 		break;
 	case 1:
+		Mix_VolumeChunk(decide_sfx, vol_sfx);
+		Mix_VolumeChunk(arrow_sfx, vol_sfx);
 		vol_sfx = (uint8_t)round(rv * 1.28f);
 		break;
 	}
@@ -83,7 +101,7 @@ static void sc_settings_initialize(void) {
 	);
 	
 	for (int i = 0; i < SLIDER_COUNT; i++) {
-		int r = i == 0 ? (int)(ceil(vol_bgm / 1.28f)) : (int)(ceil(vol_sfx / 1.28f));
+		int r = i == 0 ? (int)(round(vol_bgm / 1.28f)) : (int)(round(vol_sfx / 1.28f));
 
 		sprintf(pbuf, "%d%%", r);
 
@@ -99,7 +117,7 @@ static void sc_settings_initialize(void) {
 		};
 	}
 
-	sc_settings_highlight();
+	sc_settings_highlight_silent();
 
 	music = Mix_LoadMUS("sound/bgm/cosmos.ogg");
 	if (music == NULL) {

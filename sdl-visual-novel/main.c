@@ -89,6 +89,12 @@ int _main(void) {
 
     Mix_VolumeMusic(vol_bgm);
 
+    decide_sfx = Mix_LoadWAV("sound/se/decide.wav");
+    arrow_sfx  = Mix_LoadWAV("sound/se/move.wav");
+
+    Mix_VolumeChunk(decide_sfx, vol_sfx);
+    Mix_VolumeChunk(arrow_sfx, vol_sfx);
+
     SDL_Surface* imageSurface;
     if (!(imageSurface = IMG_Load("image/ui/saving.png"))) return;
 

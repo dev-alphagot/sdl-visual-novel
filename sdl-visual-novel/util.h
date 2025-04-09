@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_Mixer.h>
+
 #include <stdint.h>
 
 void iclamp(int* v, int mi, int mx);
@@ -30,6 +32,9 @@ extern uint8_t sc_save_marker_a;
 extern SDL_Color bg_fill_color;
 
 extern char VERSION[16];
+
+extern Mix_Chunk* arrow_sfx;
+extern Mix_Chunk* decide_sfx;
 
 int char_uni_bytes(char ss);
 

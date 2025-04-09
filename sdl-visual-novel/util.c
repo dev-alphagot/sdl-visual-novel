@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <math.h>
 
+#include <SDL2/SDL_Mixer.h>
+
 int quit = 0;
 
 SDL_Renderer* renderer;
@@ -16,6 +18,9 @@ uint8_t sc_save_marker_a = 0;
 SDL_Color bg_fill_color = { 0, 0, 0, 0 };
 
 char VERSION[16] = "responsive\0\0\0\0\0\0";
+
+Mix_Chunk* arrow_sfx;
+Mix_Chunk* decide_sfx;
 
 void iclamp(int* v, int mi, int mx) {
 	if (*v < mi) *v = mi;

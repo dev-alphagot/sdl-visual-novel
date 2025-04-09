@@ -37,6 +37,8 @@ static bool wcoll_exiting = false;
 
 static Mix_Music* music;
 
+static Mix_Chunk* flip_sfx;
+
 static void sc_wcoll_keys_initialize(void) {
 	FILE* indices = fopen("def/wcoll_index.txt", "rt");
 	
@@ -86,6 +88,8 @@ static void sc_wcoll_scroll(int mod) {
 }
 
 static void sc_wcoll_segment_update(void) {
+	Mix_PlayChannel(-1, flip_sfx, 0);
+
 	printf("%p %d %d\n", wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h);
 
 	if (!wcoll_imgs || !wcoll_txts || !wcoll_mnns) return;
@@ -174,6 +178,9 @@ static void sc_wcoll_segment_update(void) {
 }
 
 static void sc_wcoll_initialize(void) {
+	flip_sfx = Mix_LoadWAV("sound/se/flip.wav");
+	Mix_VolumeChunk(flip_sfx, vol_sfx);
+
 	bg_fill_color = (SDL_Color) { 250, 250, 250, 255 };
 
 	wcoll_exiting = false;
@@ -275,6 +282,8 @@ static void sc_wcoll_music_free(void) {
 }
 
 static void sc_wcoll_dispose(void) {
+	Mix_FreeChunk(flip_sfx);
+
 	SDL_DestroyTexture(wcoll_bg_tex);
 
 	for (int i = 0; i < wcoll_count; i++) {

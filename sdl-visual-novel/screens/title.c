@@ -53,6 +53,8 @@ static void sc_title_op_highlight(void) {
 
 	image_alpha(op_img[op_sel], 255);
 	text_color(op_txt[op_sel], 0, 0, 0, 255);
+
+	if(vTicks > 10) Mix_PlayChannel(-1, arrow_sfx, 0);
 }
 
 static void sc_title_modal_on(void) {
@@ -71,6 +73,8 @@ static void sc_title_modal_off(void) {
 }
 
 static void sc_title_initialize(void) {
+	vTicks = 0;
+
 	bg_id = -image_add(
 		"image/bg/title.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.666667f, 0.666667f, H_CENTER, V_CENTER
 	);
@@ -92,7 +96,7 @@ static void sc_title_initialize(void) {
 		254, 254, 254, 254,
 		0.35f, 0.35f, LEFT, BOTTOM
 	);
-	char s8[24] = ""; // 24가 적절함
+	char s8[21] = ""; // 21이 적절함
 	sprintf(s8, "%s/sid", VERSION);
 	text_add_as(
 		s8,
@@ -168,11 +172,15 @@ static void sc_title_modal_1(void) {
 }
 
 static void sc_title_render(void) {
+	vTicks++;
+
 	if (modal) {
 		if (input_is_keydown(SDLK_z)) {
+			Mix_PlayChannel(-1, decide_sfx, 0);
 			modal_proceed_callback();
 		}
 		else if (input_is_keydown(SDLK_x)) {
+			Mix_PlayChannel(-1, arrow_sfx, 0);
 			sc_title_modal_off();
 		}
 	}
@@ -189,6 +197,8 @@ static void sc_title_render(void) {
 		}
 		else if (input_is_keydown(SDLK_z)) {
 			printf("op_sel %d\n", op_sel);
+
+			Mix_PlayChannel(-1, decide_sfx, 0);
 
 			switch (op_sel) {
 			case 0:
