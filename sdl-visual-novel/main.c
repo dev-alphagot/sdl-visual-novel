@@ -59,6 +59,8 @@ int _main(void) {
     
     IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
 
+    SDL_SetWindowIcon(window, IMG_Load("image/icon.png"));
+
     if (Mix_OpenAudio(48000, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
         fprintf(stderr, "Failed to initialize SDL_mixer: %s\n", Mix_GetError());
         exit(1);
