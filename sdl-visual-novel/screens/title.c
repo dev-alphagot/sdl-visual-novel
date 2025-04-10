@@ -131,7 +131,7 @@ static void sc_title_initialize(void) {
 	}
 
 	modal_bg = -image_add(
-		"image/bg/white.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 6.4f, 3.0f, H_CENTER, V_CENTER
+		"image/bg/white.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 6.2f, 3.0f, H_CENTER, V_CENTER
 	);
 	modal_text = -text_add_as(
 		u8"다람쥐 헌 쳇바퀴에 타고파.",
@@ -187,12 +187,14 @@ static void sc_title_render(void) {
 	else {
 		if (input_is_keydown(SDLK_UP)) {
 			op_sel--;
-			iclamp(&op_sel, 0, OP_COUNT - 1);
+			op_sel = (op_sel + 5) % OP_COUNT;
+			// iclamp(&op_sel, 0, OP_COUNT - 1);
 			sc_title_op_highlight();
 		}
 		else if (input_is_keydown(SDLK_DOWN)) {
 			op_sel++;
-			iclamp(&op_sel, 0, OP_COUNT - 1);
+			op_sel %= OP_COUNT;
+			// iclamp(&op_sel, 0, OP_COUNT - 1);
 			sc_title_op_highlight();
 		}
 		else if (input_is_keydown(SDLK_z)) {
