@@ -457,6 +457,7 @@ static void sc_ingame_render(void) {
 static void sc_ingame_music_free(void) {
 	Mix_FreeMusic(ingame_bgm);
 	Mix_HookMusicFinished(NULL); // 개같이 버그 해결
+	ingame_bgm = NULL;
 }
 
 static void sc_ingame_dispose(void) {

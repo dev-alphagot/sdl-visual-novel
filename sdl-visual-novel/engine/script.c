@@ -28,6 +28,7 @@ bool sc_exec_desire = true;
 
 static char fnb[80] = "";
 
+static int ingame_bgm_c = 0;
 static Mix_Music* ingame_bgm_w;
 
 uint8_t sc_sel_storage[128] = { 0 };
@@ -415,4 +416,6 @@ void sc_save(void) {
     fwrite(&sc_words, sizeof(int), 1, save);
     fwrite(sc_word_collected, sc_words, 1, save);
     fclose(save);
+
+    sc_save_last = tm;
 }

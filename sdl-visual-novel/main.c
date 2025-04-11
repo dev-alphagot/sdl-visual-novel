@@ -140,7 +140,7 @@ int _main(void) {
 
         if (sc_save_marker) {
             SDL_SetTextureAlphaMod(sc_save_marker, sc_save_marker_a);
-            SDL_RenderCopy(renderer, sc_save_marker, NULL, &((SDL_Rect) { 1070, 10, 200, 50 }));
+            SDL_RenderCopy(renderer, sc_save_marker, NULL, &((SDL_Rect) { 1070, 10, 200, 25 }));
         }
 
         SDL_RenderPresent(renderer);

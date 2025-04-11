@@ -117,10 +117,10 @@ static void sc_title_initialize(void) {
 		);
 		op_txt[i] = -text_add_as(
 			op_ctt[i],
-			COMBINED,
-			855, 66 + (i * 40),
+			JANGMICHE,
+			855, 63 + (i * 40),
 			0, 0, 0, 255,
-			0.35f, 0.35f, LEFT, V_CENTER
+			0.45f, 0.45f, LEFT, V_CENTER
 		);
 	}
 
@@ -131,11 +131,11 @@ static void sc_title_initialize(void) {
 	}
 
 	modal_bg = -image_add(
-		"image/bg/white.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 6.2f, 3.0f, H_CENTER, V_CENTER
+		"image/bg/white.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 6.8f, 2.4f, H_CENTER, V_CENTER
 	);
 	modal_text = -text_add_as(
 		u8"다람쥐 헌 쳇바퀴에 타고파.",
-		NANUMBARUNGOTHIC,
+		NANUMGOTHIC,
 		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + RYUGU,
 		0, 0, 0, 255,
 		0.5f, 0.5f, H_CENTER, V_CENTER
@@ -229,8 +229,8 @@ static void sc_title_render(void) {
 					static char sss[1536] = "";
 
 					sprintf(sss,
-						u8"다른 버전의 플레이 데이터가 있습니다.\n현재 버전은 %s이며,\n데이터가 기록된 버전은 %s입니다.\n\n다른 버전의 저장 데이터를 불러오면\n예기치 못한 오류가 발생할 수 있습니다.\n\n무시하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
-						, VERSION, sc_save_version);
+						u8"%s 버전의 플레이 데이터가 있습니다.\n현재 버전은 %s이며,\n다른 버전의 저장 데이터를 불러오면\n예기치 못한 오류가 발생할 수 있습니다.\n\n무시하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
+						, sc_save_version, VERSION);
 					modal_text_ptr = sss;
 					modal_proceed_callback = sc_title_modal_1;
 					sc_title_modal_on();
