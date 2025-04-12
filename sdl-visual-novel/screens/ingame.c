@@ -373,7 +373,7 @@ static void sc_ingame_render(void) {
 		if (strlen(ingame_name) == 0 && strlen(spk_buffer) == 0) {
 			spk_bg_hide_tick++;
 
-			if (spk_bg_hide_tick > 3) {
+			if (spk_bg_hide_tick > 5) {
 				image_alpha(speak_bg, 0);
 			}
 		}

@@ -1,4 +1,4 @@
-10
+16
 1
 image/char/hibiki
 0.0
@@ -9,3 +9,9 @@ smile c
 mad c
 0.0
 sad
+0.0
+happy c
+0.0
+nssnss
+0.0
+neutral
