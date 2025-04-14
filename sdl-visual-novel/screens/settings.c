@@ -106,13 +106,13 @@ static void sc_settings_initialize(void) {
 		sprintf(pbuf, "%d%%", r);
 
 		sliders[i] = (settings_slider_t){
-			-text_add_as(slider_options[i], SPOQAHANSANSNEO, WINDOW_WIDTH / 2 - 190, WINDOW_HEIGHT / 2 - 35 + (i * 70), 255, 255, 255, 255, 0.4f, 0.4f, LEFT, BOTTOM),
+			-text_add_as(slider_options[i], GOORMSANS, WINDOW_WIDTH / 2 - 190, WINDOW_HEIGHT / 2 - 35 + (i * 70), 255, 255, 255, 255, 0.4f, 0.4f, LEFT, BOTTOM),
 			-image_add(
 				"image/bg/white.png",
 				WINDOW_WIDTH / 2 - 190 + 75, WINDOW_HEIGHT / 2 - 35 + 30 + (i * 70),
 				0.025f * r, 0.25f, LEFT, BOTTOM
 			),
-			-text_add_as(_strdup(pbuf), SPOQAHANSANSNEO, WINDOW_WIDTH / 2 - 190 + 350, WINDOW_HEIGHT / 2 - 35 + 30 + (i * 70), 255, 255, 255, 255, 0.4f, 0.4f, LEFT, BOTTOM),
+			-text_add_as(_strdup(pbuf), GOORMSANS, WINDOW_WIDTH / 2 - 190 + 350, WINDOW_HEIGHT / 2 - 35 + 30 + (i * 70), 255, 255, 255, 255, 0.4f, 0.4f, LEFT, BOTTOM),
 			r
 		};
 	}

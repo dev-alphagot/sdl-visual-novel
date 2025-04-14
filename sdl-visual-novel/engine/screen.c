@@ -24,7 +24,7 @@ static void screen_transition(void) {
 	if (stf < 120) {
 		for (int i = 0; i < 4; i++) {
 			int a = ((stf + 1) - (i * 15)) * 15;
-			SDL_Rect rc = { 0, (WINDOW_HEIGHT / 4) * i, WINDOW_WIDTH * (ease_io_cubic(a / 255.0f)), WINDOW_HEIGHT / 4};
+			SDL_Rect rc = { 0, (WINDOW_HEIGHT / 4) * i, WINDOW_WIDTH, WINDOW_HEIGHT / 4};
 
 			SDL_Color orc = { 0, 0, 0, 0 };
 
@@ -52,7 +52,7 @@ static void screen_transition(void) {
 	else if (stf < 180) {
 		for (int i = 0; i < 4; i++) {
 			int a = (15 - (((stf - 120) + 1) - (i * 15))) * 15;
-			SDL_Rect rc = { WINDOW_WIDTH - (WINDOW_WIDTH * (ease_io_cubic(a / 255.0f))), (WINDOW_HEIGHT / 4) * i, (WINDOW_WIDTH * (ease_io_cubic(a / 255.0f))), WINDOW_HEIGHT / 4};
+			SDL_Rect rc = { 0, (WINDOW_HEIGHT / 4) * i, WINDOW_WIDTH, WINDOW_HEIGHT / 4};
 
 			SDL_Color orc = { 0, 0, 0, 0 };
 

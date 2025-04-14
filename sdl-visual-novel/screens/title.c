@@ -91,7 +91,7 @@ static void sc_title_initialize(void) {
 	);
 	text_add_as(
 		u8"♪ Nite Nite @ a_hisa",
-		SPOQAHANSANSNEO,
+		GOORMSANS,
 		8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, LEFT, BOTTOM
@@ -100,7 +100,7 @@ static void sc_title_initialize(void) {
 	sprintf(s8, "%s/sid", VERSION);
 	text_add_as(
 		s8,
-		SPOQAHANSANSNEO,
+		GOORMSANS,
 		WINDOW_WIDTH - 8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, RIGHT, BOTTOM

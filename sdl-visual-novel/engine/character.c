@@ -26,10 +26,14 @@ void char_init(void) {
 
 	char f_buf[64] = "";
 	char p_buf[64] = "";
+	fseek(index_handle, 0, SEEK_SET);
 	for (int i = 0; i < indices; i++) {
 		if (i >= CHAR_CAPACITY) return;
 
-		char* tok = strtok(i == 0 ? index_buf : NULL, "\n");
+		char tok[64] = "";
+		fgets(tok, 64, index_handle);
+		str_trim_lf(64, tok);
+		// char* tok = strtok(i == 0 ? index_buf : NULL, "\n");
 		memset(f_buf, 0, 64);
 		sprintf(f_buf, "def/char/%s.txt", tok);
 
