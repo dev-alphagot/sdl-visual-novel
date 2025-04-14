@@ -124,6 +124,10 @@ int sc_exec(void) {
             if (cid != 990) {
                 sprintf(fnb, "%s/%s.png", chr.path, chr.emotions[0].path); 
                 image_content(ingame_char, fnb);
+                image_color(ingame_char, 255, 255, 255);
+            }
+            else {
+                image_color(ingame_char, 216, 216, 216);
             }
 
             break;

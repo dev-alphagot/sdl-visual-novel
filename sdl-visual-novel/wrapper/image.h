@@ -24,7 +24,7 @@ typedef struct {
 	float scale_y;
 	halign_t halign;
 	valign_t valign;
-	uint8_t a;
+	SDL_Color color;
 } image_t;
 
 err_image_t image_init(SDL_Renderer* _renderer);
@@ -64,6 +64,8 @@ err_image_t image_pos(int id, int x, int y);
 err_image_t image_scale(int id, float sx, float sy);
 
 err_image_t image_alpha(int id, uint8_t a);
+
+err_image_t image_color(int id, uint8_t r, uint8_t g, uint8_t b);
 
 err_image_t image_get_rect(int id, SDL_Rect* const rc);
 

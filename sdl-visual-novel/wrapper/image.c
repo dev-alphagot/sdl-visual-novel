@@ -94,7 +94,7 @@ err_image_t image_add(
 	}
 
 	image_t im = {
-		texture, rc, scale_x, scale_y, halign, valign, x == IMAGE_RECT_REUSE ? images[index].a : 255
+		texture, rc, scale_x, scale_y, halign, valign, x == IMAGE_RECT_REUSE ? images[index].color : (SDL_Color) { 255, 255, 255, 255 }
 	};
 	images[index] = im;
 
@@ -137,7 +137,7 @@ err_image_t image_add_tex(
 	}
 
 	image_t im = {
-		tex, rc, scale_x, scale_y, halign, valign, x == IMAGE_RECT_REUSE ? images[index].a : 255
+		tex, rc, scale_x, scale_y, halign, valign, x == IMAGE_RECT_REUSE ? images[index].color : (SDL_Color) { 255, 255, 255, 255 }
 	};
 	images[index] = im;
 
@@ -255,7 +255,7 @@ err_image_t image_alpha(int id, uint8_t a) {
 	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
 
 	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
-	images[id].a = a;
+	images[id].color.a = a;
 
 	return;
 
@@ -266,11 +266,27 @@ err_image_t image_alpha(int id, uint8_t a) {
 	}
 }
 
+err_image_t image_color(int id, uint8_t r, uint8_t g, uint8_t b) {
+	if (id < 0 || id >= IMAGE_CAPACITY) return IMAGE_INVALID_INDEX;
+
+	if (!(images[id].tex)) return IMAGE_INVALID_INDEX;
+	images[id].color = (SDL_Color){ r, g, b, images[id].color.a };
+
+	return;
+
+	int res = SDL_SetTextureColorMod(images[id].tex, r, g, b);
+
+	if (res) {
+		printf("SDL Error @ %s: %d / %s", __func__, res, SDL_GetError());
+	}
+}
+
 void image_render(void) {
 	for (int i = 0; i < IMAGE_CAPACITY; i++) {
 		if (!(images[i].tex)) continue;
 
-		SDL_SetTextureAlphaMod(images[i].tex, images[i].a);
+		SDL_SetTextureColorMod(images[i].tex, images[i].color.r, images[i].color.g, images[i].color.b);
+		SDL_SetTextureAlphaMod(images[i].tex, images[i].color.a);
 		SDL_RenderCopy(renderer, images[i].tex, NULL, &images[i].rect);
 	}
 }
