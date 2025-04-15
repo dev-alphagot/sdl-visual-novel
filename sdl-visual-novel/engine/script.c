@@ -123,8 +123,14 @@ int sc_exec(void) {
 
             if (cid != 990) {
                 sprintf(fnb, "%s/%s.png", chr.path, chr.emotions[0].path); 
-                image_content(ingame_char, fnb);
                 image_color(ingame_char, 255, 255, 255);
+
+                uint8_t ctmp = 0;
+                fread(&ctmp, 1, 1, sc_script);
+
+                fseek(sc_script, -1, SEEK_CUR);
+
+                if(ctmp != EMOTE) image_content(ingame_char, fnb);
             }
             else {
                 image_color(ingame_char, 216, 216, 216);
