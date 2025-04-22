@@ -84,14 +84,14 @@ static void sc_title_initialize(void) {
 
 	ntId = -text_add_as(
 		u8"タイトル名を\nここで入力", 
-		COMBINED, 
+		JANGMICHE,
 		WINDOW_WIDTH / 2 - 12, WINDOW_HEIGHT / 2 + 12, 
 		0, 0, 0, 255,
 		0.8f, 0.8f, H_CENTER, V_CENTER
 	);
 	text_add_as(
 		u8"♪ Nite Nite @ a_hisa",
-		GOORMSANS,
+		PRETENDARDJPMEDIUM,
 		8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, LEFT, BOTTOM
@@ -100,7 +100,7 @@ static void sc_title_initialize(void) {
 	sprintf(s8, "%s/sid", VERSION);
 	text_add_as(
 		s8,
-		GOORMSANS,
+		PRETENDARDJPMEDIUM,
 		WINDOW_WIDTH - 8, WINDOW_HEIGHT - 8,
 		254, 254, 254, 254,
 		0.35f, 0.35f, RIGHT, BOTTOM

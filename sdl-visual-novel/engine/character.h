@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../wrapper/text.h"
+
 #define CHAR_CAPACITY 32
 
 #define CHAR_BASE_MAX_PATH 64
@@ -16,6 +18,7 @@ typedef struct {
 typedef struct {
 	int id;
 	char path[CHAR_BASE_MAX_PATH];
+	font_t font;
 	emotion_t emotions[CHAR_MAX_EMOTION];
 } character_t;
 

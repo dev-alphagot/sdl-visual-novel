@@ -1,6 +1,7 @@
 hibiki
 sensei
 extra-student
+hibiki-telephone
 narrator
 script-names
 word-coll-w

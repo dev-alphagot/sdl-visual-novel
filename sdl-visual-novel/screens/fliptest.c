@@ -29,7 +29,7 @@ static void sc_fliptest_initialize(void) {
 
     txt_lt = -text_add_as(
         u8"숫자 키로 선택",
-        GOORMSANS,
+        PRETENDARDJPLIGHT,
         8, 8,
         255, 255, 255, 255,
         0.25f, 0.25f, LEFT, TOP

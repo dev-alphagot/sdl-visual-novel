@@ -1,6 +1,7 @@
-16
+17
 1
 image/char/hibiki
+8
 0.0
 smile
 0.0

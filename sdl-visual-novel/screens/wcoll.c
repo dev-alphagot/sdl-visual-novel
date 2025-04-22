@@ -144,19 +144,19 @@ static void sc_wcoll_segment_update(void) {
 
 			wcoll_imgs[i] = -image_add_tex(wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h, WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
 			wcoll_txts[i] = -text_add_as(
-				tb, COMBINED, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+				tb, CAFE24SSUKSSUK, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 			wcoll_mnns[i] = -text_add_as(
-				tm, COMBINED, 450, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+				tm, CAFE24SSUKSSUK, 450, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 		}
 		else {
 			wcoll_imgs[i] = -image_add_tex(wcoll_bg_tex, wcoll_bg_w, wcoll_bg_h, WINDOW_WIDTH / 2, 173 + 60 * (i + 1), 1.0f, 1.0f, H_CENTER, BOTTOM);
 			wcoll_txts[i] = -text_add_as(
-				u8"???", COMBINED, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+				u8"???", CAFE24SSUKSSUK, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 			wcoll_mnns[i] = -text_add_as(
-				u8"아직 획득하지 못한 단어입니다.", COMBINED, 450, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+				u8"아직 획득하지 못한 단어입니다.", CAFE24SSUKSSUK, 450, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 		}
 	}
@@ -221,23 +221,23 @@ static void sc_wcoll_initialize(void) {
 	}
 
 	wcoll_txts[0] = -text_add_as(
-		u8"단어장의 페이지는 ← → 키를 이용해 넘길 수 있습니다.", COMBINED, 220, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"단어장의 페이지는 ← → 키를 이용해 넘길 수 있습니다.", CAFE24SSUKSSUK, 220, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 	wcoll_txts[1] = -text_add_as(
-		u8"↑ ↓ 키를 이용해 위아래로 스크롤할 수 있습니다.", COMBINED, 220, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"↑ ↓ 키를 이용해 위아래로 스크롤할 수 있습니다.", CAFE24SSUKSSUK, 220, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 	wcoll_txts[2] = -text_add_as(
-		u8"X 키를 이용해 타이틀 화면으로 돌아갈 수 있습니다.", COMBINED, 220, 135 + 60 * 3, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"X 키를 이용해 타이틀 화면으로 돌아갈 수 있습니다.", CAFE24SSUKSSUK, 220, 135 + 60 * 3, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 
 	wcoll_mnns[0] = -text_add_as(
-		u8"", COMBINED, 220, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"", CAFE24SSUKSSUK, 220, 135 + 60, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 	wcoll_mnns[1] = -text_add_as(
-		u8"", COMBINED, 220, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"", CAFE24SSUKSSUK, 220, 135 + 60 * 2, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 	wcoll_mnns[2] = -text_add_as(
-		u8"", COMBINED, 220, 135 + 60 * 3, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"", CAFE24SSUKSSUK, 220, 135 + 60 * 3, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 
 	wcoll_btm = -image_add("image/ui/wcoll_bottom.png", WINDOW_WIDTH / 2, 173 + 180, 1.0f, 1.0f, H_CENTER, TOP);

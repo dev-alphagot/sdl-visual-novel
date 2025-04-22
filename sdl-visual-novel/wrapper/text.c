@@ -277,6 +277,20 @@ err_text_t text_pos(int id, int x, int y) {
 	return 0;
 }
 
+err_text_t text_font(int id, font_t font) {
+	if (id < 0 || id >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
+
+	if (!(text_textures[id])) return TEXT_INVALID_INDEX;
+	if (texts[id].font == font) return 0;
+
+	texts[id].font = font;
+
+	text_color(id, texts[id].color.r, texts[id].color.g, texts[id].color.b, texts[id].color.a);
+	text_pos(id, texts[id].x, texts[id].y);
+
+	return 0;
+}
+
 err_text_t text_get_rect(int id, SDL_Rect* const rc) {
 	if (id < 0 || id >= TEXT_CAPACITY) return TEXT_INVALID_INDEX;
 

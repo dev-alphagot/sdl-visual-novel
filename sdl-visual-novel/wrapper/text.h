@@ -24,11 +24,13 @@ typedef enum {
 	NANUMBARUNGOTHIC,
 	NANUMBARUNPENB,
 	NANUMGOTHIC,
-	GOORMSANS,
+	PRETENDARDJPLIGHT,
 	GYEONGGIMILLENNIUMBATANGB,
 	HUIJI,
 	COMBINED,
 	JANGMICHE,
+	CAFE24SSUKSSUK,
+	PRETENDARDJPMEDIUM,
 	FONT_COUNT
 } font_t;
 
@@ -67,6 +69,8 @@ err_text_t text_color(int id, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 err_text_t text_move(int id, int x, int y);
 
 err_text_t text_pos(int id, int x, int y);
+
+err_text_t text_font(int id, font_t font);
 
 err_text_t text_get_rect(int id, SDL_Rect* const rc);
 

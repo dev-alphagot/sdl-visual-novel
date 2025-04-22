@@ -26,7 +26,7 @@ static int bg_cf = 0;
 
 static int speak_bg = 0;
 static int speak_name = 0;
-static int speak_content = 0;
+       int speak_content = 0;
 
 static int cg_id = 0;
 static int cg_show_ticks = -1;
@@ -327,7 +327,7 @@ static void sc_ingame_initialize(void) {
 
 	speak_content = -text_add_as(
 		"",
-		COMBINED,
+		CAFE24SSUKSSUK,
 		220, WINDOW_HEIGHT - 180,
 		255, 255, 255, 255,
 		0.5, 0.5, LEFT, TOP
@@ -341,7 +341,7 @@ static void sc_ingame_initialize(void) {
 		);
 		ingame_sel_txt_ids[i] = -text_add_as(
 			u8"",
-			COMBINED,
+			JANGMICHE,
 			WINDOW_WIDTH / 2, 56 * i + 64 + 2,
 			255, 255, 255, 255,
 			0.5f, 0.5f, H_CENTER, V_CENTER

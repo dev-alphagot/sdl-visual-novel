@@ -45,7 +45,7 @@ void char_init(void) {
 
 		d = atoi(p_buf);
 
-		character_t chr = { -1, "" }; // 임시 초기화
+		character_t chr = { -1, "", 0 }; // 임시 초기화
 
 		for (int j = 0; j < d; j++) {
 			fgets(p_buf, 64, hl);
@@ -57,10 +57,14 @@ void char_init(void) {
 			else if (j == 1) {
 				strcpy(chr.path, p_buf);
 			}
+			else if (j == 2) {
+				chr.font = atoi(p_buf);
+				//strcpy(chr.font, p_buf);
+			}
 			else {
-				int emo_index = (j - 2) >> 1;
+				int emo_index = (j - 3) >> 1;
 
-				if (j % 2 == 0) {
+				if (j % 2 == 1) {
 					chr.emotions[emo_index].movement_multiplier = atof(p_buf);
 				}
 				else {
@@ -69,7 +73,7 @@ void char_init(void) {
 			}
 		}
 
-		printf("ID %d\tPATH %s\n", chr.id, chr.path);
+		printf("ID %d\tPATH %s\nFONT %d\n", chr.id, chr.path, chr.font);
 		for (int a = 0; a < CHAR_EMOTION_MAX_PATH; a++) {
 			if (!chr.emotions[a].path) continue;
 			if (!strlen(chr.emotions[a].path)) continue;

@@ -13,6 +13,8 @@ extern character_t chr;
 
 extern int ingame_char;
 
+extern int speak_content;
+
 extern int bg_cf_index;
 extern int ingame_tid;
 
