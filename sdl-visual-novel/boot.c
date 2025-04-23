@@ -11,6 +11,8 @@ int main(void) {
 
     fread(&vol_bgm, 1, 1, settings);
     fread(&vol_sfx, 1, 1, settings);
+    fread(&st_key_guide, 1, 1, settings);
+    fread(&st_scale_low_quality, 1, 1, settings);
 
     fclose(settings);
 

@@ -41,8 +41,8 @@ bool* sc_word_collected = NULL;
 
 time_t sc_save_last = 0;
 
-int sc_index_current = 2;
-static int sc_index_next = 2;
+int sc_index_current = 4;
+static int sc_index_next = 4;
 char sc_save_version[16] = "";
 
 static int sc_saving_mk_tick = -1;
@@ -76,7 +76,7 @@ void sc_forcejump(int offset) {
 
 int sc_exec(void) {
     if (!sc_word_collected) {
-        sc_word_collected = malloc(sizeof(bool) * 128);
+        sc_word_collected = malloc(sizeof(bool) * 256);
     }
 
     if (!sc_script && sc_exec_desire) {
@@ -444,8 +444,8 @@ void sc_init(void) {
 
 void sc_reset(void) {
     sc_save_last = 0;
-	sc_index_current = 2;
-	sc_index_next = 2;
+	sc_index_current = 4;
+	sc_index_next = 4;
 	memset(sc_sel_storage, 0, SC_SEL_STORAGE_SIZE);
 }
 

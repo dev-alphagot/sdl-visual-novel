@@ -70,12 +70,15 @@ static int imx = 10;
 
 static int spk_bg_hide_tick = 0;
 
+static int kg;
+
 void sc_ingame_text(void) {
 	if (!(spk_ticks < 0 && spk_offset < 0)) return;
 
 	memset(spk_buffer, 0, 2048);
 	spk_offset = 0;
 	spk_ticks = 0;
+	text_content(kg, u8"Z 키로 넘기기");
 }
 
 static void sc_ingame_emotion(void) {
@@ -250,10 +253,14 @@ static void sc_ingame_sel_clear(void) {
 		image_alpha(ingame_sel_img_ids[i], 0);
 		text_content(ingame_sel_txt_ids[i], "");
 	}
+
+	text_content(kg, u8"Z 키로 넘기기");
 }
 
 void sc_ingame_sel_disp(void) {
 	ingame_sel_disp = true;
+
+	text_content(kg, u8"⇅ 키로 선택 Z 키로 확정");
 
 	for (int i = 0; i < 10; i++) {
 		printf("%s\n", ingame_sel_text[i]);
@@ -333,6 +340,15 @@ static void sc_ingame_initialize(void) {
 		0.5, 0.5, LEFT, TOP
 	);
 
+	kg = -text_add_as(
+		u8"Z 키로 넘기기",
+		NANUMGOTHICEXTRABOLD,
+		WINDOW_WIDTH / 2, WINDOW_HEIGHT - 16,
+		255, 255, 255, 255,
+		0.25f, 0.25f, H_CENTER, BOTTOM
+	);
+	if (!st_key_guide) text_move(kg, 0, 3250);
+
 	for (int i = 0; i < 10; i++) {
 		ingame_sel_img_ids[i] = -image_add(
 			"image/ui/choice_bg.png",
@@ -375,6 +391,8 @@ static void sc_ingame_render(void) {
 
 			if (spk_bg_hide_tick > 5) {
 				image_alpha(speak_bg, 0);
+				if(!ingame_sel_disp)
+					text_content(kg, u8"");
 			}
 		}
 		else {

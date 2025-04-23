@@ -27,6 +27,7 @@ extern SDL_Renderer* renderer;
 extern uint8_t vol_bgm;
 extern uint8_t vol_sfx;
 extern bool st_key_guide;
+extern bool st_scale_low_quality;
 
 extern SDL_Texture* sc_save_marker;
 extern uint8_t sc_save_marker_a;

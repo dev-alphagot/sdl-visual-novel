@@ -37,7 +37,7 @@ int _main(void) {
         return 0;
     }
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+    if(!st_scale_low_quality) SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
     SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
 
     // SDL 초기화

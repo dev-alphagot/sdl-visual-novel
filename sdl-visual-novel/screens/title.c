@@ -142,7 +142,7 @@ static void sc_title_initialize(void) {
 	);
 
 	int kg = -text_add_as(
-		u8"⇅ 키로 선택  Z 키로 확정",
+		u8"⇅ 키로 선택 Z 키로 확정",
 		NANUMGOTHICEXTRABOLD,
 		WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT - 36,
 		255, 255, 255, 255,
@@ -230,6 +230,7 @@ static void sc_title_render(void) {
 					sc_title_modal_on();
 				}
 				else {
+					sc_reset();
 					screen_change("ingame");
 				}
 				break;
