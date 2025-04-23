@@ -27,6 +27,8 @@
 #include "screens/wcoll.h"
 #include "screens/settings.h"
 
+static bool fullscreen = false;
+
 int _main(void) {
     SDL_Window* window = NULL;
 
@@ -34,6 +36,9 @@ int _main(void) {
     {
         return 0;
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+    SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
 
     // SDL 초기화
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -46,8 +51,6 @@ int _main(void) {
         fprintf(stderr, "SDL_CreateWindowAndRenderer Error\n");
         return 1;
     }
-
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 
     SDL_RenderSetVSync(renderer, 1);
 
@@ -120,6 +123,19 @@ int _main(void) {
             else if (event.type == SDL_QUIT) {
                 quit = 1;
             }
+        }
+
+        if (input_is_keydown(SDLK_F11)) {
+            SDL_DisplayMode DM;
+            SDL_GetCurrentDisplayMode(0, &DM);
+
+            SDL_SetWindowFullscreen(window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
+            SDL_RenderSetScale(
+                renderer, 
+                fullscreen ? 1.0f : DM.w / (float)WINDOW_WIDTH,
+                fullscreen ? 1.0f : DM.h / (float)WINDOW_HEIGHT
+            );
+            fullscreen = !fullscreen;
         }
 
         SDL_SetRenderDrawColor(renderer, bg_fill_color.r, bg_fill_color.g, bg_fill_color.b, bg_fill_color.a);

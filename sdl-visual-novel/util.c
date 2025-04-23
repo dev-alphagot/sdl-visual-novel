@@ -11,6 +11,7 @@ SDL_Renderer* renderer;
 
 uint8_t vol_bgm = 0; // 0..128
 uint8_t vol_sfx = 0; // 0..128
+bool st_key_guide = true;
 
 SDL_Texture* sc_save_marker = NULL;
 uint8_t sc_save_marker_a = 0;

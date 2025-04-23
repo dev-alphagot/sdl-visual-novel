@@ -210,8 +210,21 @@ static void sc_wcoll_initialize(void) {
 
 	wcoll_ct_seg = 3;
 
+	int kg = -text_add_as(
+		u8"⇄ ⇅\n키 키\n로 로\n\n페 스\n이 크\n지 롤\n\n변\n경",
+		NANUMGOTHICBOLD,
+		25, 8,
+		20, 20, 20, 255,
+		0.333333f, 0.333333f, LEFT, TOP
+	);
+	int kg_bg = -image_add("image/ui/key_guide_bg.png", 20, 0, 1.0f, 1.0f, LEFT, TOP);
+	if (!st_key_guide) {
+		text_content(kg, "");
+		image_alpha(kg_bg, 0);
+	}
+
 	wcoll_segment_txt = -text_add_as(
-		u8"단어장을 뒤적거리는 학습자를 위한 안내서", GYEONGGIMILLENNIUMBATANGB, 185, 135, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+		u8"단어장을 뒤적거리는 학습자를 위한 안내서", PRETENDARDJPMEDIUM, 185, 135, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 	);
 
 	if (!wcoll_imgs || !wcoll_txts || !wcoll_mnns) return;

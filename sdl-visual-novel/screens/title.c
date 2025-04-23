@@ -85,7 +85,7 @@ static void sc_title_initialize(void) {
 	ntId = -text_add_as(
 		u8"タイトル名を\nここで入力", 
 		JANGMICHE,
-		WINDOW_WIDTH / 2 - 12, WINDOW_HEIGHT / 2 + 12, 
+		WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT / 2 + 12, 
 		0, 0, 0, 255,
 		0.8f, 0.8f, H_CENTER, V_CENTER
 	);
@@ -109,7 +109,7 @@ static void sc_title_initialize(void) {
 	SDL_Rect rc = { 0 };
 	text_get_rect(ntId, &rc);
 
-	image_add("image/bg/white.png", WINDOW_WIDTH / 2 - 12, WINDOW_HEIGHT / 2 + 12, rc.w / 100.0f + 0.16f, rc.h / 100.0f + 0.16f, H_CENTER, V_CENTER);
+	image_add("image/bg/white.png", WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT / 2 + 12, rc.w / 100.0f + 0.16f, rc.h / 100.0f + 0.16f, H_CENTER, V_CENTER);
 
 	for (int i = 0; i < OP_COUNT; i++) {
 		op_img[i] = -image_add(
@@ -140,6 +140,15 @@ static void sc_title_initialize(void) {
 		0, 0, 0, 255,
 		0.5f, 0.5f, H_CENTER, V_CENTER
 	);
+
+	int kg = -text_add_as(
+		u8"⇅ 키로 선택  Z 키로 확정",
+		NANUMGOTHICEXTRABOLD,
+		WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT - 36,
+		255, 255, 255, 255,
+		0.333333f, 0.333333f, H_CENTER, V_CENTER
+	);
+	if (!st_key_guide) text_content(kg, "");
 
 	image_alpha(modal_bg, 0);
 

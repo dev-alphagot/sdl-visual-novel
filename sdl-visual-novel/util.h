@@ -4,6 +4,7 @@
 #include <SDL2/SDL_Mixer.h>
 
 #include <stdint.h>
+#include <stdbool.h>
 
 void iclamp(int* v, int mi, int mx);
 
@@ -25,6 +26,7 @@ extern SDL_Renderer* renderer;
 
 extern uint8_t vol_bgm;
 extern uint8_t vol_sfx;
+extern bool st_key_guide;
 
 extern SDL_Texture* sc_save_marker;
 extern uint8_t sc_save_marker_a;

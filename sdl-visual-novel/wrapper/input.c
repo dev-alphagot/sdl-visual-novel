@@ -54,6 +54,18 @@ bool input_is_keydown(SDL_KeyCode key) {
 	return false;
 }
 
+bool input_is_keypressed(SDL_KeyCode key) {
+	for (int i = 0; i < INPUT_MAX_KEYS; i++) {
+		if (!keys[i]) continue;
+
+		if (key == keys[i]) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void input_update(void) {
 	memcpy(keys_prev, keys, sizeof(SDL_KeyCode) * INPUT_MAX_KEYS);
 }

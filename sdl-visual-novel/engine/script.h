@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define SC_SEL_STORAGE_SIZE 256
+
 typedef enum {
 	CHAR_SET = 1,
 	BG_CROSSFADE,
@@ -25,6 +27,10 @@ typedef enum {
 	SE_PLAY,
 	CG_CONTENT,
 	NEXT,
+	ADD_IMMEDIATE,
+	SUBTRACT_IMMEDIATE,
+	ADD_STORAGE,
+	SUBTRACT_STORAGE
 } opcode_t;
 
 extern bool sc_exec_desire;

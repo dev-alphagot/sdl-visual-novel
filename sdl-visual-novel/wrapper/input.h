@@ -13,4 +13,6 @@ void input_keyup(SDL_KeyCode key);
 
 bool input_is_keydown(SDL_KeyCode key);
 
+bool input_is_keypressed(SDL_KeyCode key);
+
 void input_update(void);

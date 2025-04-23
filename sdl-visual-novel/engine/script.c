@@ -31,7 +31,7 @@ static char fnb[80] = "";
 static int ingame_bgm_c = 0;
 static Mix_Music* ingame_bgm_w;
 
-uint8_t sc_sel_storage[128] = { 0 };
+uint8_t sc_sel_storage[SC_SEL_STORAGE_SIZE] = { 0 };
 
 char** sc_script_index_table = NULL;
 int sc_scripts = 0;
@@ -341,6 +341,38 @@ int sc_exec(void) {
             sc_index_next = cid;
 			break;
 		}
+        case ADD_IMMEDIATE:
+        {
+            uint8_t cid = 0;
+            fread(&cid, 1, 1, sc_script);
+
+            reg += cid;
+            break;
+        }
+        case SUBTRACT_IMMEDIATE:
+        {
+            uint8_t cid = 0;
+            fread(&cid, 1, 1, sc_script);
+
+            reg -= cid;
+            break;
+        }
+        case ADD_STORAGE:
+        {
+            short cid = 0;
+            fread(&cid, 2, 1, sc_script);
+
+            reg += sc_sel_storage[cid];
+            break;
+        }
+        case SUBTRACT_STORAGE:
+        {
+            short cid = 0;
+            fread(&cid, 2, 1, sc_script);
+
+            reg -= sc_sel_storage[cid];
+            break;
+        }
 		}
     } while (sc_delay == 0);
 
@@ -399,7 +431,7 @@ void sc_init(void) {
     fread(&sc_index_current, sizeof(int), 1, save);
     fread(&sc_index_next, sizeof(int), 1, save);
     fread(sc_save_version, 16, 1, save);
-    fread(sc_sel_storage, 1, 128, save);
+    fread(sc_sel_storage, 1, SC_SEL_STORAGE_SIZE, save);
     
     int swd = 0;
     fread(&swd, sizeof(int), 1, save);
@@ -414,7 +446,7 @@ void sc_reset(void) {
     sc_save_last = 0;
 	sc_index_current = 2;
 	sc_index_next = 2;
-	memset(sc_sel_storage, 0, 128);
+	memset(sc_sel_storage, 0, SC_SEL_STORAGE_SIZE);
 }
 
 void sc_save(void) {
@@ -424,7 +456,7 @@ void sc_save(void) {
     fwrite(&sc_index_current, sizeof(int), 1, save);
     fwrite(&sc_index_next, sizeof(int), 1, save);
     fwrite(VERSION, 16, 1, save);
-    fwrite(sc_sel_storage, 1, 128, save);
+    fwrite(sc_sel_storage, 1, SC_SEL_STORAGE_SIZE, save);
     fwrite(&sc_words, sizeof(int), 1, save);
     fwrite(sc_word_collected, sc_words, 1, save);
     fclose(save);

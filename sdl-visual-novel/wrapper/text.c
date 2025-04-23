@@ -43,7 +43,7 @@ err_text_t text_init(SDL_Renderer* _renderer) {
 		if (!(fonts[i] = TTF_OpenFont(ss, 48))) {
 			return TEXT_FONT_LOAD_FAILED;
 		}
-		TTF_SetFontHinting(fonts[i], TTF_HINTING_NORMAL);
+		TTF_SetFontHinting(fonts[i], TTF_HINTING_LIGHT);
 	}
 
 
