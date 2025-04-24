@@ -78,7 +78,7 @@ void sc_ingame_text(void) {
 	memset(spk_buffer, 0, 2048);
 	spk_offset = 0;
 	spk_ticks = 0;
-	text_content(kg, u8"Z 키로 넘기기");
+	text_content(kg, u8"Z | 넘기기\u3000\u3000P | 그만두고 나가기");
 }
 
 static void sc_ingame_emotion(void) {
@@ -254,13 +254,13 @@ static void sc_ingame_sel_clear(void) {
 		text_content(ingame_sel_txt_ids[i], "");
 	}
 
-	text_content(kg, u8"Z 키로 넘기기");
+	text_content(kg, u8"Z | 넘기기\u3000\u3000P | 그만두고 나가기");
 }
 
 void sc_ingame_sel_disp(void) {
 	ingame_sel_disp = true;
 
-	text_content(kg, u8"⇅ 키로 선택 Z 키로 확정");
+	text_content(kg, u8"⇅ | 선택  Z | 확정");
 
 	for (int i = 0; i < 10; i++) {
 		printf("%s\n", ingame_sel_text[i]);
@@ -341,11 +341,11 @@ static void sc_ingame_initialize(void) {
 	);
 
 	kg = -text_add_as(
-		u8"Z 키로 넘기기",
-		NANUMGOTHICEXTRABOLD,
-		WINDOW_WIDTH / 2, WINDOW_HEIGHT - 16,
+		u8"Z | 넘기기\u3000\u3000P | 그만두고 나가기",
+		SPOQAHANSANSBOLD,
+		WINDOW_WIDTH - 36, WINDOW_HEIGHT - 16,
 		255, 255, 255, 255,
-		0.25f, 0.25f, H_CENTER, BOTTOM
+		0.25f, 0.25f, RIGHT, BOTTOM
 	);
 	if (!st_key_guide) text_move(kg, 0, 3250);
 

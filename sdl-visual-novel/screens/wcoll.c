@@ -211,8 +211,8 @@ static void sc_wcoll_initialize(void) {
 	wcoll_ct_seg = 3;
 
 	int kg = -text_add_as(
-		u8"⇄ ⇅\n키 키\n로 로\n\n페 스\n이 크\n지 롤\n\n변\n경",
-		NANUMGOTHICBOLD,
+		u8"⇄ ⇅\n키 키\n로 로\n\n넘 스\n기 크\n기 롤",
+		SPOQAHANSANSBOLD,
 		25, 8,
 		20, 20, 20, 255,
 		0.333333f, 0.333333f, LEFT, TOP

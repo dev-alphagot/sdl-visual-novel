@@ -154,7 +154,7 @@ static void sc_settings_initialize(void) {
 
 	kg = -text_add_as(
 		u8"⇅ 키로 선택 ⇄ 키로 조절",
-		NANUMGOTHICEXTRABOLD,
+		SPOQAHANSANSBOLD,
 		WINDOW_WIDTH / 2 + 24, WINDOW_HEIGHT - 36,
 		255, 255, 255, 255,
 		0.333333f, 0.333333f, H_CENTER, V_CENTER
@@ -180,7 +180,7 @@ static void sc_settings_initialize(void) {
 	}
 
 	for (int i = SLIDER_COUNT; i < OPTION_COUNT; i++) {
-		int r = i == 0 ? (int)(st_key_guide) : (int)(!st_scale_low_quality);
+		int r = i == SLIDER_COUNT ? (int)(!st_key_guide) : (int)(!st_scale_low_quality);
 
 		sliders[i] = (settings_option_t){
 			RADIO,

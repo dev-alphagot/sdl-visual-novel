@@ -143,7 +143,7 @@ static void sc_title_initialize(void) {
 
 	int kg = -text_add_as(
 		u8"⇅ 키로 선택 Z 키로 확정",
-		NANUMGOTHICEXTRABOLD,
+		SPOQAHANSANSBOLD,
 		WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT - 36,
 		255, 255, 255, 255,
 		0.333333f, 0.333333f, H_CENTER, V_CENTER
