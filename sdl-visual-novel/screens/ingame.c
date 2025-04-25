@@ -71,6 +71,23 @@ static int imx = 10;
 static int spk_bg_hide_tick = 0;
 
 static int kg;
+static int kg_bg;
+
+static void sc_ingame_key_guide_sel(void) {
+	if (!st_key_guide) return;
+
+	image_alpha(kg_bg, 144);
+	text_content(kg, u8"⇅ | 선택\u3000\u3000Z | 확정");
+	text_pos(kg, WINDOW_WIDTH - 18, 24);
+}
+
+static void sc_ingame_key_guide_normal(void) {
+	if (!st_key_guide) return;
+
+	image_alpha(kg_bg, 0);
+	text_content(kg, u8"Z | 넘기기\u3000\u3000P | 그만두고 나가기");
+	text_pos(kg, WINDOW_WIDTH - 36, WINDOW_HEIGHT - 16);
+}
 
 void sc_ingame_text(void) {
 	if (!(spk_ticks < 0 && spk_offset < 0)) return;
@@ -78,7 +95,7 @@ void sc_ingame_text(void) {
 	memset(spk_buffer, 0, 2048);
 	spk_offset = 0;
 	spk_ticks = 0;
-	text_content(kg, u8"Z | 넘기기\u3000\u3000P | 그만두고 나가기");
+	sc_ingame_key_guide_normal();
 }
 
 static void sc_ingame_emotion(void) {
@@ -241,8 +258,8 @@ void sc_ingame_bg_cf_start(void){
 
 static void sc_ingame_sel_highlight(void) {
 	for (int i = 0; i < 10; i++) {
-		image_alpha(ingame_sel_img_ids[i], i >= (5 - (imx / 2)) && i < (5 - (imx / 2)) + imx ? 128 : 0);
-		text_color(ingame_sel_txt_ids[i], 255, 255, 255, i >= (5 - (imx / 2)) && i < (5 - (imx / 2)) + imx ? 128 : 0);
+		image_alpha(ingame_sel_img_ids[i], i >= (5 - (imx / 2)) && i < (5 - (imx / 2)) + imx ? 96 : 0);
+		text_color(ingame_sel_txt_ids[i], 255, 255, 255, i >= (5 - (imx / 2)) && i < (5 - (imx / 2)) + imx ? 96 : 0);
 	}
 	image_alpha(ingame_sel_img_ids[ingame_sel_last + (5 - (imx / 2))], 255);
 	text_color(ingame_sel_txt_ids[ingame_sel_last + (5 - (imx / 2))], 255, 255, 255, 255);
@@ -254,13 +271,14 @@ static void sc_ingame_sel_clear(void) {
 		text_content(ingame_sel_txt_ids[i], "");
 	}
 
-	text_content(kg, u8"Z | 넘기기\u3000\u3000P | 그만두고 나가기");
+	text_content(kg, u8"");
+	image_alpha(kg_bg, 0);
 }
 
 void sc_ingame_sel_disp(void) {
 	ingame_sel_disp = true;
 
-	text_content(kg, u8"⇅ | 선택  Z | 확정");
+	sc_ingame_key_guide_sel();
 
 	for (int i = 0; i < 10; i++) {
 		printf("%s\n", ingame_sel_text[i]);
@@ -348,6 +366,11 @@ static void sc_ingame_initialize(void) {
 		0.25f, 0.25f, RIGHT, BOTTOM
 	);
 	if (!st_key_guide) text_move(kg, 0, 3250);
+	kg_bg = -image_add(
+		"image/ui/ingame_key_guide_bg.png", WINDOW_WIDTH - 8, 16, 0.25f, 0.4f, RIGHT, V_CENTER
+	);
+	image_color(kg_bg, 32, 32, 32);
+	image_alpha(kg_bg, 0);
 
 	for (int i = 0; i < 10; i++) {
 		ingame_sel_img_ids[i] = -image_add(
@@ -391,24 +414,16 @@ static void sc_ingame_render(void) {
 
 			if (spk_bg_hide_tick > 5) {
 				image_alpha(speak_bg, 0);
-				if(!ingame_sel_disp)
+				if (!ingame_sel_disp) {
 					text_content(kg, u8"");
+					image_alpha(kg_bg, 0);
+				}
 			}
 		}
 		else {
 			image_alpha(speak_bg, 255);
 			spk_bg_hide_tick = 0;
 		}
-	}
-
-	if (emo_ticks < 0 && input_is_keydown(SDLK_a)) {
-		emo_ticks = 0;
-		fupdate_add(45, sc_ingame_emotion);
-	}
-
-	if (bg_cf_ticks < 0 && input_is_keydown(SDLK_s)) {
-		bg_cf_ticks = 0;
-		fupdate_add(61, sc_ingame_bg_cf);
 	}
 
 	if (sc_delay == 65534 && input_is_keydown(SDLK_z)) {
