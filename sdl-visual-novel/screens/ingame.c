@@ -78,7 +78,7 @@ static void sc_ingame_key_guide_sel(void) {
 
 	image_alpha(kg_bg, 144);
 	text_content(kg, u8"⇅ | 선택\u3000\u3000Z | 확정");
-	text_pos(kg, WINDOW_WIDTH - 18, 24);
+	text_pos(kg, WINDOW_WIDTH - 22, 34);
 }
 
 static void sc_ingame_key_guide_normal(void) {
@@ -363,11 +363,11 @@ static void sc_ingame_initialize(void) {
 		SPOQAHANSANSBOLD,
 		WINDOW_WIDTH - 36, WINDOW_HEIGHT - 16,
 		255, 255, 255, 255,
-		0.25f, 0.25f, RIGHT, BOTTOM
+		0.333333f, 0.333333f, RIGHT, BOTTOM
 	);
 	if (!st_key_guide) text_move(kg, 0, 3250);
 	kg_bg = -image_add(
-		"image/ui/ingame_key_guide_bg.png", WINDOW_WIDTH - 8, 16, 0.25f, 0.4f, RIGHT, V_CENTER
+		"image/ui/ingame_key_guide_bg.png", WINDOW_WIDTH - 8, 24, 0.333333f, 0.533333f, RIGHT, V_CENTER
 	);
 	image_color(kg_bg, 32, 32, 32);
 	image_alpha(kg_bg, 0);

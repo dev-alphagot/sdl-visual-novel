@@ -55,6 +55,12 @@ const char* text_error_str(err_text_t err);
 err_text_t text_init(SDL_Renderer* renderer);
 void text_end(void);
 
+SDL_Texture* text_create_texture(
+	const char* text1, SDL_Color color, font_t font,
+	int w1,
+	float sx, float sy
+);
+
 err_text_t text_add_o(const char* text, SDL_Color color, font_t font, int x, int y, int w, float sx, float sy, halign_t ha, valign_t va);
 
 err_text_t text_add(const char* text, font_t font, int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);

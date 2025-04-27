@@ -140,6 +140,7 @@
     <ClCompile Include="boot.c" />
     <ClCompile Include="engine\character.c" />
     <ClCompile Include="engine\fupdate.c" />
+    <ClCompile Include="engine\modal.c" />
     <ClCompile Include="engine\screen.c" />
     <ClCompile Include="engine\script.c" />
     <ClCompile Include="engine\texthold.c" />
@@ -158,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="engine\character.h" />
     <ClInclude Include="engine\fupdate.h" />
+    <ClInclude Include="engine\modal.h" />
     <ClInclude Include="engine\screen.h" />
     <ClInclude Include="engine\script.h" />
     <ClInclude Include="engine\texthold.h" />

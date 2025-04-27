@@ -15,6 +15,7 @@
 #include "engine/fupdate.h"
 #include "engine/screen.h"
 #include "engine/texthold.h"
+#include "engine/modal.h"
 
 #include "wrapper/text.h"
 #include "wrapper/image.h"
@@ -92,6 +93,8 @@ int _main(void) {
 
     th_init();
 
+	modal_init(renderer);
+
     Mix_VolumeMusic(vol_bgm);
 
     decide_sfx = Mix_LoadWAV("sound/se/decide.wav");
@@ -147,6 +150,8 @@ int _main(void) {
         image_render();
 
         text_render();
+
+        modal_render();
 
         fupdate_update();
 

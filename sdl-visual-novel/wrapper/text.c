@@ -76,6 +76,86 @@ static int text_able_index(void) {
 	return -1;
 }
 
+SDL_Texture* text_create_texture(
+	const char* text1, SDL_Color color, font_t font,
+	int w1,
+	float sx, float sy
+) {
+	if (!text1) return TEXT_STRING_NULL;
+
+	char* text = strlen(text1) ? text1 : " ";
+
+	if (font < 0 || font >= FONT_COUNT) return TEXT_INVALID_FONT;
+
+	int w2 = 0;
+
+	char* ss = strdup(text);
+
+	int lfc = 0;
+	int mx = 0;
+
+	for (int i = 0; i < strlen(ss); i++) {
+		if (ss[i] == '\n') lfc++;
+	}
+
+	if (lfc == 0) {
+		TTF_MeasureUTF8(fonts[font], text, WINDOW_WIDTH / sx, &w2, NULL);
+	}
+	else {
+		for (int i = 0; i <= lfc; i++) {
+			ss = strtok(i == 0 ? ss : NULL, "\n");
+
+			int r = 0;
+
+			TTF_MeasureUTF8(fonts[font], ss, WINDOW_WIDTH / sx, &r, NULL);
+
+			r += r % 2;
+			r += 48;
+
+			if (mx < r) mx = r;
+		}
+
+		w2 = mx;
+	}
+
+	w2 = (int)(ceil(w2 * sx));
+
+#if VERBOSE
+	if (!surfaces[index])
+		printf("SDL Info @ %s: %d %d\n", __func__, w2, (int)ceil(w2 / sx));
+#endif
+
+	int w = (w1 <= -1 ? w2 : (int)(ceil(w1 * sx)));
+
+	//tx.w = w;
+	//texts[index] = tx;
+	SDL_Surface* sf = TTF_RenderUTF8_Blended_Wrapped(fonts[font], text, color, (int)ceil(w / sx));
+#if VERBOSE
+	if (!surfaces[index])
+		printf("SDL Error @ %s: %s\n", __func__, SDL_GetError());
+#endif
+	if (!sf) return TEXT_SURFACE_NULL;
+
+	SDL_Texture* tx = SDL_CreateTextureFromSurface(renderer, sf);
+#if VERBOSE
+	if (!text_textures[index])
+		printf("SDL Error @ %s: %s\n", __func__, SDL_GetError());
+#endif
+	if (!tx) return TEXT_FONT_TEXTURE_NULL;
+
+	SDL_SetSurfaceBlendMode(sf, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureBlendMode(tx, SDL_BLENDMODE_BLEND);
+
+	int wx = w;
+	int wy = (int)ceil(sf->h * sy);
+
+#if VERBOSE
+	printf("SDL Info @ %s: #%d %ld %ld %ld %ld (%d %d %d %f %f)\n", __func__, index, rt.x, rt.y, rt.w, rt.h, w2, surfaces[index]->w, surfaces[index]->h, sx, sy);
+#endif
+
+	return tx;
+}
+
 // 성공 시 (인덱스 * -1)을 반환
 err_text_t text_add_o(
 	const char* text1, SDL_Color color, font_t font, 

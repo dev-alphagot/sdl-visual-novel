@@ -10,11 +10,12 @@
 #include "../engine/character.h"
 #include "../engine/texthold.h"
 #include "../engine/script.h"
+#include "../engine/modal.h"
 
 #include "../misc.h"
 #include "../util.h"
 
-#include <SDL2/SDL_Mixer.h>
+#include <SDL2/SDL_mixer.h>
 #include <time.h>
 
 #define OP_COUNT 5
@@ -130,7 +131,7 @@ static void sc_title_initialize(void) {
 		return 1;
 	}
 
-	modal_bg = -image_add(
+	/*modal_bg = -image_add(
 		"image/bg/white.png", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 6.8f, 2.4f, H_CENTER, V_CENTER
 	);
 	modal_text = -text_add_as(
@@ -139,7 +140,9 @@ static void sc_title_initialize(void) {
 		WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + RYUGU,
 		0, 0, 0, 255,
 		0.5f, 0.5f, H_CENTER, V_CENTER
-	);
+	);*/
+
+	//image_alpha(modal_bg, 0);
 
 	int kg = -text_add_as(
 		u8"⇅ 키로 선택 Z 키로 확정",
@@ -149,8 +152,6 @@ static void sc_title_initialize(void) {
 		0.333333f, 0.333333f, H_CENTER, V_CENTER
 	);
 	if (!st_key_guide) text_content(kg, "");
-
-	image_alpha(modal_bg, 0);
 
 	// Mix_PlayMusic(titlemusic, 1 << 30);
 
@@ -170,20 +171,22 @@ static void sc_title_initialize(void) {
 }
 
 static void sc_title_modal_0(void) {
-	sc_title_modal_off();
+	//sc_title_modal_off();
 	sc_reset();
 	screen_change("ingame");
 }
 
 static void sc_title_modal_1(void) {
-	sc_title_modal_off();
+	//sc_title_modal_off();
 	screen_change("ingame");
 }
 
 static void sc_title_render(void) {
 	vTicks++;
 
-	if (modal) {
+	if (modal_is_on) {
+		return;
+
 		if (input_is_keydown(SDLK_z)) {
 			Mix_PlayChannel(-1, decide_sfx, 0);
 			modal_proceed_callback();
@@ -223,11 +226,14 @@ static void sc_title_render(void) {
 					th_search(sc_index_current + 99700000, &th);
 
 					sprintf(sss,
-						u8"이전에 플레이하던 데이터가 있습니다.\n%d년 %d월 %d일 %d시 %d분에 마지막으로 플레이하였으며,\n%s까지 진행했습니다.\n\n플레이 데이터를 초기화하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
+						u8"이전에 플레이하던 데이터가 있습니다.\n%d년 %d월 %d일 %d시 %d분에 마지막으로 플레이했으며,\n%s까지 진행했습니다.\n\n[확인]을 선택하면 저장 데이터가 초기화됩니다."
 						, tw->tm_year + 1900, tw->tm_mon + 1, tw->tm_mday, tw->tm_hour, tw->tm_min, th.value);
-					modal_text_ptr = sss;
+					
+					/*modal_text_ptr = sss;
 					modal_proceed_callback = sc_title_modal_0;
-					sc_title_modal_on();
+					sc_title_modal_on();*/
+
+					modal_on(ACTIONS_OK_CANCEL, sss, sc_title_modal_0, modal_off);
 				}
 				else {
 					sc_reset();
@@ -239,11 +245,14 @@ static void sc_title_render(void) {
 					static char sss[1536] = "";
 
 					sprintf(sss,
-						u8"%s 버전의 플레이 데이터가 있습니다.\n현재 버전은 %s이며,\n다른 버전의 저장 데이터를 불러오면\n예기치 못한 오류가 발생할 수 있습니다.\n\n무시하고 계속하려면 Z 키를,\n돌아가려면 X 키를 눌러주세요."
+						u8"%s 버전의 플레이 데이터가 있습니다.\n현재 버전은 %s이며,\n다른 버전의 저장 데이터를 불러오면\n예기치 못한 오류가 발생할 수 있습니다.\n\n[확인]을 선택하면 무시하고 계속 진행합니다."
 						, sc_save_version, VERSION);
-					modal_text_ptr = sss;
+
+					/*modal_text_ptr = sss;
 					modal_proceed_callback = sc_title_modal_1;
-					sc_title_modal_on();
+					sc_title_modal_on();*/
+
+					modal_on(ACTIONS_OK_CANCEL, sss, sc_title_modal_1, modal_off);
 				}
 				else {
 					screen_change("ingame");

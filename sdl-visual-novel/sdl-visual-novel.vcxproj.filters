@@ -84,6 +84,9 @@
     <ClCompile Include="screens\settings.c">
       <Filter>소스 파일\screens</Filter>
     </ClCompile>
+    <ClCompile Include="engine\modal.c">
+      <Filter>소스 파일\engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="misc.h">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="screens\settings.h">
       <Filter>헤더 파일\screens</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\modal.h">
+      <Filter>헤더 파일\engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
