@@ -123,10 +123,10 @@ int _main(void) {
     SDL_Texture* blurTex = SDL_CreateTexture(renderer,
         SDL_PIXELFORMAT_RGBA8888,
         SDL_TEXTUREACCESS_TARGET,
-        WINDOW_WIDTH / 20, WINDOW_HEIGHT / 20);
+        WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    SDL_SetTextureScaleMode(target, SDL_ScaleModeLinear);
-    SDL_SetTextureScaleMode(blurTex, SDL_ScaleModeLinear);
+    //SDL_SetTextureScaleMode(target, SDL_ScaleModeLinear);
+    //SDL_SetTextureScaleMode(blurTex, SDL_ScaleModeLinear);
 
     while (!quit) {
         while (SDL_PollEvent(&event)) {
@@ -169,16 +169,34 @@ int _main(void) {
         //SDL_SetRenderTarget(renderer, NULL);
 
         if (modal_is_on) {
+            SDL_SetTextureBlendMode(target, SDL_BLENDMODE_BLEND);
+
             SDL_SetRenderTarget(renderer, blurTex);
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
             SDL_RenderClear(renderer);
 
-            SDL_RenderCopy(renderer, target, NULL, &(SDL_Rect){0, 0, WINDOW_WIDTH / 20, WINDOW_HEIGHT / 20});
+            struct Offset {
+                int x, y;
+                int alpha;
+            } offsets[] = {
+                { 0, 0, 128 },  // 중심
+                { -1, 0, 64 }, { 1, 0, 64 }, { 0, -1, 64 }, { 0, 1, 64 }, // 1칸 거리
+                { -2, 0, 32 }, { 2, 0, 32 }, { 0, -2, 32 }, { 0, 2, 32 }, // 2칸 거리
+                { -1, -1, 48 }, { 1, -1, 48 }, { -1, 1, 48 }, { 1, 1, 48 }, // 대각
+                { -2, -2, 16 }, { 2, -2, 16 }, { -2, 2, 16 }, { 2, 2, 16 }, // 먼 대각
+            };
 
+            for (int i = 0; i < sizeof(offsets) / sizeof(offsets[0]); ++i) {
+                SDL_SetTextureAlphaMod(target, offsets[i].alpha);
+                SDL_Rect dst = { offsets[i].x, offsets[i].y, WINDOW_WIDTH, WINDOW_HEIGHT };
+                SDL_RenderCopy(renderer, target, NULL, &dst);
+            }
             SDL_SetRenderTarget(renderer, NULL);
-            SDL_RenderCopy(renderer, blurTex, NULL, &(SDL_Rect){0, 0, WINDOW_WIDTH, WINDOW_HEIGHT});
+            SDL_RenderCopy(renderer, blurTex, NULL, &((SDL_Rect) { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT }));
         }
         else {
+            SDL_SetTextureBlendMode(target, SDL_BLENDMODE_NONE);
+
             SDL_SetRenderTarget(renderer, NULL);
 
             SDL_Rect dst = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
