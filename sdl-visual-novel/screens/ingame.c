@@ -13,6 +13,7 @@
 #include "../engine/character.h"
 #include "../engine/script.h"
 #include "../engine/screen.h"
+#include "../engine/modal.h"
 
 #include <SDL2/SDL_Mixer.h>
 
@@ -395,6 +396,10 @@ static void sc_ingame_initialize(void) {
 	sc_exec_desire = true;
 }
 
+static void sc_ingame_exit(void) { 
+	screen_change("title");
+}
+
 static void sc_ingame_render(void) {
 	int res = 0;
 	
@@ -426,16 +431,21 @@ static void sc_ingame_render(void) {
 		}
 	}
 
-	if (sc_delay == 65534 && input_is_keydown(SDLK_z)) {
-		memset(ingame_name, 0, 128);
-		memset(spk_buffer, 0, 2048);
-		text_content(speak_name, "");
-		text_content(speak_content, "");
-		sc_delay = 0;
+	if (sc_delay == 65534 && !modal_is_on) {
+		if (input_is_keydown(SDLK_z)) {
+			memset(ingame_name, 0, 128);
+			memset(spk_buffer, 0, 2048);
+			text_content(speak_name, "");
+			text_content(speak_content, "");
+			sc_delay = 0;
+		}
+		else if (input_is_keydown(SDLK_p)) {
+			modal_on(ACTIONS_OK_CANCEL, "지금 그만두고 나가면 저장하지 않은 데이터는\n모두 사라지며, 복구할 수 없습니다.\n\n그래도 그만두려면 [확인]을 선택해주세요.", sc_ingame_exit, modal_off);
+		}
 	}
 
 	/// region SEL
-	if (sc_delay == 65535) {
+	if (sc_delay == 65535 && !modal_is_on) {
 		if (input_is_keydown(SDLK_UP)) {
 			puts("NEVER GONNA GIVE YOU UP");
 			ingame_sel_last--;
