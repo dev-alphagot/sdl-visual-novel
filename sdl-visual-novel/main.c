@@ -120,6 +120,14 @@ int _main(void) {
         SDL_TEXTUREACCESS_TARGET,
         WINDOW_WIDTH, WINDOW_HEIGHT);
 
+    SDL_Texture* blurTex = SDL_CreateTexture(renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        WINDOW_WIDTH / 20, WINDOW_HEIGHT / 20);
+
+    SDL_SetTextureScaleMode(target, SDL_ScaleModeLinear);
+    SDL_SetTextureScaleMode(blurTex, SDL_ScaleModeLinear);
+
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
@@ -158,27 +166,24 @@ int _main(void) {
 
         text_render();
 
-        SDL_SetRenderTarget(renderer, NULL);
+        //SDL_SetRenderTarget(renderer, NULL);
 
         if (modal_is_on) {
-            int offset = 8;
-            int step = 2;
+            SDL_SetRenderTarget(renderer, blurTex);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+            SDL_RenderClear(renderer);
 
-            /*SDL_SetTextureBlendMode(target, SDL_BLENDMODE_ADD);
-            SDL_SetTextureAlphaMod(target, 50);
+            SDL_RenderCopy(renderer, target, NULL, &(SDL_Rect){0, 0, WINDOW_WIDTH / 20, WINDOW_HEIGHT / 20});
 
-            for (int dy = -offset; dy <= offset; dy += step) {
-                for (int dx = -offset; dx <= offset; dx += step) {
-                    SDL_Rect dst = { dx, dy, WINDOW_WIDTH, WINDOW_HEIGHT };
-                    SDL_RenderCopy(renderer, target, NULL, &dst);
-                }
-            }*/
+            SDL_SetRenderTarget(renderer, NULL);
+            SDL_RenderCopy(renderer, blurTex, NULL, &(SDL_Rect){0, 0, WINDOW_WIDTH, WINDOW_HEIGHT});
         }
+        else {
+            SDL_SetRenderTarget(renderer, NULL);
 
-        
-
-        SDL_Rect dst = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-        SDL_RenderCopy(renderer, target, NULL, &dst);
+            SDL_Rect dst = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+            SDL_RenderCopy(renderer, target, NULL, &dst);
+        }
 
         modal_render();
 
