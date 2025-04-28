@@ -153,6 +153,8 @@ SDL_Texture* text_create_texture(
 	printf("SDL Info @ %s: #%d %ld %ld %ld %ld (%d %d %d %f %f)\n", __func__, index, rt.x, rt.y, rt.w, rt.h, w2, surfaces[index]->w, surfaces[index]->h, sx, sy);
 #endif
 
+	SDL_FreeSurface(sf);
+
 	return tx;
 }
 

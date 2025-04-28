@@ -128,6 +128,17 @@ int _main(void) {
     //SDL_SetTextureScaleMode(target, SDL_ScaleModeLinear);
     //SDL_SetTextureScaleMode(blurTex, SDL_ScaleModeLinear);
 
+    struct Offset {
+        int x, y;
+        int alpha;
+    } offsets[] = {
+        { 0, 0, 128 },  // 중심
+        { -1, 0, 64 }, { 1, 0, 64 }, { 0, -1, 64 }, { 0, 1, 64 }, // 1칸 거리
+        { -2, 0, 32 }, { 2, 0, 32 }, { 0, -2, 32 }, { 0, 2, 32 }, // 2칸 거리
+        { -1, -1, 48 }, { 1, -1, 48 }, { -1, 1, 48 }, { 1, 1, 48 }, // 대각
+        { -2, -2, 16 }, { 2, -2, 16 }, { -2, 2, 16 }, { 2, 2, 16 }, // 먼 대각
+    };
+
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
@@ -175,18 +186,7 @@ int _main(void) {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
             SDL_RenderClear(renderer);
 
-            struct Offset {
-                int x, y;
-                int alpha;
-            } offsets[] = {
-                { 0, 0, 128 },  // 중심
-                { -1, 0, 64 }, { 1, 0, 64 }, { 0, -1, 64 }, { 0, 1, 64 }, // 1칸 거리
-                { -2, 0, 32 }, { 2, 0, 32 }, { 0, -2, 32 }, { 0, 2, 32 }, // 2칸 거리
-                { -1, -1, 48 }, { 1, -1, 48 }, { -1, 1, 48 }, { 1, 1, 48 }, // 대각
-                { -2, -2, 16 }, { 2, -2, 16 }, { -2, 2, 16 }, { 2, 2, 16 }, // 먼 대각
-            };
-
-            for (int i = 0; i < sizeof(offsets) / sizeof(offsets[0]); ++i) {
+            for (int i = 0; i < sizeof(offsets) / sizeof(offsets[0]); i++) {
                 SDL_SetTextureAlphaMod(target, offsets[i].alpha);
                 SDL_Rect dst = { offsets[i].x, offsets[i].y, WINDOW_WIDTH, WINDOW_HEIGHT };
                 SDL_RenderCopy(renderer, target, NULL, &dst);
