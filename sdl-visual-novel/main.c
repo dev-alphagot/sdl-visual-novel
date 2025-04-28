@@ -115,6 +115,11 @@ int _main(void) {
     SDL_initFramerate(&fpsManager);
     SDL_setFramerate(&fpsManager, 60);
 
+    SDL_Texture* target = SDL_CreateTexture(renderer,
+        SDL_PIXELFORMAT_RGBA8888,
+        SDL_TEXTUREACCESS_TARGET,
+        WINDOW_WIDTH, WINDOW_HEIGHT);
+
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_KEYDOWN) {
@@ -141,6 +146,8 @@ int _main(void) {
             fullscreen = !fullscreen;
         }
 
+        SDL_SetRenderTarget(renderer, target);
+
         SDL_SetRenderDrawColor(renderer, bg_fill_color.r, bg_fill_color.g, bg_fill_color.b, bg_fill_color.a);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -150,6 +157,28 @@ int _main(void) {
         image_render();
 
         text_render();
+
+        SDL_SetRenderTarget(renderer, NULL);
+
+        if (modal_is_on) {
+            int offset = 8;
+            int step = 2;
+
+            /*SDL_SetTextureBlendMode(target, SDL_BLENDMODE_ADD);
+            SDL_SetTextureAlphaMod(target, 50);
+
+            for (int dy = -offset; dy <= offset; dy += step) {
+                for (int dx = -offset; dx <= offset; dx += step) {
+                    SDL_Rect dst = { dx, dy, WINDOW_WIDTH, WINDOW_HEIGHT };
+                    SDL_RenderCopy(renderer, target, NULL, &dst);
+                }
+            }*/
+        }
+
+        
+
+        SDL_Rect dst = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
+        SDL_RenderCopy(renderer, target, NULL, &dst);
 
         modal_render();
 
