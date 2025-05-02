@@ -356,7 +356,7 @@ static void sc_ingame_initialize(void) {
 		CAFE24SSUKSSUK,
 		220, WINDOW_HEIGHT - 180,
 		255, 255, 255, 255,
-		0.5, 0.5, LEFT, TOP
+		0.625f, 0.625f, LEFT, TOP
 	);
 
 	kg = -text_add_as(
