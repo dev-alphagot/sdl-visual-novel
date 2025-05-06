@@ -14,7 +14,7 @@ typedef struct {
 	void (*dispose)(void);
 } screen_t;
 
-extern screen_t screens[6];
+extern screen_t screens[];
 
 void screen_init(SDL_Renderer* _renderer, int scc);
 

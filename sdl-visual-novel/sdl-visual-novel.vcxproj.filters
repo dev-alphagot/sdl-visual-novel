@@ -72,9 +72,6 @@
     <ClCompile Include="screens\ingame.c">
       <Filter>소스 파일\screens</Filter>
     </ClCompile>
-    <ClCompile Include="screens\fliptest.c">
-      <Filter>소스 파일\screens</Filter>
-    </ClCompile>
     <ClCompile Include="wrapper\input.c">
       <Filter>소스 파일\wrapper</Filter>
     </ClCompile>
@@ -86,6 +83,12 @@
     </ClCompile>
     <ClCompile Include="engine\modal.c">
       <Filter>소스 파일\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="screens\diary.c">
+      <Filter>소스 파일\screens</Filter>
+    </ClCompile>
+    <ClCompile Include="screens\ending.c">
+      <Filter>소스 파일\screens</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -116,9 +119,6 @@
     <ClInclude Include="engine\script.h">
       <Filter>헤더 파일\engine</Filter>
     </ClInclude>
-    <ClInclude Include="screens\fliptest.h">
-      <Filter>헤더 파일\screens</Filter>
-    </ClInclude>
     <ClInclude Include="screens\ingame.h">
       <Filter>헤더 파일\screens</Filter>
     </ClInclude>
@@ -142,6 +142,12 @@
     </ClInclude>
     <ClInclude Include="engine\modal.h">
       <Filter>헤더 파일\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="screens\diary.h">
+      <Filter>헤더 파일\screens</Filter>
+    </ClInclude>
+    <ClInclude Include="screens\ending.h">
+      <Filter>헤더 파일\screens</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

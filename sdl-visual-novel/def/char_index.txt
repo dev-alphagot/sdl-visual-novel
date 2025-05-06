@@ -3,6 +3,7 @@ sensei
 extra-student
 hibiki-telephone
 narrator
+diary-comments
 script-names
 word-coll-w
 word-coll-m

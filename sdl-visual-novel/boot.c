@@ -1,5 +1,9 @@
 #define SDL_MAIN_HANDLED
 
+#ifndef __STDC_CONSTANT_MACROS
+#define __STDC_CONSTANT_MACROS
+#endif
+
 #include "util.h"
 
 #include <stdio.h>

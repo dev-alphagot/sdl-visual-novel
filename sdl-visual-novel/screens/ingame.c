@@ -96,6 +96,7 @@ void sc_ingame_text(void) {
 	memset(spk_buffer, 0, 2048);
 	spk_offset = 0;
 	spk_ticks = 0;
+	puts("magnolia");
 	sc_ingame_key_guide_normal();
 }
 
@@ -427,6 +428,7 @@ static void sc_ingame_render(void) {
 		}
 		else {
 			image_alpha(speak_bg, 255);
+			sc_ingame_key_guide_normal();
 			spk_bg_hide_tick = 0;
 		}
 	}

@@ -24,9 +24,10 @@
 #include "screens/notice.h"
 #include "screens/title.h"
 #include "screens/ingame.h"
-#include "screens/fliptest.h"
+#include "screens/diary.h"
 #include "screens/wcoll.h"
 #include "screens/settings.h"
+#include "screens/ending.h"
 
 static bool fullscreen = false;
 
@@ -85,11 +86,14 @@ int _main(void) {
     screens[0] = sc_notice;
     screens[1] = sc_title;
     screens[2] = sc_ingame;
-    screens[3] = sc_fliptest;
+    screens[3] = sc_diary;
     screens[4] = sc_wcoll;
     screens[5] = sc_settings;
+    screens[6] = sc_ending;
 
-    screen_init(renderer, 6);
+    sc_ending_renderer = renderer;
+
+    screen_init(renderer, 7);
 
     th_init();
 

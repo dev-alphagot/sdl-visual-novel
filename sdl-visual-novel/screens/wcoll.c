@@ -265,15 +265,25 @@ static void sc_wcoll_initialize(void) {
 }
 
 static void sc_wcoll_render(void) {
+	static int prev_sel = 0;
+
 	if (input_is_keydown(SDLK_LEFT) && !wcoll_exiting) {
 		wcoll_sel--;
 		iclamp(&wcoll_sel, 0, wcoll_count - 1);
-		sc_wcoll_segment_update();
+
+		if (wcoll_sel != prev_sel) {
+			prev_sel = wcoll_sel;
+			sc_wcoll_segment_update();
+		}
 	}
 	else if (input_is_keydown(SDLK_RIGHT) && !wcoll_exiting) {
 		wcoll_sel++;
 		iclamp(&wcoll_sel, 0, wcoll_count - 1);
-		sc_wcoll_segment_update();
+
+		if (wcoll_sel != prev_sel) {
+			prev_sel = wcoll_sel;
+			sc_wcoll_segment_update();
+		}
 	}
 
 	if (input_is_keydown(SDLK_UP) && !wcoll_exiting) {

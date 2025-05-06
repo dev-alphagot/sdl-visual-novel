@@ -18,7 +18,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <time.h>
 
-#define OP_COUNT 5
+#define OP_COUNT 6
 #define RYUGU 1770 // 용궁으로 보내는 위치 상수
 
 static int vTicks = 0;
@@ -34,6 +34,7 @@ static const char* op_ctt[OP_COUNT] = {
 	u8"처음부터",
 	u8"이어서",
 	u8"단어장",
+	u8"일기장",
 	u8"설정",
 	u8"종료"
 };
@@ -199,7 +200,7 @@ static void sc_title_render(void) {
 	else {
 		if (input_is_keydown(SDLK_UP)) {
 			op_sel--;
-			op_sel = (op_sel + 5) % OP_COUNT;
+			op_sel = (op_sel + OP_COUNT) % OP_COUNT;
 			// iclamp(&op_sel, 0, OP_COUNT - 1);
 			sc_title_op_highlight();
 		}
@@ -208,6 +209,9 @@ static void sc_title_render(void) {
 			op_sel %= OP_COUNT;
 			// iclamp(&op_sel, 0, OP_COUNT - 1);
 			sc_title_op_highlight();
+		}
+		else if (input_is_keydown(SDLK_RSHIFT)) {
+			screen_change("ending");
 		}
 		else if (input_is_keydown(SDLK_z)) {
 			printf("op_sel %d\n", op_sel);
@@ -262,9 +266,12 @@ static void sc_title_render(void) {
 				screen_change("wcoll");
 				break;
 			case 3:
-				screen_change("settings");
+				screen_change("diary");
 				break;
 			case 4:
+				screen_change("settings");
+				break;
+			case 5:
 				quit = 1;
 				break;
 			}
