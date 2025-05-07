@@ -38,7 +38,7 @@ err_text_t text_init(SDL_Renderer* _renderer) {
 
 	char ss[48] = "";
 	for (int i = 0; i < FONT_COUNT; i++) {
-		sprintf(ss, "font/%d.ttf", i);
+		sprintf_s(ss, 48, "font/%d.ttf", i);
 
 		if (!(fonts[i] = TTF_OpenFont(ss, 48))) {
 			return TEXT_FONT_LOAD_FAILED;

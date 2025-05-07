@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "settings.h"
 
@@ -97,7 +97,7 @@ static void sc_settings_value_adjust(int facing) {
 		sliders[slider_sel].r_value = rv;
 		image_scale(opt.gauge, (float)rv / 40.0f, 0.25f);
 
-		sprintf(pbuf, "%d%%", rv);
+		sprintf_s(pbuf, 13, "%d%%", rv);
 		text_content(opt.val_text, _strdup(pbuf));
 
 		switch (slider_sel) {
@@ -164,7 +164,7 @@ static void sc_settings_initialize(void) {
 	for (int i = 0; i < SLIDER_COUNT; i++) {
 		int r = i == 0 ? (int)(round(vol_bgm / 1.28f)) : (int)(round(vol_sfx / 1.28f));
 
-		sprintf(pbuf, "%d%%", r);
+		sprintf_s(pbuf, 5, "%d%%", r);
 
 		sliders[i] = (settings_option_t){
 			SLIDER,

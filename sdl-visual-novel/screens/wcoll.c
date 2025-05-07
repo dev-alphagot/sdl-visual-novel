@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "wcoll.h"
 
@@ -106,7 +106,7 @@ static void sc_wcoll_segment_update(void) {
 	text_pos(wcoll_segment_txt, 185, 135);
 
 	static char fb[80] = "";
-	sprintf(fb, "def/wcoll/%s.bin", wcoll_indices[wcoll_sel]);
+	sprintf_s(fb, 80, "def/wcoll/%s.bin", wcoll_indices[wcoll_sel]);
 
 	printf("%s\n", fb);
 	FILE* wc = fopen(fb, "rb");
@@ -131,7 +131,7 @@ static void sc_wcoll_segment_update(void) {
 
 	for (int i = 0; i < wcoll_ct_seg; i++) {
 		int id = 0;
-		fread(&id, 4, 1, wc);
+		fread_s(&id, 4, 4, 1, wc);
 
 		if (sc_word_collected[id - 99800000]) {
 			text_h_t txt = { -1, "" };

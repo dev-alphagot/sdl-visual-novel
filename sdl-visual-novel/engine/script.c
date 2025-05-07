@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "script.h"
 
@@ -83,8 +83,8 @@ int sc_exec(void) {
 
     if (!sc_script && sc_exec_desire) {
         static char fff[80] = "";
-		sprintf(fff, "def/scripts/%s.bin", sc_script_index_table[sc_index_next]);
-        sc_script = fopen(fff, "rb");
+		sprintf_s(fff, 80, "def/scripts/%s.bin", sc_script_index_table[sc_index_next]);
+        fopen_s(&sc_script, fff, "rb");
 		sc_index_current = sc_index_next;
     }
 
@@ -105,7 +105,7 @@ int sc_exec(void) {
             if (sc_saving_mk_tick == -2) sc_saving_mk_tick = -1;
         }
 
-		fread(&opc, 1, 1, sc_script);
+		fread_s(&opc, 1, 1, 1, sc_script);
 
 		printf("Script Offset %d OpCode: %d\n", ftell(sc_script) - 1, opc);
 
@@ -114,7 +114,7 @@ int sc_exec(void) {
         case CHAR_SET:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
 			for (int i = 0; i < CHAR_CAPACITY; i++) {
 				if (characters[i].id == cid) {
@@ -126,11 +126,11 @@ int sc_exec(void) {
 			text_font(speak_content, chr.font);
 
             if (cid != 990) {
-                sprintf(fnb, "%s/%s.png", chr.path, chr.emotions[0].path); 
+                sprintf_s(fnb, 80, "%s/%s.png", chr.path, chr.emotions[0].path); 
                 image_color(ingame_char, 255, 255, 255);
 
                 uint8_t ctmp = 0;
-                fread(&ctmp, 1, 1, sc_script);
+                fread_s(&ctmp, 1, 1, 1, sc_script);
 
                 fseek(sc_script, -1, SEEK_CUR);
 
@@ -145,7 +145,7 @@ int sc_exec(void) {
         case BG_CROSSFADE:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             bg_cf_index = cid;
             sc_ingame_bg_cf_start();
@@ -156,9 +156,9 @@ int sc_exec(void) {
         case BGM_PLAY:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
-            sprintf(fnb, "sound/bgm/%d.ogg", cid);
+            sprintf_s(fnb, 80, "sound/bgm/%d.ogg", cid);
             ingame_bgm_w = Mix_LoadMUS(fnb);
 
             if (ingame_bgm) {
@@ -175,7 +175,7 @@ int sc_exec(void) {
         case CG_SHOW:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             sc_ingame_cg_show(cid);
             sc_delay = 60;
@@ -200,7 +200,7 @@ int sc_exec(void) {
             strcpy_s(ingame_name, 128, th.value);
 
             int cid = 0;
-            fread(&cid, 4, 1, sc_script);
+            fread_s(&cid, 4, 4, 1, sc_script);
 
             th_search(cid, &th);
 
@@ -216,9 +216,9 @@ int sc_exec(void) {
             int ciw = 0;
             text_h_t th = { -1, "" };
 
-            fread(&cix, 1, 1, sc_script);
-            fread(&cid, 2, 1, sc_script);
-            fread(&ciw, 4, 1, sc_script);
+            fread_s(&cix, 1, 1, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
+            fread_s(&ciw, 4, 4, 1, sc_script);
 
 			printf("SEL_ADD %d %d %d\n", cix, cid, ciw);
 
@@ -241,7 +241,7 @@ int sc_exec(void) {
         case JUMP:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             fseek(sc_script, cid, SEEK_SET);
 
@@ -251,8 +251,8 @@ int sc_exec(void) {
         {
             uint8_t ccd = 0;
             short cid = 0;
-            fread(&ccd, 1, 1, sc_script);
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&ccd, 1, 1, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             printf("%d %d %d %d\n", reg, ccd, reg == ccd, cid);
             if (reg == ccd) fseek(sc_script, cid, SEEK_SET);
@@ -262,7 +262,7 @@ int sc_exec(void) {
         case WAIT:
         {
             unsigned short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             sc_delay = cid;
             break;
@@ -270,7 +270,7 @@ int sc_exec(void) {
         case SEL_SAVE:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             sc_sel_storage[cid] = reg;
 
@@ -279,7 +279,7 @@ int sc_exec(void) {
         case SEL_LOAD:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             reg = sc_sel_storage[cid];
 
@@ -300,7 +300,7 @@ int sc_exec(void) {
         case WCOLL_ADD:
         {
             int cid = 0;
-            fread(&cid, 4, 1, sc_script);
+            fread_s(&cid, 4, 4, 1, sc_script);
 
             sc_word_collected[cid - 99800000] = true;
             break;
@@ -308,16 +308,16 @@ int sc_exec(void) {
         case EMOTE:
         {
             uint8_t cid = 0;
-            fread(&cid, 1, 1, sc_script);
+            fread_s(&cid, 1, 1, 1, sc_script);
             sc_ingame_emote(cid);
             break;
         }
 		case SE_PLAY:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
-            sprintf(fnb, "sound/se/%d.wav", cid);
+            sprintf_s(fnb, 80, "sound/se/%d.wav", cid);
             Mix_Chunk* r = Mix_LoadWAV(fnb);
 
             Mix_VolumeChunk(r, vol_sfx);
@@ -329,7 +329,7 @@ int sc_exec(void) {
         case CG_CONTENT:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             sc_ingame_cg_content(cid);
 
@@ -338,7 +338,7 @@ int sc_exec(void) {
 		case NEXT:
 		{
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             sc_index_next = cid;
 			break;
@@ -346,7 +346,7 @@ int sc_exec(void) {
         case ADD_IMMEDIATE:
         {
             uint8_t cid = 0;
-            fread(&cid, 1, 1, sc_script);
+            fread_s(&cid, 1, 1, 1, sc_script);
 
             reg += cid;
             break;
@@ -354,7 +354,7 @@ int sc_exec(void) {
         case SUBTRACT_IMMEDIATE:
         {
             uint8_t cid = 0;
-            fread(&cid, 1, 1, sc_script);
+            fread_s(&cid, 1, 1, 1, sc_script);
 
             reg -= cid;
             break;
@@ -362,7 +362,7 @@ int sc_exec(void) {
         case ADD_STORAGE:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             reg += sc_sel_storage[cid];
             break;
@@ -370,7 +370,7 @@ int sc_exec(void) {
         case SUBTRACT_STORAGE:
         {
             short cid = 0;
-            fread(&cid, 2, 1, sc_script);
+            fread_s(&cid, 2, 2, 1, sc_script);
 
             reg -= sc_sel_storage[cid];
             break;
@@ -401,7 +401,7 @@ void sc_init(void) {
     sc_word_collected = calloc(sizeof(bool), wcnt);
     if (!sc_word_collected) return;
 
-    ff = fopen("def/script_index.txt", "rt");
+    fopen_s(&ff, "def/script_index.txt", "rt");
 
     wcnt = 1;
 
@@ -431,24 +431,24 @@ void sc_init(void) {
 
     FILE* cdf = fopen("cleared_date.bin", "rb");
     if (!cdf || !sc_script_cleared_date) goto SAVE;
-    fread(sc_cd_version, 16, 1, cdf);
-    fread(sc_script_cleared_date, sizeof(time_t), sc_scripts, cdf);
+    fread_s(sc_cd_version, 16, 16, 1, cdf);
+    fread_s(sc_script_cleared_date, sizeof(time_t) * sc_scripts, sizeof(time_t), sc_scripts, cdf);
     fclose(cdf);
 
 SAVE:
 
     FILE* save = fopen("save.bin", "rb");
     if (!save) return;
-    fread(&sc_save_last, sizeof(time_t), 1, save);
-    fread(&sc_index_current, sizeof(int), 1, save);
-    fread(&sc_index_next, sizeof(int), 1, save);
-    fread(sc_save_version, 16, 1, save);
-    fread(sc_sel_storage, 1, SC_SEL_STORAGE_SIZE, save);
+    fread_s(&sc_save_last, sizeof(time_t), sizeof(time_t), 1, save);
+    fread_s(&sc_index_current, sizeof(int), sizeof(int), 1, save);
+    fread_s(&sc_index_next, sizeof(int), sizeof(int), 1, save);
+    fread_s(sc_save_version, 16, 16, 1, save);
+    fread_s(sc_sel_storage, SC_SEL_STORAGE_SIZE, 1, SC_SEL_STORAGE_SIZE, save);
     
     int swd = 0;
-    fread(&swd, sizeof(int), 1, save);
+    fread_s(&swd, sizeof(int), sizeof(int), 1, save);
 	printf("WCOLL %d %d\n", swd, sc_words);
-    fread(sc_word_collected, sc_words > swd ? swd : sc_words, 1, save);
+    fread_s(sc_word_collected, sc_words > swd ? swd : sc_words, sc_words > swd ? swd : sc_words, 1, save);
     fclose(save);
 
 	printf("Save %lld %d %d\n", sc_save_last, sc_index_current, sc_index_next);

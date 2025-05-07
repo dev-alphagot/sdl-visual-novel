@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "character.h"
 
@@ -42,7 +42,7 @@ void char_init(void) {
 		str_trim_lf(64, tok);
 		// char* tok = strtok(i == 0 ? index_buf : NULL, "\n");
 		memset(f_buf, 0, 64);
-		sprintf(f_buf, "def/char/%s.txt", tok);
+		sprintf_s(f_buf, 64, "def/char/%s.txt", tok);
 
 		FILE* hl = fopen(f_buf, "rt");
 		int d = 0;
@@ -62,7 +62,7 @@ void char_init(void) {
 				chr.id = atoi(p_buf);
 			}
 			else if (j == 1) {
-				strcpy(chr.path, p_buf);
+				strcpy_s(chr.path, 64, p_buf);
 			}
 			else if (j == 2) {
 				chr.font = atoi(p_buf);
@@ -75,7 +75,7 @@ void char_init(void) {
 					chr.emotions[emo_index].movement_multiplier = atof(p_buf);
 				}
 				else {
-					strcpy(chr.emotions[emo_index].path, p_buf);
+					strcpy_s(chr.emotions[emo_index].path, 64, p_buf);
 				}
 			}
 		}

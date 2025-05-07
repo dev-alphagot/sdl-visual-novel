@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "ingame.h"
 
@@ -96,7 +96,6 @@ void sc_ingame_text(void) {
 	memset(spk_buffer, 0, 2048);
 	spk_offset = 0;
 	spk_ticks = 0;
-	puts("magnolia");
 	sc_ingame_key_guide_normal();
 }
 
@@ -104,7 +103,7 @@ static void sc_ingame_emotion(void) {
 	emotion_t emo = chr.emotions[emo_index];
 
 	if (emo_ticks == 0) {
-		sprintf(emo_buf, "%s/%s.png", chr.path, emo.path);
+		sprintf_s(emo_buf, 80, "%s/%s.png", chr.path, emo.path);
 		printf("%s\n", emo.path);
 		image_content(ingame_char, emo_buf);
 	}
@@ -129,7 +128,7 @@ static void sc_ingame_emotion(void) {
 static void sc_ingame_bg_cf(void) { // 배경 크로스페이드
 	char bgf[64] = "";
 
-	sprintf(bgf, "image/bg/%d.png", bg_cf_index);
+	sprintf_s(bgf, 64, "image/bg/%d.png", bg_cf_index);
 
 	if (bg_cf_ticks == 0) {
 		image_content(bg_cf, bgf);
@@ -222,7 +221,7 @@ static void sc_ingame_char_hide_task(void) { // 배경 크로스페이드
 }
 
 void sc_ingame_cg_show(short id) {
-	sprintf(cg_buf, "image/cg/%d.png", id);
+	sprintf_s(cg_buf, 64, "image/cg/%d.png", id);
 	cg_show_ticks = 0;
 	fupdate_add(61, sc_ingame_cg_show_task);
 }
@@ -233,7 +232,7 @@ void sc_ingame_cg_hide(void) {
 }
 
 void sc_ingame_cg_content(short id) {
-	sprintf(cg_buf, "image/cg/%d.png", id);
+	sprintf_s(cg_buf, 64, "image/cg/%d.png", id);
 	image_content(cg_id, cg_buf);
 }
 
@@ -449,20 +448,16 @@ static void sc_ingame_render(void) {
 	/// region SEL
 	if (sc_delay == 65535 && !modal_is_on) {
 		if (input_is_keydown(SDLK_UP)) {
-			puts("NEVER GONNA GIVE YOU UP");
 			ingame_sel_last--;
 			iclamp(&ingame_sel_last, 0, imx - 1);
 			sc_ingame_sel_highlight();
 		}
 		else if (input_is_keydown(SDLK_DOWN)) {
-			puts("GET DOWN");
 			ingame_sel_last++;
 			iclamp(&ingame_sel_last, 0, imx - 1);
 			sc_ingame_sel_highlight();
 		}
 		else if (input_is_keydown(SDLK_z)) {
-			puts("Z");
-
 			reg = ingame_sel_last + 1;
 			ingame_sel_disp = false;
 			sc_delay = 0;

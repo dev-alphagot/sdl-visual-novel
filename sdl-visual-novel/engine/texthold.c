@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "texthold.h"
 #include "character.h"
@@ -144,7 +144,7 @@ void th_load(void) {
     for (int i = 0; i < CHAR_CAPACITY; i++) {
         if (!strlen(characters[i].path)) continue;
 
-        sprintf(nbuf, "def/text/%d.csv", characters[i].id);
+        sprintf_s(nbuf, 64, "def/text/%d.csv", characters[i].id);
 
         FILE* file = fopen(nbuf, "rt");
         char* fbuf = (char*)malloc(65536);

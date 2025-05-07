@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "diary.h"
 
@@ -74,7 +74,7 @@ static void sc_diary_segment_update(void) {
 	else initial_silent = false;
 
 	static char fb[80] = "";
-	sprintf(fb, "def/wcoll/%s.bin", diary_indices[diary_sel]);
+	sprintf_s(fb, 80, "def/wcoll/%s.bin", diary_indices[diary_sel]);
 
 	printf("%s\n", fb);
 	FILE* wc = fopen(fb, "rb");
@@ -95,7 +95,7 @@ static void sc_diary_segment_update(void) {
 		}
 	}
 
-	sprintf(fb, "image/diary/%s.png", diary_indices[diary_sel]);
+	sprintf_s(fb, 80, "image/diary/%s.png", diary_indices[diary_sel]);
 
 	image_content(diary_painting, fb);
 
@@ -103,12 +103,12 @@ static void sc_diary_segment_update(void) {
 
 	for (int i = 0; i < diary_wcoll_count; i++) {
 		int id = 0;
-		fread(&id, 4, 1, wc);
+		fread_s(&id, 4, 4, 1, wc);
 
 		if (sc_word_collected[id - 99800000]) ww++;
 	}
 
-	sprintf(fb, "단어 %d / %d개 획득", ww, diary_wcoll_count);
+	sprintf_s(fb, 80, "단어 %d / %d개 획득", ww, diary_wcoll_count);
 	text_content(diary_wcount_txt, fb);
 
 	text_h_t th = { -1, "" };
@@ -120,16 +120,16 @@ static void sc_diary_segment_update(void) {
 	//th_display();
 
 	th_search(99600000 + wcr, &th);
-	strncpy(diary_cmt, th.value, 1024);
+	strncpy_s(diary_cmt, 1024, th.value, 1024);
 	sc_diary_lf_preprocess();
 	text_content(diary_comment_txt, diary_cmt);
 
 	static char sss[60];
 	
-	struct tm* tw;
-	tw = localtime(sc_script_cleared_date + wcr);
+	struct tm* tw = NULL;
+	localtime_s(&tw, sc_script_cleared_date + wcr);
 
-	sprintf(sss,
+	sprintf_s(sss, 60,
 		u8"%d년 %d월 %d일 클리어"
 		, tw->tm_year + 1900, tw->tm_mon + 1, tw->tm_mday);
 	text_content(diary_cleared_txt, sc_script_cleared_date[wcr] != 0 ? sss : "아직 클리어하지 못함");

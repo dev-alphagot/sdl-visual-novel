@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include "title.h"
 
@@ -99,7 +99,7 @@ static void sc_title_initialize(void) {
 		0.35f, 0.35f, LEFT, BOTTOM
 	);
 	char s8[21] = ""; // 21이 적절함
-	sprintf(s8, "%s/sid", VERSION);
+	sprintf_s(s8, 21, "%s/sid", VERSION);
 	text_add_as(
 		s8,
 		PRETENDARDJPMEDIUM,
@@ -223,13 +223,13 @@ static void sc_title_render(void) {
 				if (sc_save_last) {
 					static char sss[1536] = "";
 
-					struct tm* tw;
-					tw = localtime(&sc_save_last);
+					struct tm* tw = NULL;
+					localtime_s(&tw, &sc_save_last);
 
 					text_h_t th = { -1, "" };
 					th_search(sc_index_current + 99700000, &th);
 
-					sprintf(sss,
+					sprintf_s(sss, 1536,
 						u8"이전에 플레이하던 데이터가 있습니다.\n%d년 %d월 %d일 %d시 %d분에 마지막으로 플레이했으며,\n%s까지 진행했습니다.\n\n[확인]을 선택하면 저장 데이터가 초기화됩니다."
 						, tw->tm_year + 1900, tw->tm_mon + 1, tw->tm_mday, tw->tm_hour, tw->tm_min, th.value);
 					
@@ -248,7 +248,7 @@ static void sc_title_render(void) {
 				if (strcmp(VERSION, sc_save_version)) {
 					static char sss[1536] = "";
 
-					sprintf(sss,
+					sprintf_s(sss, 1536,
 						u8"%s 버전의 플레이 데이터가 있습니다.\n현재 버전은 %s이며,\n다른 버전의 저장 데이터를 불러오면\n예기치 못한 오류가 발생할 수 있습니다.\n\n[확인]을 선택하면 무시하고 계속 진행합니다."
 						, sc_save_version, VERSION);
 

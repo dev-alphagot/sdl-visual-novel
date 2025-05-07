@@ -1,6 +1,6 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
+// #define _CRT_SECURE_NO_WARNINGS
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_TTF.h>
