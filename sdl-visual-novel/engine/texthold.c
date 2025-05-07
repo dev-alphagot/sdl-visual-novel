@@ -8,8 +8,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 static text_bucket_t* hashTable = NULL;
+static bool is_initialized = false;
 
 static text_h_t* th_create_node(int key, const char* value) {
     text_h_t* newNode;
@@ -106,7 +108,7 @@ void th_search(int key, text_h_t* out) {
     }
     else {
         memcpy(out, calloc(1, sizeof(text_h_t)), sizeof(text_h_t));
-        printf(" 존재하지 않는 키는 찾을 수 없습니다. \n");
+        printf(" 존재하지 않는 키는 찾을 수 없습니다. (%d)\n", key);
     }
 }
 
@@ -133,6 +135,10 @@ void th_init(void) {
 }
 
 void th_load(void) {
+    if (is_initialized) return;
+
+    is_initialized = true;
+
     char nbuf[64] = "";
 
     for (int i = 0; i < CHAR_CAPACITY; i++) {

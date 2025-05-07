@@ -24,4 +24,6 @@ typedef struct {
 
 extern character_t characters[];
 
+bool char_is_initialized(void);
+
 void char_init(void);

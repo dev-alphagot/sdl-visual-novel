@@ -117,3 +117,11 @@ void screen_change(const char* id) {
 void screen_render(void) {
 	screen_current.render();
 }
+
+void screen_focus_lost(void) {
+	if (screen_current.focus_lost) screen_current.focus_lost();
+}
+
+void screen_focus_restore(void) {
+	if (screen_current.focus_restore) screen_current.focus_restore();
+}

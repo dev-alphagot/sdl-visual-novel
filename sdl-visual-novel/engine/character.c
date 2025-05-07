@@ -10,8 +10,15 @@
 #include "../util.h"
 
 character_t characters[CHAR_CAPACITY];
+static bool is_initialized = false;
+
+bool char_is_initialized(void) {
+	return is_initialized;
+}
 
 void char_init(void) {
+	if (is_initialized) return;
+
 	FILE* index_handle = fopen("def/char_index.txt", "rt");
 	char* index_buf = malloc(CHAR_INDEX_BUFFER_LENGTH);
 	if (!index_buf) return;
@@ -83,4 +90,6 @@ void char_init(void) {
 		puts("");
 		characters[i] = chr;
 	}
+
+	is_initialized = true;
 }

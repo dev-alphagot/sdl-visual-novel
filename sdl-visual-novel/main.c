@@ -154,6 +154,14 @@ int _main(void) {
             else if (event.type == SDL_QUIT) {
                 quit = 1;
             }
+            else if (event.type == SDL_WINDOWEVENT) {
+                if (event.window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
+                    screen_focus_lost();
+                }
+                else if (event.window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
+                    screen_focus_restore();
+                }
+            }
         }
 
         if (input_is_keydown(SDLK_F11)) {

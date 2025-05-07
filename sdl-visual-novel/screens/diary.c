@@ -13,6 +13,8 @@
 
 #include <SDL2/SDL_Mixer.h>
 
+#include <time.h>
+
 static int diary_bg = 0;
 static int diary_painting = 0;
 static int diary_segment_txt = 0;
@@ -34,6 +36,8 @@ static bool diary_exiting = false;
 static Mix_Music* music;
 
 static Mix_Chunk* flip_sfx;
+
+static bool initial_silent = true;
 
 static void sc_diary_keys_initialize(void) {
 	FILE* indices = fopen("def/wcoll_index.txt", "rt");
@@ -66,7 +70,8 @@ static void sc_diary_lf_preprocess(void) {
 }
 
 static void sc_diary_segment_update(void) {
-	Mix_PlayChannel(-1, flip_sfx, 0);
+	if(!initial_silent) Mix_PlayChannel(-1, flip_sfx, 0);
+	else initial_silent = false;
 
 	static char fb[80] = "";
 	sprintf(fb, "def/wcoll/%s.bin", diary_indices[diary_sel]);
@@ -94,7 +99,7 @@ static void sc_diary_segment_update(void) {
 
 	image_content(diary_painting, fb);
 
-	static int ww = 0;
+	int ww = 0;
 
 	for (int i = 0; i < diary_wcoll_count; i++) {
 		int id = 0;
@@ -118,6 +123,16 @@ static void sc_diary_segment_update(void) {
 	strncpy(diary_cmt, th.value, 1024);
 	sc_diary_lf_preprocess();
 	text_content(diary_comment_txt, diary_cmt);
+
+	static char sss[60];
+	
+	struct tm* tw;
+	tw = localtime(sc_script_cleared_date + wcr);
+
+	sprintf(sss,
+		u8"%d년 %d월 %d일 클리어"
+		, tw->tm_year + 1900, tw->tm_mon + 1, tw->tm_mday);
+	text_content(diary_cleared_txt, sc_script_cleared_date[wcr] != 0 ? sss : "아직 클리어하지 못함");
 }
 
 static void sc_diary_initialize(void) {
@@ -134,7 +149,7 @@ static void sc_diary_initialize(void) {
 
 	// int diary_ltb = -image_add("image/bg/white.png", 0, 0, 12.8f, 7.2f, LEFT, TOP);
 	diary_bg = -image_add("image/ui/diary_bg.png", 0, 0, 1.0f, 1.0f, LEFT, TOP);
-	diary_painting = -image_add("image/diary/0305.png", 190, 135, 1.0f, 1.0f, LEFT, TOP);
+	diary_painting = -image_add("image/diary/diary_blank.png", 190, 135, 1.0f, 1.0f, LEFT, TOP);
 
 	image_alpha(diary_painting, 250);
 	image_color(diary_painting, 250, 250, 250);
@@ -157,18 +172,18 @@ static void sc_diary_initialize(void) {
 	}
 
 	diary_segment_txt = -text_add_as(
-		u8"3월 25일", JANGMICHE, 975, 48, 0, 0, 0, 255, 0.5f, 0.5f, LEFT, TOP
+		u8"", JANGMICHE, 975, 48, 0, 0, 0, 255, 0.5f, 0.5f, LEFT, TOP
 	);
 	diary_comment_txt = -text_add_as(
-		u8"아직까지도 청년들이 이 소설에 공감한다는 사실이\n괴로워. 요즘의 청년들이 이런 이야기에\n공감하지 못하고 그냥 옛날이야기라고\n생각하길 바랐어.\n\n사람들은 아버지를 난장이라고 불렀다.\n兄さんは 理想主義者だよ。", 
+		u8"", 
 		JANGMICHE, 675, 136, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
 	);
 	diary_cleared_txt = -text_add_as(
-		u8"1989년 6월 4일 클리어",
+		u8"",
 		JANGMICHE, 675, 543, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
 	);
 	diary_wcount_txt = -text_add_as(
-		u8"단어 3 / 25개 획득",
+		u8"",
 		JANGMICHE, 675, 578, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
 	);
 
@@ -177,6 +192,8 @@ static void sc_diary_initialize(void) {
 		fprintf(stderr, "Failed to load music file: %s\n", Mix_GetError());
 		return 1;
 	}
+
+	sc_diary_segment_update();
 
 	Mix_FadeInMusic(music, 1 << 30, 5000);
 }

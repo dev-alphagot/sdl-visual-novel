@@ -202,6 +202,18 @@ static void sc_ending_dispose(void) {
 	Mix_HookMusicFinished(sc_ending_music_free);
 }
 
+static void sc_ending_focus_lost(void) {
+	Mix_PauseMusic();
+	while (!Mix_PausedMusic());
+	E = 0;
+}
+
+static void sc_ending_focus_restore(void) {
+	Mix_ResumeMusic();
+	while (Mix_PausedMusic());
+	E = 1;
+}
+
 screen_t sc_ending = {
-	"ending", sc_ending_initialize, sc_ending_render, sc_ending_dispose
+	"ending", sc_ending_initialize, sc_ending_render, sc_ending_dispose, sc_ending_focus_lost, sc_ending_focus_restore
 };

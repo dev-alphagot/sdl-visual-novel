@@ -35,6 +35,7 @@ uint8_t sc_sel_storage[SC_SEL_STORAGE_SIZE] = { 0 };
 
 char** sc_script_index_table = NULL;
 int sc_scripts = 0;
+time_t* sc_script_cleared_date = NULL;
 
 static int sc_words = 0;
 bool* sc_word_collected = NULL;
@@ -44,6 +45,7 @@ time_t sc_save_last = 0;
 int sc_index_current = 4;
 static int sc_index_next = 4;
 char sc_save_version[16] = "";
+char sc_cd_version[16] = ""; // 클리어 일자 기록 파일 버전
 
 static int sc_saving_mk_tick = -1;
 
@@ -425,6 +427,16 @@ void sc_init(void) {
 
 	fclose(ff);
 
+    sc_script_cleared_date = calloc(sc_scripts, sizeof(time_t));
+
+    FILE* cdf = fopen("cleared_date.bin", "rb");
+    if (!cdf || !sc_script_cleared_date) goto SAVE;
+    fread(sc_cd_version, 16, 1, cdf);
+    fread(sc_script_cleared_date, sizeof(time_t), sc_scripts, cdf);
+    fclose(cdf);
+
+SAVE:
+
     FILE* save = fopen("save.bin", "rb");
     if (!save) return;
     fread(&sc_save_last, sizeof(time_t), 1, save);
@@ -460,6 +472,14 @@ void sc_save(void) {
     fwrite(&sc_words, sizeof(int), 1, save);
     fwrite(sc_word_collected, sc_words, 1, save);
     fclose(save);
+    
+    if (!sc_script_cleared_date[sc_index_current]) {
+        sc_script_cleared_date[sc_index_current] = tm;
+        FILE* cdf = fopen("cleared_date.bin", "wb");
+        fwrite(VERSION, 16, 1, cdf);
+        fwrite(sc_script_cleared_date, sizeof(time_t), sc_scripts, cdf);
+        fclose(cdf);
+    }
 
     sc_save_last = tm;
 }
