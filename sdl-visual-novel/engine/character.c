@@ -19,9 +19,10 @@ bool char_is_initialized(void) {
 void char_init(void) {
 	if (is_initialized) return;
 
-	FILE* index_handle = fopen("def/char_index.txt", "rt");
-	char* index_buf = malloc(CHAR_INDEX_BUFFER_LENGTH);
-	if (!index_buf) return;
+	FILE* index_handle = NULL;
+	fopen_s(&index_handle, "def/char_index.txt", "rt");
+	char* index_buf = calloc(1, CHAR_INDEX_BUFFER_LENGTH);
+	if (!index_buf || !index_handle) return;
 	memset(index_buf, 0, CHAR_INDEX_BUFFER_LENGTH);
 
 	fread_s(index_buf, CHAR_INDEX_BUFFER_LENGTH, CHAR_INDEX_BUFFER_LENGTH, 1, index_handle);
@@ -44,7 +45,8 @@ void char_init(void) {
 		memset(f_buf, 0, 64);
 		sprintf_s(f_buf, 64, "def/char/%s.txt", tok);
 
-		FILE* hl = fopen(f_buf, "rt");
+		FILE* hl = NULL;
+		fopen_s(&hl, f_buf, "rt");
 		int d = 0;
 
 		fgets(p_buf, 64, hl);
@@ -52,7 +54,10 @@ void char_init(void) {
 
 		d = atoi(p_buf);
 
+		printf("CC %d\n", d);
+
 		character_t chr = { -1, "", 0 }; // 임시 초기화
+		memset(chr.emotions, 0, sizeof(emotion_t) * CHAR_MAX_EMOTION);
 
 		for (int j = 0; j < d; j++) {
 			fgets(p_buf, 64, hl);
@@ -75,7 +80,7 @@ void char_init(void) {
 					chr.emotions[emo_index].movement_multiplier = atof(p_buf);
 				}
 				else {
-					strcpy_s(chr.emotions[emo_index].path, 64, p_buf);
+					strcpy_s(chr.emotions[emo_index].path, strlen(p_buf) + 1, p_buf);
 				}
 			}
 		}

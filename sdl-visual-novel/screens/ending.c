@@ -36,6 +36,8 @@ static AVFrame* frame;
 static AVFrame* yuv_frame;
 static AVFrame* sw_frame;
 
+static AVHWFramesContext* frames_ctx;
+
 static unsigned char* out_buffer;
 
 static int v_img;
@@ -88,7 +90,7 @@ static void sc_ending_initialize(void) {
 	}
 
 	// 2) 내부 AVHWFramesContext 포인터 얻기
-	AVHWFramesContext* frames_ctx = (AVHWFramesContext*)(hw_device_ctx->data);
+	frames_ctx = (AVHWFramesContext*)(hw_device_ctx->data);
 
 	// 3) DXVA2 픽셀 포맷 및 SW 복사 포맷 지정
 	frames_ctx->format = AV_PIX_FMT_DXVA2_VLD;
@@ -112,13 +114,14 @@ static void sc_ending_initialize(void) {
 
 	dec_ctx = avcodec_alloc_context3(codec);
 
+	dec_ctx->hw_device_ctx = av_buffer_ref(hw_device_ctx);
+	dec_ctx->get_format = get_dxva2_format;
+
 	// 코덱 파라미터 복사 - 최신 FFmpeg 방식
 	if (avcodec_parameters_to_context(dec_ctx, fmt_ctx->streams[video_stream_idx]->codecpar) < 0) {
 		printf("Could not copy codec parameters.\n");
 		return -1;
 	}
-	dec_ctx->hw_device_ctx = av_buffer_ref(hw_device_ctx);
-	dec_ctx->get_format = get_dxva2_format;
 
 	if (avcodec_open2(dec_ctx, codec, NULL) < 0) {
 		printf("Coult not open codec.\n");
@@ -127,6 +130,8 @@ static void sc_ending_initialize(void) {
 
 	frame = av_frame_alloc();
 	yuv_frame = av_frame_alloc();
+
+	sw_frame = av_frame_alloc();
 
 	out_buffer = (unsigned char*)av_malloc(
 		av_image_get_buffer_size(AV_PIX_FMT_YUV420P, WINDOW_WIDTH, WINDOW_HEIGHT, 1));
@@ -144,7 +149,7 @@ static void sc_ending_initialize(void) {
 	av_dump_format(fmt_ctx, 0, u8"image/video/V.mp4", 0);
 	printf("-------------------------------------------------\n");
 
-	sws_ctx = sws_getContext(WINDOW_WIDTH, WINDOW_HEIGHT, AV_PIX_FMT_YUV420P,
+	sws_ctx = sws_getContext(WINDOW_WIDTH, WINDOW_HEIGHT, AV_PIX_FMT_NV12,
 		WINDOW_WIDTH, WINDOW_HEIGHT, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL,
 		NULL);
 
@@ -170,8 +175,6 @@ static void sc_ending_initialize(void) {
 	Mix_FadeInMusic(v_music, 0, 5000);
 
 	// while (!Mix_PlayingMusic()); // for synchronize
-
-	sw_frame = av_frame_alloc();
 
 	E = 1;
 }
@@ -209,11 +212,11 @@ static void sc_ending_render(void) {
 
 				double delta = seconds - Mix_GetMusicPosition(v_music);
 
-				if (delta > 0.06) {
+				/*if (delta > 0.06) {
 					SDL_Delay((delta * 1000));
-				}
+				}*/
 
-				delta = seconds - Mix_GetMusicPosition(v_music);
+				//delta = seconds - Mix_GetMusicPosition(v_music);
 
 				//sprintf_s(s8, 21, "%.2fs / %.2fs", Mix_GetMusicPosition(v_music), Mix_MusicDuration(NULL));
 				sprintf_s(s8, 63, "%.2fs %.2fs (%.2fs %.2fms %d)", seconds, Mix_GetMusicPosition(v_music), delta, delta_ms / delta_samples, delta_samples);

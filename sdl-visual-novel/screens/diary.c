@@ -1,4 +1,4 @@
-// #define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "diary.h"
 
@@ -126,8 +126,7 @@ static void sc_diary_segment_update(void) {
 
 	static char sss[60];
 	
-	struct tm* tw = NULL;
-	localtime_s(&tw, sc_script_cleared_date + wcr);
+	struct tm* tw = localtime(sc_script_cleared_date + wcr);
 
 	sprintf_s(sss, 60,
 		u8"%d년 %d월 %d일 클리어"
