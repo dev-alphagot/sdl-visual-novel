@@ -174,7 +174,7 @@ static void sc_ending_initialize(void) {
 
 	Mix_FadeInMusic(v_music, 0, 5000);
 
-	// while (!Mix_PlayingMusic()); // for synchronize
+	while (!Mix_PlayingMusic()); // for synchronize
 
 	E = 1;
 }
@@ -207,7 +207,7 @@ static void sc_ending_render(void) {
 			}
 
 			if (got_picture) {
-				int64_t pts = pkt->pts;
+				int64_t pts = frame->best_effort_timestamp;
 				double seconds = pts * av_q2d(fmt_ctx->streams[video_stream_idx]->time_base);
 
 				double delta = seconds - Mix_GetMusicPosition(v_music);
