@@ -55,7 +55,7 @@ static void sc_title_op_highlight(void) {
 
 	image_alpha(op_img[op_sel], 255);
 	text_color(op_txt[op_sel], 0, 0, 0, 255);
-
+	
 	if(vTicks > 10) Mix_PlayChannel(-1, arrow_sfx, 0);
 }
 
@@ -99,7 +99,7 @@ static void sc_title_initialize(void) {
 		0.35f, 0.35f, LEFT, BOTTOM
 	);
 	char s8[21] = ""; // 21이 적절함
-	sprintf_s(s8, 21, "%s/sid", VERSION);
+	sprintf_s(s8, 21, "%s: α", VERSION);
 	text_add_as(
 		s8,
 		PRETENDARDJPMEDIUM,
