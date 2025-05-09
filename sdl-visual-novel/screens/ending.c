@@ -8,6 +8,8 @@
 
 #include "../window.h"
 
+#include <stdbool.h>
+
 #include <SDL2/SDL_mixer.h>
 
 #include <libavformat/avformat.h>
@@ -47,6 +49,8 @@ static Mix_Music* v_music;
 
 static int E = 1;
 
+static bool sw_fallback = false;
+
 static enum AVPixelFormat get_dxva2_format(AVCodecContext* ctx,
 	const enum AVPixelFormat* pix_fmts)
 {
@@ -55,7 +59,7 @@ static enum AVPixelFormat get_dxva2_format(AVCodecContext* ctx,
 			return *p;
 	}
 	printf("DXVA2 pixel format not found.\n");
-	return AV_PIX_FMT_NONE;
+	return AV_PIX_FMT_YUV420P;
 }
 
 static void sc_ending_initialize(void) {
@@ -86,36 +90,42 @@ static void sc_ending_initialize(void) {
 		NULL, NULL, 0);
 	if (err < 0) {
 		printf("Failed to create DXVA2 device.\n");
-		return -1;
+		sw_fallback = true;
+		//return -1;
 	}
 
 	// 2) 내부 AVHWFramesContext 포인터 얻기
-	frames_ctx = (AVHWFramesContext*)(hw_device_ctx->data);
+	if (!sw_fallback) {
+		frames_ctx = (AVHWFramesContext*)(hw_device_ctx->data);
 
-	// 3) DXVA2 픽셀 포맷 및 SW 복사 포맷 지정
-	frames_ctx->format = AV_PIX_FMT_DXVA2_VLD;
-	frames_ctx->sw_format = AV_PIX_FMT_NV12;  // 또는 필요 SW 포맷
+		// 3) DXVA2 픽셀 포맷 및 SW 복사 포맷 지정
+		frames_ctx->format = AV_PIX_FMT_DXVA2_VLD;
+		frames_ctx->sw_format = AV_PIX_FMT_NV12;  // 또는 필요 SW 포맷
 
-	// 4) 영상 크기 지정 (디코더 컨텍스트에서 복사)
-	frames_ctx->width = WINDOW_WIDTH;
-	frames_ctx->height = WINDOW_HEIGHT;
+		// 4) 영상 크기 지정 (디코더 컨텍스트에서 복사)
+		frames_ctx->width = WINDOW_WIDTH;
+		frames_ctx->height = WINDOW_HEIGHT;
 
-	// 5) 풀 초기화 (GPU 메모리 풀 생성)
-	if ((err = av_hwframe_ctx_init(hw_device_ctx)) < 0) {
-		printf("Failed to initialize HW frame pool\n");
-		return;
+		// 5) 풀 초기화 (GPU 메모리 풀 생성)
+		if ((err = av_hwframe_ctx_init(hw_device_ctx)) < 0) {
+			printf("Failed to initialize HW frame pool\n");
+			// return;
+		}
+
+		codec = avcodec_find_decoder_by_name("h264_dxva2");
 	}
 
-	codec = avcodec_find_decoder_by_name("h264_dxva2");
-	if (!codec) {
+	if (!codec || sw_fallback) {
 		// fallback 일반 디코더
 		codec = avcodec_find_decoder(fmt_ctx->streams[video_stream_idx]->codecpar->codec_id);
 	}
 
 	dec_ctx = avcodec_alloc_context3(codec);
 
-	dec_ctx->hw_device_ctx = av_buffer_ref(hw_device_ctx);
-	dec_ctx->get_format = get_dxva2_format;
+	if (!sw_fallback) {
+		dec_ctx->hw_device_ctx = av_buffer_ref(hw_device_ctx);
+		dec_ctx->get_format = get_dxva2_format;
+	}
 
 	// 코덱 파라미터 복사 - 최신 FFmpeg 방식
 	if (avcodec_parameters_to_context(dec_ctx, fmt_ctx->streams[video_stream_idx]->codecpar) < 0) {
@@ -131,7 +141,7 @@ static void sc_ending_initialize(void) {
 	frame = av_frame_alloc();
 	yuv_frame = av_frame_alloc();
 
-	sw_frame = av_frame_alloc();
+	if(!sw_fallback) sw_frame = av_frame_alloc();
 
 	out_buffer = (unsigned char*)av_malloc(
 		av_image_get_buffer_size(AV_PIX_FMT_YUV420P, WINDOW_WIDTH, WINDOW_HEIGHT, 1));
@@ -147,9 +157,9 @@ static void sc_ending_initialize(void) {
 	//Output Info-----------------------------
 	printf("--------------- File Information ----------------\n");
 	av_dump_format(fmt_ctx, 0, u8"image/video/V.mp4", 0);
-	printf("-------------------------------------------------\n");
+	printf("-------------------------------------------------\ncodec is %s\n", codec->name);
 
-	sws_ctx = sws_getContext(WINDOW_WIDTH, WINDOW_HEIGHT, AV_PIX_FMT_NV12,
+	sws_ctx = sws_getContext(WINDOW_WIDTH, WINDOW_HEIGHT, sw_fallback ? AV_PIX_FMT_YUV420P : AV_PIX_FMT_NV12,
 		WINDOW_WIDTH, WINDOW_HEIGHT, AV_PIX_FMT_YUV420P, SWS_BICUBIC, NULL, NULL,
 		NULL);
 
@@ -183,7 +193,9 @@ static void sc_ending_render(void) {
 	static int ret, got_picture;
 	got_picture = 1;
 
-	static double delta_ms = 0;
+	static int64_t pts;
+
+	static double delta_ms, delta, seconds = 0;
 	static int delta_samples = 0;
 
 	if (!E) return;
@@ -193,6 +205,8 @@ static void sc_ending_render(void) {
 	if(Mix_PausedMusic()) Mix_ResumeMusic();
 
 	while (Mix_PausedMusic());
+
+FRAME_SKIP:
 
 	if (av_read_frame(fmt_ctx, pkt) >= 0) {
 		if (pkt->stream_index == video_stream_idx) {
@@ -207,38 +221,49 @@ static void sc_ending_render(void) {
 			}
 
 			if (got_picture) {
-				int64_t pts = frame->best_effort_timestamp;
-				double seconds = pts * av_q2d(fmt_ctx->streams[video_stream_idx]->time_base);
+				pts = frame->best_effort_timestamp;
+				seconds = pts * av_q2d(fmt_ctx->streams[video_stream_idx]->time_base);
 
-				double delta = seconds - Mix_GetMusicPosition(v_music);
+				delta = seconds - Mix_GetMusicPosition(v_music);
 
-				/*if (delta > 0.06) {
-					SDL_Delay((delta * 1000));
-				}*/
+				if (delta > 0.06) {
+					SDL_Delay((delta * 1000) - 1);
+				}
+				else if (delta < -0.06) goto FRAME_SKIP;
 
-				//delta = seconds - Mix_GetMusicPosition(v_music);
+				delta = seconds - Mix_GetMusicPosition(v_music);
 
 				//sprintf_s(s8, 21, "%.2fs / %.2fs", Mix_GetMusicPosition(v_music), Mix_MusicDuration(NULL));
-				sprintf_s(s8, 63, "%.2fs %.2fs (%.2fs %.2fms %d)", seconds, Mix_GetMusicPosition(v_music), delta, delta_ms / delta_samples, delta_samples);
-				text_content(v_txt, s8);
 
 				delta_ms += delta * 1000;
 				delta_samples++;
 
-				av_hwframe_transfer_data(sw_frame, frame, 0);
+				//if (!sw_fallback) av_hwframe_transfer_data(sw_frame, frame, 0);
 
-				sws_scale(sws_ctx, (const unsigned char* const*)sw_frame->data, sw_frame->linesize, 0,
-					dec_ctx->height,
-					yuv_frame->data, yuv_frame->linesize);
+				if (!sw_fallback) {
+					av_hwframe_transfer_data(sw_frame, frame, 0);
+
+					sws_scale(sws_ctx, (const unsigned char* const*)sw_frame->data, sw_frame->linesize, 0,
+						dec_ctx->height,
+						yuv_frame->data, yuv_frame->linesize);
+				}
+				else {
+					sws_scale(sws_ctx, (const unsigned char* const*)frame->data, frame->linesize, 0,
+						dec_ctx->height,
+						yuv_frame->data, yuv_frame->linesize);
+				}
 
 				SDL_UpdateYUVTexture(v_tex, &(SDL_Rect){ 0, 0, 1280, 720 },
 					yuv_frame->data[0], yuv_frame->linesize[0],
 					yuv_frame->data[1], yuv_frame->linesize[1],
 					yuv_frame->data[2], yuv_frame->linesize[2]);
 
+				sprintf_s(s8, 63, "%.3fs %.3fs (%.3fs %.3fms %d)", seconds, Mix_GetMusicPosition(v_music), delta, delta_ms / delta_samples, delta_samples);
+				text_content(v_txt, s8);
+
 				//image_content(v_img, v_tex);
 			}
-			av_frame_unref(frame);
+			if (!sw_fallback) av_frame_unref(frame);
 		}
 		av_packet_unref(pkt);
 	}
@@ -266,7 +291,7 @@ static void sc_ending_dispose(void) {
 	sws_freeContext(sws_ctx);
 	av_frame_free(&frame);
 	av_frame_free(&yuv_frame);
-	av_frame_free(&sw_frame);
+	if(!sw_fallback) av_frame_free(&sw_frame);
 	av_packet_free(&pkt);
 	avcodec_free_context(&dec_ctx);
 	avformat_close_input(&fmt_ctx);

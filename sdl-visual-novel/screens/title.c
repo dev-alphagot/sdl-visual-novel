@@ -1,4 +1,4 @@
-// #define _CRT_SECURE_NO_WARNINGS
+ #define _CRT_SECURE_NO_WARNINGS
 
 #include "title.h"
 
@@ -223,8 +223,7 @@ static void sc_title_render(void) {
 				if (sc_save_last) {
 					static char sss[1536] = "";
 
-					struct tm* tw = NULL;
-					localtime_s(&tw, &sc_save_last);
+					struct tm* tw = localtime(&sc_save_last);
 
 					text_h_t th = { -1, "" };
 					th_search(sc_index_current + 99700000, &th);
