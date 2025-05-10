@@ -61,6 +61,8 @@ static void sc_diary_keys_initialize(void) {
 	for (int i = 0; i < diary_count; i++) {
 		printf("wc %s\n", diary_indices[i]);
 	}
+
+	printf("dc %d\n", diary_count);
 }
 
 static void sc_diary_lf_preprocess(void) {
@@ -192,6 +194,7 @@ static void sc_diary_initialize(void) {
 		return 1;
 	}
 
+	initial_silent = true;
 	sc_diary_segment_update();
 
 	Mix_FadeInMusic(music, 1 << 30, 5000);
