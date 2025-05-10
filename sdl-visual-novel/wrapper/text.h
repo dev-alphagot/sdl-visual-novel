@@ -81,6 +81,8 @@ err_text_t text_pos(int id, int x, int y);
 
 err_text_t text_font(int id, font_t font);
 
+err_text_t text_scale(int id, float sx, float sy);
+
 err_text_t text_get_rect(int id, SDL_Rect* const rc);
 
 void text_render(void);

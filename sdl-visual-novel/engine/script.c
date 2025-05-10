@@ -375,6 +375,14 @@ int sc_exec(void) {
             reg -= sc_sel_storage[cid];
             break;
         }
+        case TEXT_SCALE:
+        {
+            uint8_t cid = 0;
+            fread_s(&cid, 1, 1, 1, sc_script);
+
+			text_scale(speak_content, TEXT_CONTENT_SCALE * cid, TEXT_CONTENT_SCALE* cid);
+            break;
+        }
 		}
     } while (sc_delay == 0);
 

@@ -100,6 +100,7 @@ static void sc_diary_segment_update(void) {
 	sprintf_s(fb, 80, "image/diary/%s.png", diary_indices[diary_sel]);
 
 	image_content(diary_painting, fb);
+	image_alpha(diary_painting, 250);
 
 	int ww = 0;
 
@@ -150,7 +151,7 @@ static void sc_diary_initialize(void) {
 
 	// int diary_ltb = -image_add("image/bg/white.png", 0, 0, 12.8f, 7.2f, LEFT, TOP);
 	diary_bg = -image_add("image/ui/diary_bg.png", 0, 0, 1.0f, 1.0f, LEFT, TOP);
-	diary_painting = -image_add("image/diary/diary_blank.png", 190, 135, 1.0f, 1.0f, LEFT, TOP);
+	diary_painting = -image_add("image/diary/diary_blank.png", 180, 135, 475.0f / 1024, 475.0f / 1024, LEFT, TOP);
 
 	image_alpha(diary_painting, 250);
 	image_color(diary_painting, 250, 250, 250);
@@ -177,15 +178,15 @@ static void sc_diary_initialize(void) {
 	);
 	diary_comment_txt = -text_add_as(
 		u8"", 
-		JANGMICHE, 675, 136, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
+		JANGMICHE, 665, 136, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
 	);
 	diary_cleared_txt = -text_add_as(
 		u8"",
-		JANGMICHE, 675, 543, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
+		JANGMICHE, 665, 543, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
 	);
 	diary_wcount_txt = -text_add_as(
 		u8"",
-		JANGMICHE, 675, 578, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
+		JANGMICHE, 665, 578, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
 	);
 
 	music = Mix_LoadMUS("sound/bgm/cosmos.ogg");

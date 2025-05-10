@@ -30,7 +30,8 @@ typedef enum {
 	ADD_IMMEDIATE,
 	SUBTRACT_IMMEDIATE,
 	ADD_STORAGE,
-	SUBTRACT_STORAGE
+	SUBTRACT_STORAGE,
+	TEXT_SCALE
 } opcode_t;
 
 extern bool sc_exec_desire;

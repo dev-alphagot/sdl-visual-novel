@@ -174,12 +174,21 @@ err_image_t image_content(int id, const char* new_path) {
 	SDL_Texture* texture;
 	if (!(texture = SDL_CreateTextureFromSurface(renderer, imageSurface))) return IMAGE_SURFACE_NULL;
 
-	SDL_FreeSurface(imageSurface);
-
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
 	if(images[id].tex) SDL_DestroyTexture(images[id].tex);
 	images[id].tex = texture;
+
+	images[id].rect.x += ((int)(ceil(images[id].rect.w * (images[id].halign / 2.0f))));
+	images[id].rect.y += ((int)(ceil(images[id].rect.h * (images[id].valign / 2.0f))));
+
+	images[id].rect.w = (int)(ceil(imageSurface->w * images[id].scale_x));
+	images[id].rect.h = (int)(ceil(imageSurface->h * images[id].scale_y));
+
+	images[id].rect.x -= ((int)(ceil(images[id].rect.w * (images[id].halign / 2.0f))));
+	images[id].rect.y -= ((int)(ceil(images[id].rect.h * (images[id].valign / 2.0f))));
+
+	SDL_FreeSurface(imageSurface);
 
 	return 0;
 }

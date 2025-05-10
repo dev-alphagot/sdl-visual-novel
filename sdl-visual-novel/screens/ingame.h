@@ -7,6 +7,8 @@
 
 #include <stdbool.h>
 
+#define TEXT_CONTENT_SCALE 0.5f
+
 extern screen_t sc_ingame;
 
 extern character_t chr;

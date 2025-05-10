@@ -147,7 +147,7 @@ static void sc_wcoll_segment_update(void) {
 				tb, CAFE24SSUKSSUK, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 			wcoll_mnns[i] = -text_add_as(
-				tm, CAFE24SSUKSSUK, 450, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+				tm, CAFE24SSUKSSUK, 600, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 		}
 		else {
@@ -156,7 +156,7 @@ static void sc_wcoll_segment_update(void) {
 				u8"???", CAFE24SSUKSSUK, 220, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 			wcoll_mnns[i] = -text_add_as(
-				u8"아직 획득하지 못한 단어입니다.", CAFE24SSUKSSUK, 450, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
+				u8"아직 획득하지 못한 단어입니다.", CAFE24SSUKSSUK, 600, 195 + 60 * i, 0, 0, 0, 255, 0.6f, 0.6f, LEFT, TOP
 			);
 		}
 	}

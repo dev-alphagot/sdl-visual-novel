@@ -356,7 +356,7 @@ static void sc_ingame_initialize(void) {
 		CAFE24SSUKSSUK,
 		220, WINDOW_HEIGHT - 180,
 		255, 255, 255, 255,
-		0.5f, 0.5f, LEFT, TOP
+		TEXT_CONTENT_SCALE, TEXT_CONTENT_SCALE, LEFT, TOP
 	);
 
 	kg = -text_add_as(
@@ -484,7 +484,7 @@ static void sc_ingame_render(void) {
 
 		text_content(speak_content, spk_buffer);
 
-		spk_ticks = cb;
+		spk_ticks = input_is_keypressed(SDLK_LCTRL) ? 1 : cb;
 	}
 	else if (spk_ticks == 0 && spk_offset >= strlen(ingame_text)) {
 		spk_offset = -1;
