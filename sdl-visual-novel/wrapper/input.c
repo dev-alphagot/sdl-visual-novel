@@ -35,6 +35,8 @@ void input_keyup(SDL_KeyCode key) {
 }
 
 bool input_is_keydown(SDL_KeyCode key) {
+	if (!input_available) return false;
+
 	for (int i = 0; i < INPUT_MAX_KEYS; i++) {
 		if (!keys[i]) continue;
 
@@ -55,6 +57,8 @@ bool input_is_keydown(SDL_KeyCode key) {
 }
 
 bool input_is_keypressed(SDL_KeyCode key) {
+	if (!input_available) return false;
+
 	for (int i = 0; i < INPUT_MAX_KEYS; i++) {
 		if (!keys[i]) continue;
 
