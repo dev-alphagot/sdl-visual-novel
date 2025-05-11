@@ -31,7 +31,8 @@ static int wcoll_ct_seg = 3;
 
 static int wcoll_scroll_pos = 0;
 
-static int wcoll_sel = 0;
+static int wcoll_sel = -1;
+static int wcoll_prev_sel = -1;
 
 static bool wcoll_exiting = false;
 
@@ -40,6 +41,8 @@ static Mix_Music* music;
 static Mix_Chunk* flip_sfx;
 
 static void sc_wcoll_keys_initialize(void) {
+	wcoll_count = 1;
+
 	FILE* indices = fopen("def/wcoll_index.txt", "rt");
 	
 	while (!feof(indices)) {
@@ -261,18 +264,19 @@ static void sc_wcoll_initialize(void) {
 		return 1;
 	}
 
+	wcoll_sel = -1;
+	wcoll_prev_sel = -1;
+
 	Mix_FadeInMusic(music, 1 << 30, 5000);
 }
 
 static void sc_wcoll_render(void) {
-	static int prev_sel = 0;
-
 	if (input_is_keydown(SDLK_LEFT) && !wcoll_exiting) {
 		wcoll_sel--;
 		iclamp(&wcoll_sel, 0, wcoll_count - 1);
 
-		if (wcoll_sel != prev_sel) {
-			prev_sel = wcoll_sel;
+		if (wcoll_sel != wcoll_prev_sel) {
+			wcoll_prev_sel = wcoll_sel;
 			sc_wcoll_segment_update();
 		}
 	}
@@ -280,8 +284,8 @@ static void sc_wcoll_render(void) {
 		wcoll_sel++;
 		iclamp(&wcoll_sel, 0, wcoll_count - 1);
 
-		if (wcoll_sel != prev_sel) {
-			prev_sel = wcoll_sel;
+		if (wcoll_sel != wcoll_prev_sel) {
+			wcoll_prev_sel = wcoll_sel;
 			sc_wcoll_segment_update();
 		}
 	}

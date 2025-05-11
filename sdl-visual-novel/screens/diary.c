@@ -30,6 +30,7 @@ static char diary_cmt[1024] = "";
 static int diary_wcoll_count = 0;
 
 static int diary_sel = 0;
+static int diary_prev_sel = 0;
 
 static bool diary_exiting = false;
 
@@ -40,6 +41,8 @@ static Mix_Chunk* flip_sfx;
 static bool initial_silent = true;
 
 static void sc_diary_keys_initialize(void) {
+	diary_count = 1;
+
 	FILE* indices = fopen("def/wcoll_index.txt", "rt");
 	
 	while (!feof(indices)) {
@@ -202,14 +205,12 @@ static void sc_diary_initialize(void) {
 }
 
 static void sc_diary_render(void) {
-	static int prev_sel = 0;
-
 	if (input_is_keydown(SDLK_LEFT) && !diary_exiting) {
 		diary_sel--;
 		iclamp(&diary_sel, 0, diary_count - 1);
 
-		if (diary_sel != prev_sel) {
-			prev_sel = diary_sel;
+		if (diary_sel != diary_prev_sel) {
+			diary_prev_sel = diary_sel;
 			sc_diary_segment_update();
 		}
 	}
@@ -217,8 +218,8 @@ static void sc_diary_render(void) {
 		diary_sel++;
 		iclamp(&diary_sel, 0, diary_count - 1);
 
-		if (diary_sel != prev_sel) {
-			prev_sel = diary_sel;
+		if (diary_sel != diary_prev_sel) {
+			diary_prev_sel = diary_sel;
 			sc_diary_segment_update();
 		}
 	}
