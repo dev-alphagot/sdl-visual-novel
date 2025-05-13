@@ -70,6 +70,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>aris-$(Platform_Actual)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>aris-$(PlatformName)</TargetName>
+  </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgInstalledDir>
     </VcpkgInstalledDir>
@@ -165,6 +171,7 @@
     <ClInclude Include="engine\script.h" />
     <ClInclude Include="engine\texthold.h" />
     <ClInclude Include="misc.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="screens\ending.h" />
     <ClInclude Include="screens\ingame.h" />
     <ClInclude Include="screens\notice.h" />
@@ -180,6 +187,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="sdl-visual-novel.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

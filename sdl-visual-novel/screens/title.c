@@ -98,8 +98,8 @@ static void sc_title_initialize(void) {
 		254, 254, 254, 254,
 		0.35f, 0.35f, LEFT, BOTTOM
 	);
-	char s8[21] = ""; // 21이 적절함
-	sprintf_s(s8, 21, "%s: α", VERSION);
+	char s8[23] = ""; // 23이 적절함
+	sprintf_s(s8, 23, "%s (α)", VERSION);
 	text_add_as(
 		s8,
 		PRETENDARDJPMEDIUM,

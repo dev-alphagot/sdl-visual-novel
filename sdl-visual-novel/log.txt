@@ -1,0 +1,76 @@
+CC 19
+ID 1	PATH image/char/hibiki
+FONT 8
+ - MMP 0.000000	PATH image/char/hibiki/smile
+ - MMP 0.000000	PATH image/char/hibiki/smile c
+ - MMP 1.000000	PATH image/char/hibiki/mad c
+ - MMP 0.000000	PATH image/char/hibiki/sad
+ - MMP 1.000000	PATH image/char/hibiki/happy c
+ - MMP 0.000000	PATH image/char/hibiki/nssnss
+ - MMP 0.000000	PATH image/char/hibiki/neutral
+ - MMP 1.000000	PATH image/char/hibiki/happy c 2x
+
+CC 3
+ID 2	PATH image/char/sensei
+FONT 6
+
+CC 3
+ID 3	PATH image/char/extra-student
+FONT 6
+
+CC 3
+ID 4	PATH image/char/hibiki-telephone
+FONT 8
+
+CC 3
+ID 990	PATH image/char/narrator
+FONT 7
+
+CC 3
+ID 996	PATH image/char/diary-comments
+FONT 7
+
+CC 3
+ID 997	PATH image/char/script-names
+FONT 8
+
+CC 3
+ID 998	PATH image/char/word-coll-w
+FONT 8
+
+CC 3
+ID 999	PATH image/char/word-coll-m
+FONT 8
+
+def/text/1.csv START
+def/text/1.csv COMPLETED
+def/text/2.csv START
+def/text/2.csv COMPLETED
+def/text/3.csv START
+def/text/3.csv COMPLETED
+def/text/4.csv START
+def/text/4.csv COMPLETED
+def/text/990.csv START
+def/text/990.csv COMPLETED
+def/text/996.csv START
+def/text/996.csv COMPLETED
+def/text/997.csv START
+def/text/997.csv COMPLETED
+def/text/998.csv START
+def/text/998.csv COMPLETED
+def/text/999.csv START
+def/text/999.csv COMPLETED
+0 0305
+
+1 0312
+
+2 0312_2
+
+3 0319
+
+4 1
+
+5 prologue
+WCOLL 56 56
+Save 1746947136 3 3
+op_sel 5
