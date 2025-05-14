@@ -14,9 +14,7 @@
 
 #include <stdio.h>
 
-#if 1
 #include <Windows.h>
-#endif
 
 int _main(void);
 
@@ -42,11 +40,24 @@ int main(void) {
         fclose(settings);
     }
     else {
-        vol_bgm = 100;
-        vol_sfx = 100;
+        vol_bgm = 127;
+        vol_sfx = 127;
         st_key_guide = true;
         st_scale_low_quality = false;
+
+        fopen_s(&settings, "settings.bin", "wb");
+
+        if (!settings) goto A;
+
+        fwrite(&vol_bgm, 1, 1, settings);
+        fwrite(&vol_sfx, 1, 1, settings);
+        fwrite(&st_key_guide, 1, 1, settings);
+        fwrite(&st_scale_low_quality, 1, 1, settings);
+
+        fclose(settings);
     }
+
+A:
 
     return _main();
 }
