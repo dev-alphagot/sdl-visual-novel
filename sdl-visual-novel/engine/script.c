@@ -464,8 +464,15 @@ SAVE:
 
 void sc_reset(void) {
     sc_save_last = 0;
-	sc_index_current = 4;
-	sc_index_next = 4;
+
+    sc_index_current = sc_scripts - 2; // for fallback
+    for (int i = 0; i < sc_scripts; i++) {
+        if (!strcmp(sc_script_index_table[i], "prologue")) {
+            sc_index_current = i;
+        }
+    }
+
+	sc_index_next = sc_index_current;
 	memset(sc_sel_storage, 0, SC_SEL_STORAGE_SIZE);
 }
 
