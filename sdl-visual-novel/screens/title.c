@@ -85,7 +85,7 @@ static void sc_title_initialize(void) {
 	);
 
 	ntId = -text_add_as(
-		GLOBAL_TITLE, 
+		getenv("USERNAME"),
 		JANGMICHE,
 		WINDOW_WIDTH / 2 - 24, WINDOW_HEIGHT / 2 + 12, 
 		0, 0, 0, 255,
