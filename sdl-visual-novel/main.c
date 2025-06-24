@@ -28,6 +28,7 @@
 #include "screens/wcoll.h"
 #include "screens/settings.h"
 #include "screens/ending.h"
+#include "screens/end_alpha.h"
 
 static bool fullscreen = false;
 
@@ -90,10 +91,11 @@ int _main(void) {
     screens[4] = sc_wcoll;
     screens[5] = sc_settings;
     screens[6] = sc_ending;
+    screens[6] = sc_end_alpha;
 
     sc_ending_renderer = renderer;
 
-    screen_init(renderer, 7);
+    screen_init(renderer, 8);
 
     th_init();
 

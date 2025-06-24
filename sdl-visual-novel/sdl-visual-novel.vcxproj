@@ -152,6 +152,7 @@
     <ClCompile Include="engine\texthold.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="screens\ending.c" />
+    <ClCompile Include="screens\end_alpha.c" />
     <ClCompile Include="screens\ingame.c" />
     <ClCompile Include="screens\notice.c" />
     <ClCompile Include="screens\settings.c" />
@@ -173,6 +174,7 @@
     <ClInclude Include="misc.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="screens\ending.h" />
+    <ClInclude Include="screens\end_alpha.h" />
     <ClInclude Include="screens\ingame.h" />
     <ClInclude Include="screens\notice.h" />
     <ClInclude Include="screens\settings.h" />

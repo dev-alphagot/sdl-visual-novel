@@ -31,7 +31,8 @@ typedef enum {
 	SUBTRACT_IMMEDIATE,
 	ADD_STORAGE,
 	SUBTRACT_STORAGE,
-	TEXT_SCALE
+	TEXT_SCALE,
+	GAME_END
 } opcode_t;
 
 extern bool sc_exec_desire;

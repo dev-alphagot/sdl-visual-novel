@@ -383,6 +383,11 @@ int sc_exec(void) {
 			text_scale(speak_content, TEXT_CONTENT_SCALE * cid, TEXT_CONTENT_SCALE* cid);
             break;
         }
+        case GAME_END:
+        {
+			screen_change("end_alpha");
+            break;
+        }
 		}
     } while (sc_delay == 0);
 

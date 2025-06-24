@@ -90,6 +90,9 @@
     <ClCompile Include="screens\ending.c">
       <Filter>소스 파일\screens</Filter>
     </ClCompile>
+    <ClCompile Include="screens\end_alpha.c">
+      <Filter>소스 파일\screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="misc.h">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="screens\end_alpha.h">
+      <Filter>헤더 파일\screens</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
