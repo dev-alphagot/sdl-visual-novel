@@ -91,7 +91,7 @@ int _main(void) {
     screens[4] = sc_wcoll;
     screens[5] = sc_settings;
     screens[6] = sc_ending;
-    screens[6] = sc_end_alpha;
+    screens[7] = sc_end_alpha;
 
     sc_ending_renderer = renderer;
 

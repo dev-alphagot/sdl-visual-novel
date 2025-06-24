@@ -211,7 +211,7 @@ static void sc_title_render(void) {
 			sc_title_op_highlight();
 		}
 		else if (input_is_keydown(SDLK_RSHIFT)) {
-			screen_change("end_alpha");
+			// screen_change("ending");
 		}
 		else if (input_is_keydown(SDLK_z)) {
 			printf("op_sel %d\n", op_sel);

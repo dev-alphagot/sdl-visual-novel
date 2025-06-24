@@ -10,7 +10,7 @@
 #include "../wrapper/image.h"
 #include "../wrapper/input.h"
 
-screen_t screens[7];
+screen_t screens[8];
 static int screen_count = -1;
 
 static SDL_Renderer* renderer;

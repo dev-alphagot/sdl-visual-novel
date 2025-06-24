@@ -37,7 +37,7 @@ static void sc_end_alpha_initialize(void) {
 		return 1;
 	}
 
-	image_add("image/ui/end_alpha_pic.png", 180, 135, 475.0f / 1024, 475.0f / 1024, LEFT, TOP);
+	image_color(-image_add("image/ui/end_alpha_pic.png", 150, 135, 475.0f / 1024, 475.0f / 1024, LEFT, TOP), 250, 250, 250);
 	
 	text_add_as(
 		u8"Fin", JANGMICHE, 975, 48, 0, 0, 0, 255, 0.5f, 0.5f, LEFT, TOP // ♪ 桐生 - Amor
@@ -58,7 +58,7 @@ static void sc_end_alpha_initialize(void) {
 		u8"  ♪ a_hisa - Nite Nite (타이틀)\n"
 		u8"  ♪ 이외 a_hisa 앨범 내 수록곡 다수\n"
 		,
-		JANGMICHE, 665, 136, 0, 0, 0, 255, 0.6125f, 0.6125f, LEFT, TOP
+		JANGMICHE, 625, 136, 0, 0, 0, 255, 0.60875f, 0.60875f, LEFT, TOP
 	);
 
 	Mix_FadeInMusic(music, 0, 5000);
